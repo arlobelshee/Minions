@@ -39,6 +39,12 @@
     <Reference Include="FluentAssertions">
       <HintPath>..\packages\FluentAssertions.1.7.0\Lib\net40\FluentAssertions.dll</HintPath>
     </Reference>
+    <Reference Include="MetaSharp.Build">
+      <HintPath>..\packages\metasharp.0.1.0.11\lib\net40-full\MetaSharp.Build.dll</HintPath>
+    </Reference>
+    <Reference Include="MetaSharp.Transformation">
+      <HintPath>..\packages\metasharp.0.1.0.11\lib\net40-full\MetaSharp.Transformation.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
@@ -81,6 +87,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\metasharp.0.1.0.11\lib\net40-full\MetaSharp.Transformation.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
