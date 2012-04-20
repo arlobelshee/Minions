@@ -1,4 +1,5 @@
 ﻿//using Fools.Vm;
+
 using NUnit.Framework;
 
 namespace Fools.Tests
@@ -24,7 +25,7 @@ namespace Fools.Tests
 			// Also, our VM should be a thin decorator on top of the .Net VM. That gives us easy port to .Net & Mono, and should be re-implementable
 			// on LLVM for other platforms (if necessary, eventually).
 
-		/*
+			/*
 		 var minion = new Fool();
 			var code = new Scope(max_stack_depth:2);
 			code.commands.add.load_universe(Universe.FOOL_DEFAULT);
@@ -51,5 +52,7 @@ namespace Fools.Tests
 		}
 	}
 
-	public class Fool {}
+	public class Fool
+	{
+	}
 }

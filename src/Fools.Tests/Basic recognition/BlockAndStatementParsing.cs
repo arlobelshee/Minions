@@ -14,6 +14,21 @@ namespace Fools.Tests
 	[TestFixture]
 	public class BlockAndStatementParsing
 	{
+		private static IEnumerable<Line> Lines(params Line[] lines)
+		{
+			return lines;
+		}
+
+		private static Line Line(int indentationLevel, params Token[] contents)
+		{
+			return new Line(indentationLevel, contents);
+		}
+
+		private static IdentifierToken Identifier(string value)
+		{
+			return new IdentifierToken(value);
+		}
+
 		[Test]
 		public void ShouldDetectASimpleStatement()
 		{
@@ -71,21 +86,6 @@ namespace Fools.Tests
 						new Block(
 							With.Tokens(Identifier("another"), Identifier("block.header")),
 							With.Statement(Identifier("pass")))));
-		}
-
-		private static IEnumerable<Line> Lines(params Line[] lines)
-		{
-			return lines;
-		}
-
-		private static Line Line(int indentationLevel, params Token[] contents)
-		{
-			return new Line(indentationLevel, contents);
-		}
-
-		private static IdentifierToken Identifier(string value)
-		{
-			return new IdentifierToken(value);
 		}
 	}
 }

@@ -41,7 +41,7 @@ namespace Fools.Compilation.Recognizing
 		private void EndBlockIfNeeded(int newIndentationLevel)
 		{
 			if(newIndentationLevel >= _currentBlocks.Count || _currentBlocks.Count == 0) return;
-			while (_currentBlocks.Count > 1) _currentBlocks.Pop();
+			while(_currentBlocks.Count > 1) _currentBlocks.Pop();
 			SendNext(_currentBlocks.Pop());
 		}
 

@@ -23,7 +23,7 @@ namespace Fools.Compilation.Tokenization
 
 		public void HandleCharacter(char ch)
 		{
-			if (ch == '\t')
+			if(ch == '\t')
 				_indentationLevel += 1;
 			else
 			{

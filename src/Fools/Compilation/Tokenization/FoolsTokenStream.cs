@@ -7,18 +7,13 @@ namespace Fools.Compilation.Tokenization
 	public class FoolsTokenStream : IObservable<Token>
 	{
 		private readonly StringReader _fileContents;
-		private ITokenizationState _currentState;
 		private readonly ObservableMulticaster<Token> _observers = new ObservableMulticaster<Token>();
+		private ITokenizationState _currentState;
 
 		public FoolsTokenStream(string fileContents)
 			: this(new StringReader(fileContents))
 		{
 		}
-
-		public LookingThroughCode StateLookingThroughCode { get; private set; }
-		public SkippingWhitespace StateSkippingWhitespace { get; private set; }
-		public MeasureIndentation StateMeasureIndentation { get; private set; }
-		public HandleEscapeSequence StateHandleEscapeSequence { get; private set; }
 
 		public FoolsTokenStream(StringReader fileContents)
 		{
@@ -29,6 +24,11 @@ namespace Fools.Compilation.Tokenization
 			StateHandleEscapeSequence = new HandleEscapeSequence(this);
 			SetStateTo(StateMeasureIndentation);
 		}
+
+		public LookingThroughCode StateLookingThroughCode { get; private set; }
+		public SkippingWhitespace StateSkippingWhitespace { get; private set; }
+		public MeasureIndentation StateMeasureIndentation { get; private set; }
+		public HandleEscapeSequence StateHandleEscapeSequence { get; private set; }
 
 		public void SetStateTo(ITokenizationState nextState)
 		{

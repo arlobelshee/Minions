@@ -12,7 +12,14 @@ namespace Fools.Tests.Support
 		public static IEnumerable<Token> Line(int indentationLevel, params Token[] tokens)
 		{
 			return
-				new Token[] {new IndentationToken(indentationLevel)}.Concat(tokens).Concat(new Token[] {new EndOfStatementToken()});
+				new Token[]
+				{
+					new IndentationToken(indentationLevel)
+				}.Concat(tokens).Concat(
+					new Token[]
+					{
+						new EndOfStatementToken()
+					});
 		}
 
 		public static IEnumerable<Token> Line(params Token[] tokens)

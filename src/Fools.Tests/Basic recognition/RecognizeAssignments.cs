@@ -9,6 +9,25 @@ namespace Fools.Tests.Basic_recognition
 	[TestFixture]
 	public class RecognizeAssignments
 	{
+		private IStatement FindAssignments(UnrecognizedStatement source)
+		{
+			return source;
+		}
+
+		private AssignmentStatement Assigment(IdentifierToken from, IdentifierToken to)
+		{
+			return new AssignmentStatement
+			       {
+			       	value = new VariableReferenceExpression(@from),
+			       	variable = new VariableReferenceExpression(to)
+			       };
+		}
+
+		private static IdentifierToken Identifier(string value)
+		{
+			return new IdentifierToken(value);
+		}
+
 		[Test, Ignore]
 		public void ShouldDetectSimpleAssignmentFromNumericLiteral()
 		{
@@ -21,22 +40,6 @@ namespace Fools.Tests.Basic_recognition
 		{
 			UnrecognizedStatement source = With.Statement(Identifier("a.b"), Identifier(","), Identifier("c.d"));
 			FindAssignments(source).Should().Be(source);
-		}
-
-		private IStatement FindAssignments(UnrecognizedStatement source)
-		{
-			return source;
-		}
-
-		private AssignmentStatement Assigment(IdentifierToken from, IdentifierToken to)
-		{
-			return new AssignmentStatement
-			       {value = new VariableReferenceExpression(@from), variable = new VariableReferenceExpression(to)};
-		}
-
-		private static IdentifierToken Identifier(string value)
-		{
-			return new IdentifierToken(value);
 		}
 	}
 }

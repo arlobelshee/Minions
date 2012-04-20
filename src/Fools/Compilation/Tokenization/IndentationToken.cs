@@ -4,12 +4,12 @@ namespace Fools.Compilation.Tokenization
 {
 	public class IndentationToken : Token, IEquatable<IndentationToken>
 	{
-		public int IndentationLevel { get; private set; }
-
 		public IndentationToken(int indentationLevel)
 		{
 			IndentationLevel = indentationLevel;
 		}
+
+		public int IndentationLevel { get; private set; }
 
 		public bool Equals(IndentationToken other)
 		{

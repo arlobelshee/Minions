@@ -4,16 +4,16 @@ namespace Fools.Ast
 {
 	public class UnparsedText : INode, IEquatable<UnparsedText>
 	{
+		public string text { get; set; }
+
 		public bool Equals(UnparsedText other)
 		{
-			if (ReferenceEquals(null, other))
+			if(ReferenceEquals(null, other))
 				return false;
-			if (ReferenceEquals(this, other))
+			if(ReferenceEquals(this, other))
 				return true;
 			return Equals(other.text, text);
 		}
-
-		public string text { get; set; }
 
 		public override string ToString()
 		{

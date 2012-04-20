@@ -8,6 +8,8 @@ namespace Fools.Ast
 {
 	public class Block : IStatement, IEquatable<Block>
 	{
+		private readonly List<IStatement> _statements;
+
 		public Block(IEnumerable<Token> header, params IStatement[] statements)
 		{
 			Require.that(
@@ -20,6 +22,10 @@ namespace Fools.Ast
 			_statements = statements.ToList();
 		}
 
+		public IEnumerable<IStatement> statements { get { return _statements; } }
+
+		public IEnumerable<Token> header { get; private set; }
+
 		public bool Equals(Block other)
 		{
 			if(ReferenceEquals(null, other))
@@ -28,11 +34,6 @@ namespace Fools.Ast
 				return true;
 			return header.SequenceEqual(other.header) && statements.SequenceEqual(other.statements);
 		}
-
-		private readonly List<IStatement> _statements;
-		public IEnumerable<IStatement> statements { get { return _statements; } }
-
-		public IEnumerable<Token> header { get; private set; }
 
 		public override string ToString()
 		{

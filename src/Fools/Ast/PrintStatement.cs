@@ -4,16 +4,16 @@ namespace Fools.Ast
 {
 	public class PrintStatement : INode, IEquatable<PrintStatement>, IStatement
 	{
+		public string variable { get; set; }
+
 		public bool Equals(PrintStatement other)
 		{
-			if (ReferenceEquals(null, other))
+			if(ReferenceEquals(null, other))
 				return false;
-			if (ReferenceEquals(this, other))
+			if(ReferenceEquals(this, other))
 				return true;
 			return Equals(other.variable, variable);
 		}
-
-		public string variable { get; set; }
 
 		public override string ToString()
 		{

@@ -4,23 +4,25 @@ namespace Fools.Ast
 {
 	public class NumberLiteral : INode, IEquatable<NumberLiteral>
 	{
-		public NumberLiteral() {}
+		public NumberLiteral()
+		{
+		}
 
 		public NumberLiteral(int value)
 		{
 			this.value = value;
 		}
 
+		public int value { get; set; }
+
 		public bool Equals(NumberLiteral other)
 		{
-			if (ReferenceEquals(null, other))
+			if(ReferenceEquals(null, other))
 				return false;
-			if (ReferenceEquals(this, other))
+			if(ReferenceEquals(this, other))
 				return true;
 			return Equals(other.value, value);
 		}
-
-		public int value { get; set; }
 
 		public override string ToString()
 		{

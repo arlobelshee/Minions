@@ -15,7 +15,7 @@ namespace Fools.Tests.Support
 
 		public void Send(IEnumerable<T> source)
 		{
-			foreach (var item in source)
+			foreach(var item in source)
 			{
 				_observers.Notify(item);
 			}

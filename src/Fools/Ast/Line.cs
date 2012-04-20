@@ -7,14 +7,14 @@ namespace Fools.Ast
 {
 	public class Line : INode, IEquatable<Line>
 	{
-		public int IndentationLevel { get; private set; }
-		public IList<Token> Contents { get; private set; }
-
 		public Line(int indentationLevel, params Token[] contents)
 		{
 			IndentationLevel = indentationLevel;
 			Contents = contents;
 		}
+
+		public int IndentationLevel { get; private set; }
+		public IList<Token> Contents { get; private set; }
 
 		public override string ToString()
 		{

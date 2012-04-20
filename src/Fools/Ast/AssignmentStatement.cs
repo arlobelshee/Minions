@@ -4,17 +4,17 @@ namespace Fools.Ast
 {
 	public class AssignmentStatement : IEquatable<AssignmentStatement>, IStatement
 	{
+		public VariableReferenceExpression variable { get; set; }
+		public INode value { get; set; }
+
 		public bool Equals(AssignmentStatement other)
 		{
-			if (ReferenceEquals(null, other))
+			if(ReferenceEquals(null, other))
 				return false;
-			if (ReferenceEquals(this, other))
+			if(ReferenceEquals(this, other))
 				return true;
 			return Equals(other.variable, variable) && Equals(other.value, value);
 		}
-
-		public VariableReferenceExpression variable { get; set; }
-		public INode value { get; set; }
 
 		public override string ToString()
 		{

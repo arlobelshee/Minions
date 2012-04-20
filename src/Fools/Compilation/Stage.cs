@@ -17,7 +17,8 @@ namespace Fools.Compilation
 			return new BlockFinder().SubscribedTo(source);
 		}
 
-		public static IObservable<TDest> SubscribedTo<TSource, TDest>(this ITransformation<TSource, TDest> dest, IObservable<TSource> source)
+		public static IObservable<TDest> SubscribedTo<TSource, TDest>(
+			this ITransformation<TSource, TDest> dest, IObservable<TSource> source)
 		{
 			source.Subscribe(dest);
 			return dest;

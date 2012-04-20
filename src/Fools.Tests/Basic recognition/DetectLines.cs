@@ -14,17 +14,17 @@ namespace Fools.Tests
 	[TestFixture]
 	public class DetectLines
 	{
+		private static IdentifierToken Identifier(string value)
+		{
+			return new IdentifierToken(value);
+		}
+
 		[Test]
 		public void ShouldFindLineBoundariesAndMakeLines()
 		{
 			The.File(With.Line(3, Identifier("a")), With.Line(2, Identifier("b")))
 				.ShouldContainLines(
 					new Line(3, Identifier("a")), new Line(2, Identifier("b")));
-		}
-
-		private static IdentifierToken Identifier(string value)
-		{
-			return new IdentifierToken(value);
 		}
 	}
 }

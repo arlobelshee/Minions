@@ -6,9 +6,9 @@ namespace Fools.Compilation.Tokenization
 	public class HandleEscapeSequence : ITokenizationState
 	{
 		private readonly FoolsTokenStream _tokens;
-		private ITokenizationState _resultHandler;
-		private bool _inUnicodeSequence;
 		private string _escapeSequence;
+		private bool _inUnicodeSequence;
+		private ITokenizationState _resultHandler;
 
 		public HandleEscapeSequence(FoolsTokenStream tokens)
 		{
@@ -29,22 +29,22 @@ namespace Fools.Compilation.Tokenization
 
 		public void HandleCharacter(char ch)
 		{
-			if (_inUnicodeSequence)
+			if(_inUnicodeSequence)
 			{
 				_escapeSequence += ch;
-				if (_escapeSequence.Length == 4)
+				if(_escapeSequence.Length == 4)
 				{
 					FinishAsCharacter((char) int.Parse(_escapeSequence, NumberStyles.HexNumber));
 				}
 				return;
 			}
-			if (ch == 'u')
+			if(ch == 'u')
 			{
 				_inUnicodeSequence = true;
 				_escapeSequence = string.Empty;
 				return;
 			}
-			if (ch == 'n')
+			if(ch == 'n')
 			{
 				FinishAsNewline();
 				return;

@@ -9,6 +9,10 @@ namespace Fools.Compilation.Recognizing
 	{
 		private readonly List<Token> _tokensSeen = new List<Token>();
 
+		protected Token[] LineContents { get { return _tokensSeen.Skip(1).ToArray(); } }
+
+		private int Indent { get { return ((IndentationToken) _tokensSeen[0]).IndentationLevel; } }
+
 		public override void OnNext(Token value)
 		{
 			if(value is EndOfStatementToken)
@@ -21,9 +25,5 @@ namespace Fools.Compilation.Recognizing
 				_tokensSeen.Add(value);
 			}
 		}
-
-		protected Token[] LineContents { get { return _tokensSeen.Skip(1).ToArray(); } }
-
-		private int Indent { get { return ((IndentationToken) _tokensSeen[0]).IndentationLevel; } }
 	}
 }

@@ -5,8 +5,8 @@ namespace Fools.Compilation.Tokenization
 {
 	public class LookingThroughCode : ITokenizationState
 	{
-		private readonly FoolsTokenStream _tokens;
 		private readonly StringBuilder _currentIdentifier = new StringBuilder();
+		private readonly FoolsTokenStream _tokens;
 
 		public LookingThroughCode(FoolsTokenStream tokens)
 		{

@@ -12,6 +12,8 @@ namespace Fools.Tests
 			Variables = new Dictionary<string, object>();
 		}
 
+		public Dictionary<string, object> Variables { get; private set; }
+
 		public void evalute(CodeUnit code)
 		{
 			foreach(INode operation in code.Statements)
@@ -34,7 +36,5 @@ namespace Fools.Tests
 			}
 			throw new ArgumentException(String.Format("I don't know how to handle Nodes of type: {0}", operation.GetType()));
 		}
-
-		public Dictionary<string, object> Variables { get; private set; }
 	}
 }

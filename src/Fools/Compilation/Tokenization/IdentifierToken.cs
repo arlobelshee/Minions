@@ -5,15 +5,17 @@ namespace Fools.Compilation.Tokenization
 {
 	public class IdentifierToken : Token, IEquatable<IdentifierToken>
 	{
-		public string Value { get; private set; }
-
 		public IdentifierToken(string value)
 		{
 			Require.that(
 				!string.IsNullOrWhiteSpace(value),
-				() => new ArgumentNullException("value", "An identifier token must always have a non-null, non-empty, non-whitespace value."));
+				() =>
+					new ArgumentNullException(
+						"value", "An identifier token must always have a non-null, non-empty, non-whitespace value."));
 			Value = value;
 		}
+
+		public string Value { get; private set; }
 
 		public bool Equals(IdentifierToken other)
 		{

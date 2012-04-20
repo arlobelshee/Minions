@@ -22,6 +22,16 @@ namespace Fools.Tests
 	[TestFixture]
 	public class Tokenization
 	{
+		private static FoolsTokenStream AssertThat(string fileContents)
+		{
+			return new FoolsTokenStream(fileContents);
+		}
+
+		private static IdentifierToken Identifier(string value)
+		{
+			return new IdentifierToken(value);
+		}
+
 		[Test]
 		public void EmptyFileShouldTokenizeToSingleEmptyStatementWithNoIndentation()
 		{
@@ -149,16 +159,6 @@ namespace Fools.Tests
 			AssertThat("eh\\\n  \t \t \t\v\t bee")
 				.TokenizesTo(
 					With.Line(Identifier("eh"), Identifier("bee")));
-		}
-
-		private static FoolsTokenStream AssertThat(string fileContents)
-		{
-			return new FoolsTokenStream(fileContents);
-		}
-
-		private static IdentifierToken Identifier(string value)
-		{
-			return new IdentifierToken(value);
 		}
 	}
 }

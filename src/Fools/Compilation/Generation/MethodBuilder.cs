@@ -14,7 +14,13 @@ namespace Fools.Compilation.Generation
 
 		public MethodBuilder()
 		{
-			_method = new DynamicMethod("foo", _STACK_FRAME_TYPE, new[] {_STACK_FRAME_TYPE},
+			_method = new DynamicMethod(
+				"foo",
+				_STACK_FRAME_TYPE,
+				new[]
+				{
+					_STACK_FRAME_TYPE
+				},
 				typeof(MethodBuilder).Module);
 			_body_generator = _method.GetILGenerator();
 		}
@@ -22,9 +28,10 @@ namespace Fools.Compilation.Generation
 		public void AddAssignmentStatement(AssignmentStatement assignment_statement)
 		{
 			var set_item_property =
-				_STACK_FRAME_TYPE.GetProperty("Item",
+				_STACK_FRAME_TYPE.GetProperty(
+					"Item",
 					BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.Public).GetSetMethod();
-			var value = (NumberLiteral)assignment_statement.value;
+			var value = (NumberLiteral) assignment_statement.value;
 
 			_body_generator.Emit(OpCodes.Ldarg_0);
 			_body_generator.Emit(OpCodes.Ldstr, assignment_statement.variable.variable_name);

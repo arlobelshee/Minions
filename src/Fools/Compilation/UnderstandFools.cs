@@ -6,8 +6,8 @@ namespace Fools.Compilation
 {
 	public class UnderstandFools : IObservable<INode>
 	{
-		private readonly FoolsTokenStream _pipelineStart;
 		private readonly IObservable<INode> _parser;
+		private readonly FoolsTokenStream _pipelineStart;
 
 		public UnderstandFools(string fool)
 		{

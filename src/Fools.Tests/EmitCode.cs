@@ -12,17 +12,6 @@ namespace Fools.Tests
 	[TestFixture, Ignore, UseReporter(typeof(QuietReporter))]
 	public class EmitCode
 	{
-		[Test]
-		public void assignment()
-		{
-			_approve_result_of_execution(
-				new AssignmentStatement
-				{
-					variable = new VariableReferenceExpression(new IdentifierToken("a")),
-					value = new NumberLiteral(3)
-				});
-		}
-
 		private static void _approve_result_of_execution(INode node)
 		{
 			Dictionary<string, object> frame = _evaluate_and_return_frame(node);
@@ -47,6 +36,17 @@ namespace Fools.Tests
 			var factory = new MethodBuilder();
 			factory.AddAssignmentStatement(node as AssignmentStatement);
 			return factory.ToCode();
+		}
+
+		[Test]
+		public void assignment()
+		{
+			_approve_result_of_execution(
+				new AssignmentStatement
+				{
+					variable = new VariableReferenceExpression(new IdentifierToken("a")),
+					value = new NumberLiteral(3)
+				});
 		}
 	}
 }
