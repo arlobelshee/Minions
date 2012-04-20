@@ -15,11 +15,15 @@ namespace Fools.Tests
 		[Test]
 		public void assignment()
 		{
-			ApproveResultOfExecution(
-				new AssignmentStatement {variable = new VariableReferenceExpression(new IdentifierToken("a")), value = new NumberLiteral(3)});
+			_approve_result_of_execution(
+				new AssignmentStatement
+				{
+					variable = new VariableReferenceExpression(new IdentifierToken("a")),
+					value = new NumberLiteral(3)
+				});
 		}
 
-		private static void ApproveResultOfExecution(INode node)
+		private static void _approve_result_of_execution(INode node)
 		{
 			Dictionary<string, object> frame = _evaluate_and_return_frame(node);
 			Approvals.Approve(frame, kv => string.Format("{0} = {1} [{2}]", kv.Key, kv.Value, kv.Value.GetType()));
@@ -29,7 +33,12 @@ namespace Fools.Tests
 		{
 			DynamicMethod method = _make_an_assignment(node);
 			var frame = new Dictionary<string, object>();
-			method.Invoke(null, new[] {frame});
+			method.Invoke(
+				null,
+				new[]
+				{
+					frame
+				});
 			return frame;
 		}
 
