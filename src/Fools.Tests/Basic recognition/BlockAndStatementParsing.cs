@@ -14,40 +14,25 @@ namespace Fools.Tests
 	[TestFixture]
 	public class BlockAndStatementParsing
 	{
-		private static IEnumerable<Line> Lines(params Line[] lines)
-		{
-			return lines;
-		}
-
-		private static Line Line(int indentationLevel, params Token[] contents)
-		{
-			return new Line(indentationLevel, contents);
-		}
-
-		private static IdentifierToken Identifier(string value)
-		{
-			return new IdentifierToken(value);
-		}
-
 		[Test]
-		public void ShouldDetectASimpleStatement()
+		public void should_detect_a_simple_statement()
 		{
 			Lines(
 				Line(0, Identifier("some"), Identifier("statement"))
 				)
-				.ShouldBeRecognizedAs(
+				.should_be_recognized_as(
 					With.Statement(Identifier("some"), Identifier("statement")));
 		}
 
 		[Test]
-		public void ShouldDetectANonNestedBlock()
+		public void should_detect_a_non_nested_block()
 		{
 			Lines(
 				Line(0, Identifier("some"), Identifier("block.header"), Identifier(":")),
 				Line(1, Identifier("do.something")),
 				Line(1, Identifier("do.something.else"))
 				)
-				.ShouldBeRecognizedAs(
+				.should_be_recognized_as(
 					new Block(
 						With.Tokens(Identifier("some"), Identifier("block.header")),
 						With.Statement(Identifier("do.something")),
@@ -55,7 +40,7 @@ namespace Fools.Tests
 		}
 
 		[Test]
-		public void ShouldDetectSequentialNonNestedBlocks()
+		public void should_detect_sequential_non_nested_blocks()
 		{
 			Lines(
 				Line(0, Identifier("some"), Identifier("block.header"), Identifier(":")),
@@ -63,7 +48,7 @@ namespace Fools.Tests
 				Line(0, Identifier("another"), Identifier("block.header"), Identifier(":")),
 				Line(1, Identifier("pass"))
 				)
-				.ShouldBeRecognizedAs(
+				.should_be_recognized_as(
 					new Block(
 						With.Tokens(Identifier("some"), Identifier("block.header")),
 						With.Statement(Identifier("pass"))),
@@ -73,19 +58,34 @@ namespace Fools.Tests
 		}
 
 		[Test]
-		public void ShouldDetectNestedBlocks()
+		public void should_detect_nested_blocks()
 		{
 			Lines(
 				Line(0, Identifier("some"), Identifier("block.header"), Identifier(":")),
 				Line(1, Identifier("another"), Identifier("block.header"), Identifier(":")),
 				Line(2, Identifier("pass"))
 				)
-				.ShouldBeRecognizedAs(
+				.should_be_recognized_as(
 					new Block(
 						With.Tokens(Identifier("some"), Identifier("block.header")),
 						new Block(
 							With.Tokens(Identifier("another"), Identifier("block.header")),
 							With.Statement(Identifier("pass")))));
+		}
+
+		private static IEnumerable<Line> Lines(params Line[] lines)
+		{
+			return lines;
+		}
+
+		private static Line Line(int indentation_level, params Token[] contents)
+		{
+			return new Line(indentation_level, contents);
+		}
+
+		private static IdentifierToken Identifier(string value)
+		{
+			return new IdentifierToken(value);
 		}
 	}
 }
@@ -94,11 +94,11 @@ namespace Fools.Tests.BlocksAndStatements
 {
 	public static class BlockAndStatementParsingHelpers
 	{
-		public static void ShouldBeRecognizedAs(this IEnumerable<Line> tokenStream, params INode[] expected)
+		public static void should_be_recognized_as(this IEnumerable<Line> token_stream, params INode[] expected)
 		{
 			var source = new ObserveLists<INode>();
-			ReadOnlyListSubject<INode> results = source.RecognizeBlocksAndStatements().Collect();
-			source.Send(tokenStream);
+			ReadOnlyListSubject<INode> results = source.recognize_blocks_and_statements().Collect();
+			source.Send(token_stream);
 			results.Should().Equal(expected);
 		}
 	}

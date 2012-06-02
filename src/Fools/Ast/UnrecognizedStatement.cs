@@ -5,7 +5,7 @@ using Fools.Compilation.Tokenization;
 
 namespace Fools.Ast
 {
-	public class UnrecognizedStatement : INode, IEquatable<UnrecognizedStatement>, IStatement
+	public class UnrecognizedStatement : IEquatable<UnrecognizedStatement>, IStatement
 	{
 		public UnrecognizedStatement(params Token[] tokens)
 		{

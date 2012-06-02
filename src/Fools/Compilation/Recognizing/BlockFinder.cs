@@ -7,48 +7,48 @@ namespace Fools.Compilation.Recognizing
 {
 	public class BlockFinder : Transformation<INode, INode>
 	{
-		private static readonly IdentifierToken Colon = new IdentifierToken(":");
-		private readonly Stack<Block> _currentBlocks = new Stack<Block>();
+		private static readonly IdentifierToken _COLON = new IdentifierToken(":");
+		private readonly Stack<Block> _current_blocks = new Stack<Block>();
 
 		public override void OnNext(INode value)
 		{
-			HandleLine((Line) value);
+			_handle_line((Line) value);
 		}
 
 		public override void OnCompleted()
 		{
-			EndBlockIfNeeded(0);
+			_end_block_if_needed(0);
 			base.OnCompleted();
 		}
 
-		private void HandleLine(Line value)
+		private void _handle_line(Line value)
 		{
-			EndBlockIfNeeded(value.IndentationLevel);
-			if(value.Contents.Last() == Colon)
-				AddBlock(new Block(value.Contents.Take(value.Contents.Count - 1)));
+			_end_block_if_needed(value.IndentationLevel);
+			if(value.Contents.Last() == _COLON)
+				_add_block(new Block(value.Contents.Take(value.Contents.Count - 1)));
 			else
-				AddStatementToCurrentBlock(new UnrecognizedStatement(value.Contents));
+				_add_statement_to_current_block(new UnrecognizedStatement(value.Contents));
 		}
 
-		private void AddStatementToCurrentBlock(UnrecognizedStatement statement)
+		private void _add_statement_to_current_block(IStatement statement)
 		{
-			if(_currentBlocks.Count == 0)
-				SendNext(statement);
+			if(_current_blocks.Count == 0)
+				send_next(statement);
 			else
-				_currentBlocks.Peek().AddStatement(statement);
+				_current_blocks.Peek().AddStatement(statement);
 		}
 
-		private void EndBlockIfNeeded(int newIndentationLevel)
+		private void _end_block_if_needed(int new_indentation_level)
 		{
-			if(newIndentationLevel >= _currentBlocks.Count || _currentBlocks.Count == 0) return;
-			while(_currentBlocks.Count > 1) _currentBlocks.Pop();
-			SendNext(_currentBlocks.Pop());
+			if(new_indentation_level >= _current_blocks.Count || _current_blocks.Count == 0) return;
+			while(_current_blocks.Count > 1) _current_blocks.Pop();
+			send_next(_current_blocks.Pop());
 		}
 
-		private void AddBlock(Block block)
+		private void _add_block(Block block)
 		{
-			if(_currentBlocks.Count > 0) _currentBlocks.Peek().AddStatement(block);
-			_currentBlocks.Push(block);
+			if(_current_blocks.Count > 0) _current_blocks.Peek().AddStatement(block);
+			_current_blocks.Push(block);
 		}
 	}
 }

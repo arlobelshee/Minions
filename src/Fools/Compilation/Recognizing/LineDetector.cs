@@ -7,22 +7,22 @@ namespace Fools.Compilation.Recognizing
 {
 	public class LineDetector : Transformation<Token, INode>
 	{
-		private readonly List<Token> _tokensSeen = new List<Token>();
+		private readonly List<Token> _tokens_seen = new List<Token>();
 
-		protected Token[] LineContents { get { return _tokensSeen.Skip(1).ToArray(); } }
+		protected Token[] line_contents { get { return _tokens_seen.Skip(1).ToArray(); } }
 
-		private int Indent { get { return ((IndentationToken) _tokensSeen[0]).IndentationLevel; } }
+		private int _indent { get { return ((IndentationToken) _tokens_seen[0]).IndentationLevel; } }
 
 		public override void OnNext(Token value)
 		{
 			if(value is EndOfStatementToken)
 			{
-				SendNext(new Line(Indent, LineContents));
-				_tokensSeen.Clear();
+				send_next(new Line(_indent, line_contents));
+				_tokens_seen.Clear();
 			}
 			else
 			{
-				_tokensSeen.Add(value);
+				_tokens_seen.Add(value);
 			}
 		}
 	}

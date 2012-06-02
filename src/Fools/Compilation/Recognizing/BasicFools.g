@@ -1,7 +1,7 @@
 namespace Fools.Compilation.Recognizing:
   import MetaSharp.Transformation;
 
-  grammar BasicFools < Parser:
-    Main = i:Identifier -> true;
+  grammar BasicFools:
+    Main = i:any -> i;
   end
 end

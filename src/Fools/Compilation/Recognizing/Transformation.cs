@@ -3,7 +3,7 @@ using Fools.Utils;
 
 namespace Fools.Compilation.Recognizing
 {
-	public interface ITransformation<TSource, TDest> : IObservable<TDest>, IObserver<TSource>
+	public interface ITransformation<in TSource, out TDest> : IObservable<TDest>, IObserver<TSource>
 	{
 	}
 
@@ -27,7 +27,7 @@ namespace Fools.Compilation.Recognizing
 			_observers.NotifyDone();
 		}
 
-		protected void SendNext(TDest item)
+		protected void send_next(TDest item)
 		{
 			_observers.Notify(item);
 		}

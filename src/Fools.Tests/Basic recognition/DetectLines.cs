@@ -14,17 +14,17 @@ namespace Fools.Tests
 	[TestFixture]
 	public class DetectLines
 	{
-		private static IdentifierToken Identifier(string value)
+		private static IdentifierToken _identifier(string value)
 		{
 			return new IdentifierToken(value);
 		}
 
 		[Test]
-		public void ShouldFindLineBoundariesAndMakeLines()
+		public void should_find_line_boundaries_and_make_lines()
 		{
-			The.File(With.Line(3, Identifier("a")), With.Line(2, Identifier("b")))
-				.ShouldContainLines(
-					new Line(3, Identifier("a")), new Line(2, Identifier("b")));
+			The.File(With.Line(3, _identifier("a")), With.Line(2, _identifier("b")))
+				.should_contain_lines(
+					new Line(3, _identifier("a")), new Line(2, _identifier("b")));
 		}
 	}
 }
@@ -33,11 +33,11 @@ namespace Fools.Tests.DetectingLines
 {
 	public static class BlockAndStatementParsingHelpers
 	{
-		public static void ShouldContainLines(this IEnumerable<Token> tokenStream, params INode[] expected)
+		public static void should_contain_lines(this IEnumerable<Token> token_stream, params INode[] expected)
 		{
 			var source = new ObserveLists<Token>();
-			ReadOnlyListSubject<INode> results = source.DetectLines().Collect();
-			source.Send(tokenStream);
+			ReadOnlyListSubject<INode> results = source.detect_lines().Collect();
+			source.Send(token_stream);
 			results.Should().Equal(expected);
 		}
 	}
