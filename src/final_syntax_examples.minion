@@ -192,7 +192,8 @@ for_programmers(ast.FunctionNode(
 @compile_time
 @with.minion.per_declaration()
 def List(item_type):
-	# this isn't optimal. Can we do a conditionally-locking read? Grab a read lock, and
+	# This isn't optimal. It also has thread safety issues.
+	# Can we do a conditionally-locking read? Grab a read lock, and
 	# release it if we find a match. If not, await an upgrade to write. After each write,
 	# recheck those who are blocked (some might have unblocked), then release the next write.
 	# only go back to allowing readers once we've drained all those waiting to write.
@@ -218,10 +219,10 @@ def List(item_type):
 	init:   # Runs once, the first time the method is called.
 		My.type_cache = Cache(Type)   # Define a universe-level variable, not just a local.
 	body:   # The main implementation of the function.
-		reader/writer:   # Does a valid read/write cache implementation, such as the double-checked locking pattern. Compiler can choose any pattern that it thinks will be efficient.
+		cache = reader/writer:   # Does a valid read/write lock implementation, such as the double-checked locking pattern. Compiler can choose any pattern that it thinks will be efficient.
 			read:   # Executes with semantics equivalent to having a read lock. Some algorithms won't need any locking at all for this.
-				return type_cache.look_up(item_type)   # read block is required to return an Optional. If valid, it'll return. Otherwise, the writer will execute.
-			write:   # If read returns invalid, then executes with semantics equivalent to a write lock.
+				return type_cache.look_up(item_type)
+			write:   # Executes with semantics equivalent to a write lock.
 				class ListNode:
 					item_type value
 					ListNode next
@@ -230,8 +231,19 @@ def List(item_type):
 					ListNode first
 					ListNode last
 				return type_cache.store(item_type, ListWrapper)
+		return cache.read() ?? cache.write()
 
-# The multi-block form of a function def would also allow a "guard" block.
+# The multi-block form of a function def would also allow a "guard" block and a "verify" block. All non-supplied
+# blocks are simply no-ops (init makes a default continuation frame, with an uninitialized space for each var).
+# The resulting function's body is equivalent to:
+
+def Fn(*args) -> R1, R2 res2:
+	if(this_is_the_first_call):
+		initial_locals = init()   # init can return a continuation frame to use as the prototype, rather than the default frame. Default frame starts with each variable set to uninitialized.
+	guard(*args)
+	*results = body(*args).with_locals(initial_locals.copy())
+	verify(*results)
+	return *results
 
 # An interesting thought. With these more declarative block algorithms, we could
 # auto-generate some unit tests for threading correctness. Compiler will verify

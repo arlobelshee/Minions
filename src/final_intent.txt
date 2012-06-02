@@ -1,0 +1,79 @@
+Fools is a language for defining languages. That's all it is.
+
+Minions is a language writen in that language. It extends Fools, so it is also a language for
+defining languages. However, it is a full general-purpose language that speaks multiple
+paradigms.
+
+Both languages can be interpreted or compiled to any of several back-ends.
+
+The bootstrap sequence for a platform is to write a Fools interpreter for that platform and
+a Fools model code generator that targets that platform. This might also include implementing
+a platform bindings library (to give uniform OO access to platform specifics). Once these are
+written, you can then interpret Fools in Fools and code-gen a Fools compiler. Then you can
+use that compiler to do Minions subsets and make whatever Minions compiler starting points you
+want.
+
+Each project can choose to make its own Minions language. Common creoles will emerge around
+paradigms that people find useful. In any case, a library can be written in a completely different
+variation from the code that uses it. Heck, a block can be written in a different language
+from the blocks that contain it or that it contains.
+
+The only thing that is consistent from language to language is the underlying execution model:
+continuations instead of stack-based functions with loose coupling as to order of execution,
+all data held in partially or fully isolated universes, Minions (actor pattern) that send messages
+to each other but are otherwise independent, and the runtime controls all aspects of threading.
+
+This execution model has two important characteristics:
+ * It is highly decoupled.
+ * The model only states constraints; the runtime optimizes within those constraints and chooses
+ what will actually execute when.
+
+Fools features:
+ * Can parse a block comprehension. Can then use that comprehension to parse another block.
+ * Can parse a function declaration and add that to the execution model.
+ * Can emit an execution model to some backend.
+ * Can run an execution model (be a Fools interpreter).
+ * Cannot understand infix expressions (no operators in the language).
+ * Can understand string, integer and code literals (no floats nor any other type).
+ * Can parse a structure definition (UDT) and add that to the execution model.
+ * Can parse an assignment and add that to the exeuction model.
+ * Can call compile-time function definitions.
+ * Can decide when to create a Fool and call spawn.minion() at the correct time.
+ * 
+
+Key concepts and when they're applicable
+----------------------------------------
+
++------------------+-------------+-------------------------------------------------------------------+
+|     Concept      |    When     |                        Meaning                                    |
++------------------+-------------+-------------------------------------------------------------------+
+| Minion           | run time    | A particular actor instance. Listens for messages and follows     |
+|                  |             | instructions to process those messages. May send more messages.   |
++------------------+-------------+-------------------------------------------------------------------+
+| Function         | static      | A declaration of a set of instructions that can be executed.      |
++------------------+-------------+-------------------------------------------------------------------+
+| Continuation     | run time    | All function calls are made as continuations. There is a linked   |
+| (Frame)          |             | list of frames, rather than an array of frames. It is singly-     |
+|                  |             | linked. Multiple frames may point back to the same "caller."      |
++------------------+-------------+-------------------------------------------------------------------+
+| Type Class       | static      | A type restriction. States that a particular function will accept |
+|                  |             | only a subset of all possible types for a particular arg. Defines |
+|                  |             | what this function expects to see on that arg.                    |
++------------------+-------------+-------------------------------------------------------------------+
+| Class            | static      | A user-defined type. Consists of member data and functions. Can   |
+|                  |             | be used to satisfy one or more type classes. Every class          |
+|                  |             | introduces at least one type class.                               |
++------------------+-------------+-------------------------------------------------------------------+
+| Message          | run time    | A very simple data-only UDT that can be sent to a Minion directly |
+|                  |             | or via broadcast.                                                 |
++------------------+-------------+-------------------------------------------------------------------+
+| Pattern Match    | static      | Declares actions to take when partiuclar messages arrive.         |
++------------------+-------------+-------------------------------------------------------------------+
+|                  |             |                                                                   |
++------------------+-------------+-------------------------------------------------------------------+
+|                  |             |                                                                   |
++------------------+-------------+-------------------------------------------------------------------+
+|                  |             |                                                                   |
++------------------+-------------+-------------------------------------------------------------------+
+|                  |             |                                                                   |
++------------------+-------------+-------------------------------------------------------------------+
