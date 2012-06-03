@@ -1,5 +1,3 @@
-using Fools.DotNet.Native;
-
 namespace Fools.DotNet
 {
 	public abstract class Namespace
