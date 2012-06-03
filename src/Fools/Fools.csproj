@@ -123,6 +123,12 @@
     <Compile Include="Compilation\Recognizing\Transformation.cs" />
     <Compile Include="Compilation\UnderstandFools.cs" />
     <Compile Include="Compilation\Stage.cs" />
+    <Compile Include="DotNet\DotNetCode.cs" />
+    <Compile Include="DotNet\ITypeStore.cs" />
+    <Compile Include="DotNet\Compiler.cs" />
+    <Compile Include="DotNet\Native\NativeAssembly.cs" />
+    <Compile Include="DotNet\Native\NativeAssemblyReference.cs" />
+    <Compile Include="DotNet\Native\NativeCompiler.cs" />
     <Compile Include="Model\Static\Function.cs" />
     <Compile Include="Model\FunctionBuilder.cs" />
     <Compile Include="Model\Execution\FunctionCall.cs" />
@@ -151,7 +157,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DotNet\Simulated\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
