@@ -22,7 +22,7 @@ namespace Fools.Model
 
 		public Function build()
 		{
-			return new Function(_name, new StackFrame(_locals));
+			return new Function(_name, new StackFrame(_locals, new Type[]{}, new Type[]{}));
 		}
 	}
 }

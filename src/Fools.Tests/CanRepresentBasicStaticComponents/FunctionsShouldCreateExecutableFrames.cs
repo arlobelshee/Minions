@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using FluentAssertions;
 using Fools.Model;
 using Fools.Model.Execution;
@@ -17,7 +17,18 @@ namespace Fools.Tests.CanRepresentBasicStaticComponents
 		{
 			var test_subject = new FunctionBuilder("right");
 			test_subject.add_local(typeof(int)).add_local(typeof(string));
-			test_subject.build().frame.Should().Be(new StackFrame(typeof(int), typeof(string)));
+			test_subject.build().frame.Should().Be(
+				new StackFrame(
+					new[]
+					{
+						typeof(int), typeof(string)
+					},
+					new Type[]
+					{
+					},
+					new Type[]
+					{
+					}));
 		}
 
 		[Test]
@@ -39,6 +50,25 @@ namespace Fools.Tests.CanRepresentBasicStaticComponents
 					typeof(StackFrame), typeof(VariableGroup), typeof(VariableGroup), typeof(FunctionCall)
 				});
 			compiled_method.Attributes.Should().Be(MethodAttributes.Static | MethodAttributes.Public);
+		}
+
+		[Test, Ignore("Will not finish implementing until I've got some wrappers for the compiler infrastructure.")]
+		public void stack_frame_should_build_type_with_locals_args_and_return_bindings()
+		{
+			var test_subject = new StackFrame(
+				new[]
+				{
+					typeof(int), typeof(string)
+				},
+				new[]
+				{
+					typeof(double), typeof(Guid)
+				},
+				new[]
+				{
+					typeof(float), typeof(bool)
+				});
+			test_subject.emit();
 		}
 	}
 }
