@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using Fools.DotNet;
+using Fools.DotNet.Native;
+using Microsoft.Cci;
 using NUnit.Framework;
 
 namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanExecuteCode
@@ -20,5 +22,16 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 				});
 			library.default_namespace.name.Should().Be("Fools.TestNamespace");
 		}
+
+		[Test]
+		public void native_library_should_create_type_for_module()
+		{
+			var compiler = new NativeCompiler();
+			var test_subject = new NativeAssembly(compiler, "irrelevant", ModuleKind.DynamicallyLinkedLibrary);
+			var module_description = test_subject.get_type("<Module>");
+			module_description.name.Should().Be("<Module>");
+			module_description.name_space.name.Should().Be(string.Empty);
+		}
+
 	}
 }

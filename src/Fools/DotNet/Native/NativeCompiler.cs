@@ -15,6 +15,7 @@ namespace Fools.DotNet.Native
 		}
 
 		public IAssemblyReference mscorlib { get; private set; }
+		public IInternFactory intern_factory { get { return _host.InternFactory; } }
 
 		public override TypeStore new_library(string default_namespace)
 		{

@@ -127,6 +127,10 @@
     <Compile Include="DotNet\Namespace.cs" />
     <Compile Include="DotNet\Native\NativeNamespace.cs" />
     <Compile Include="DotNet\Native\NativeNamespaceReference.cs" />
+    <Compile Include="DotNet\Native\NativeTypeDefinition.cs" />
+    <Compile Include="DotNet\Native\NativeTypeDefinitionReference.cs" />
+    <Compile Include="DotNet\TypeDefinition.cs" />
+    <Compile Include="DotNet\TypeName.cs" />
     <Compile Include="DotNet\TypeStore.cs" />
     <Compile Include="DotNet\Compiler.cs" />
     <Compile Include="DotNet\Native\NativeAssembly.cs" />
