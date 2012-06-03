@@ -16,7 +16,7 @@ namespace Fools.DotNet.Native
 
 		public IAssemblyReference mscorlib { get; private set; }
 
-		public override ITypeStore new_library(string default_namespace)
+		public override TypeStore new_library(string default_namespace)
 		{
 			return new NativeAssembly(this, default_namespace, ModuleKind.DynamicallyLinkedLibrary);
 		}

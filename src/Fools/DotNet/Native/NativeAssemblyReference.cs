@@ -3,7 +3,7 @@ using Microsoft.Cci;
 
 namespace Fools.DotNet.Native
 {
-	public class NativeAssemblyReference : ITypeStore
+	public class NativeAssemblyReference : TypeStore
 	{
 		private readonly IAssemblyReference _target;
 
@@ -12,10 +12,10 @@ namespace Fools.DotNet.Native
 			_target = target;
 		}
 
-		public string file_name { get { return _target.Name.Value; } }
+		public override string file_name { get { return _target.Name.Value; } }
+		public override string name { get { return _target.Name.Value; } }
 
-		public string name { get { return _target.Name.Value; } }
-
-		public IEnumerable<ITypeStore> references { get { return Enumerable<ITypeStore>.Empty; } }
+		public override IEnumerable<TypeStore> references { get { return Enumerable<TypeStore>.Empty; } }
+		public override Namespace default_namespace { get { return new NativeNamespaceReference(_target.ResolvedModule.NamespaceRoot); } }
 	}
 }

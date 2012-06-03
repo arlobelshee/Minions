@@ -124,7 +124,10 @@
     <Compile Include="Compilation\UnderstandFools.cs" />
     <Compile Include="Compilation\Stage.cs" />
     <Compile Include="DotNet\DotNetCode.cs" />
-    <Compile Include="DotNet\ITypeStore.cs" />
+    <Compile Include="DotNet\Namespace.cs" />
+    <Compile Include="DotNet\Native\NativeNamespace.cs" />
+    <Compile Include="DotNet\Native\NativeNamespaceReference.cs" />
+    <Compile Include="DotNet\TypeStore.cs" />
     <Compile Include="DotNet\Compiler.cs" />
     <Compile Include="DotNet\Native\NativeAssembly.cs" />
     <Compile Include="DotNet\Native\NativeAssemblyReference.cs" />

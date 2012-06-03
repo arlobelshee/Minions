@@ -18,6 +18,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 				{
 					"mscorlib"
 				});
+			library.default_namespace.name.Should().Be("Fools.TestNamespace");
 		}
 	}
 }
