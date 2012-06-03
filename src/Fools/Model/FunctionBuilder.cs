@@ -6,7 +6,13 @@ namespace Fools.Model
 {
 	public class FunctionBuilder
 	{
+		private readonly string _name;
 		private readonly List<Type> _locals = new List<Type>();
+
+		public FunctionBuilder(string name)
+		{
+			_name = name;
+		}
 
 		public FunctionBuilder add_local(Type type)
 		{
@@ -16,7 +22,7 @@ namespace Fools.Model
 
 		public Function build()
 		{
-			return new Function(new StackFrame(_locals));
+			return new Function(_name, new StackFrame(_locals));
 		}
 	}
 }
