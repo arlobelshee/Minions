@@ -13,7 +13,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		[Test]
 		public void library_should_determine_basics_from_default_namespace()
 		{
-			var library = DotNetCode.native().new_library("Fools.TestNamespace");
+			var library = make_compiler().new_library("Fools.TestNamespace");
 			library.file_name.Should().Be("Fools.TestNamespace.dll");
 			library.references.Select(r => r.name).Should().Equal(
 				new object[]
@@ -23,6 +23,15 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 			library.default_namespace.name.Should().Be("Fools.TestNamespace");
 		}
 
+		protected virtual Compiler make_compiler()
+		{
+			return DotNetCode.simulated();
+		}
+	}
+
+	[Explicit]
+	public class CanMakeAPlaceToMakeTypesNative : CanMakeAPlaceToMakeTypes
+	{
 		[Test]
 		public void native_library_should_create_type_for_module()
 		{
@@ -33,5 +42,9 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 			module_description.name_space.name.Should().Be(string.Empty);
 		}
 
+		protected override Compiler make_compiler()
+		{
+			return DotNetCode.native();
+		}
 	}
 }

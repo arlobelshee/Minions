@@ -8,5 +8,10 @@ namespace Fools.DotNet
 		{
 			return new NativeCompiler();
 		}
+
+		public static Compiler simulated()
+		{
+			return new NativeCompiler();
+		}
 	}
 }
