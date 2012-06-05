@@ -10,17 +10,29 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 	[TestFixture]
 	public class CanMakeAPlaceToMakeTypes
 	{
+		private const string _DEFAULT_NAMESPACE = "Fools.TestNamespace";
+
 		[Test]
 		public void library_should_determine_basics_from_default_namespace()
 		{
-			var library = make_compiler().new_library("Fools.TestNamespace");
-			library.file_name.Should().Be("Fools.TestNamespace.dll");
+			var library = make_compiler().new_library(_DEFAULT_NAMESPACE);
+			library.file_name.Should().Be(_DEFAULT_NAMESPACE + ".dll");
 			library.references.Select(r => r.name).Should().Equal(
 				new object[]
 				{
 					"mscorlib"
 				});
-			library.default_namespace.name.Should().Be("Fools.TestNamespace");
+			library.default_namespace.name.Should().Be(_DEFAULT_NAMESPACE);
+		}
+
+		[Test]
+		public void library_should_allow_adding_namespaces()
+		{
+			var library = make_compiler().new_library(_DEFAULT_NAMESPACE);
+			var ns = library.ensure_namespace_exists(_DEFAULT_NAMESPACE + ".subnamespace");
+			ns.name.Should().Be(_DEFAULT_NAMESPACE + ".subnamespace");
+			library.ensure_namespace_exists(_DEFAULT_NAMESPACE + ".subnamespace").Should().BeSameAs(ns);
+			// next up: ensure that we can ask the base namespace for this namespace. Should that return the hierarchical child or not?
 		}
 
 		protected virtual Compiler make_compiler()

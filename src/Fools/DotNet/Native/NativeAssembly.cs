@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Cci;
@@ -32,6 +33,12 @@ namespace Fools.DotNet.Native
 		private void _add_reference(IAssemblyReference assembly)
 		{
 			_assembly.AssemblyReferences.Add(assembly);
+		}
+
+		public override Namespace ensure_namespace_exists(string ns)
+		{
+			Namespace result;
+			return _namespaces.TryGetValue(ns, out result) ? result : _add_namespace(ns);
 		}
 
 		public override TypeDefinition get_type(TypeName full_name)

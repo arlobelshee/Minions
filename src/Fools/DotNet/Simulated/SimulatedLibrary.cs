@@ -10,7 +10,7 @@ namespace Fools.DotNet.Simulated
 		private readonly string _file_name;
 		private readonly List<TypeStore> _references;
 		private readonly Namespace _default_namespace;
-		private readonly Dictionary<string, Namespace> _all_namespaces;
+		private readonly Dictionary<string, Namespace> _namespaces = new Dictionary<string, Namespace>();
 
 		public SimulatedLibrary(
 			SimulatedCompiler compiler, string default_namespace, IEnumerable<TypeStore> initial_references)
@@ -19,11 +19,14 @@ namespace Fools.DotNet.Simulated
 			_name = default_namespace;
 			_file_name = default_namespace + ".dll";
 			_references = initial_references.ToList();
-			_default_namespace = new SimulatedNamespace(this, default_namespace);
-			_all_namespaces = new Dictionary<string, Namespace>
-			                  {
-			                  	{_default_namespace.name, _default_namespace}
-			                  };
+			_default_namespace = _add_namespace(default_namespace);
+		}
+
+		private SimulatedNamespace _add_namespace(string ns_name)
+		{
+			var result = new SimulatedNamespace(this, ns_name);
+			_namespaces.Add(ns_name, result);
+			return result;
 		}
 
 		public override string file_name { get { return _file_name; } }
@@ -31,9 +34,15 @@ namespace Fools.DotNet.Simulated
 		public override IEnumerable<TypeStore> references { get { return _references; } }
 		public override Namespace default_namespace { get { return _default_namespace; } }
 
+		public override Namespace ensure_namespace_exists(string ns)
+		{
+			Namespace result;
+			return _namespaces.TryGetValue(ns, out result) ? result : _add_namespace(ns);
+		}
+
 		public override TypeDefinition get_type(TypeName full_name)
 		{
-			return _all_namespaces[full_name.namespace_name].get_type(full_name.type_name);
+			return _namespaces[full_name.namespace_name].get_type(full_name.type_name);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Cci;
@@ -20,6 +21,11 @@ namespace Fools.DotNet.Native
 
 		public override IEnumerable<TypeStore> references { get { return Enumerable<TypeStore>.Empty; } }
 		public override Namespace default_namespace { get { return _namespace_for(_target.ResolvedModule.NamespaceRoot); } }
+
+		public override Namespace ensure_namespace_exists(string ns)
+		{
+			throw new InvalidOperationException("This is a read-only assembly. You cannot add namespaces to it.");
+		}
 
 		public override TypeDefinition get_type(TypeName full_name)
 		{
