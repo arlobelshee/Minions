@@ -129,6 +129,9 @@
     <Compile Include="DotNet\Native\NativeNamespaceReference.cs" />
     <Compile Include="DotNet\Native\NativeTypeDefinition.cs" />
     <Compile Include="DotNet\Native\NativeTypeDefinitionReference.cs" />
+    <Compile Include="DotNet\Simulated\SimulatedCompiler.cs" />
+    <Compile Include="DotNet\Simulated\SimulatedLibrary.cs" />
+    <Compile Include="DotNet\Simulated\SimulatedNamespace.cs" />
     <Compile Include="DotNet\TypeDefinition.cs" />
     <Compile Include="DotNet\TypeName.cs" />
     <Compile Include="DotNet\TypeStore.cs" />
@@ -164,9 +167,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DotNet\Simulated\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

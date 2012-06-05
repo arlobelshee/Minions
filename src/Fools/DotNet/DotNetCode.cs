@@ -1,4 +1,5 @@
 using Fools.DotNet.Native;
+using Fools.DotNet.Simulated;
 
 namespace Fools.DotNet
 {
@@ -11,7 +12,7 @@ namespace Fools.DotNet
 
 		public static Compiler simulated()
 		{
-			return new NativeCompiler();
+			return new SimulatedCompiler();
 		}
 	}
 }
