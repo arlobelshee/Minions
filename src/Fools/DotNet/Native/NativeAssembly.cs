@@ -17,7 +17,7 @@ namespace Fools.DotNet.Native
 		{
 			_compiler = compiler;
 			_assembly = _create_assembly_impl(default_namespace, kind);
-			add_reference(compiler.mscorlib);
+			_add_reference(compiler.mscorlib);
 			_root_namespace = _create_root_namespace();
 			_default_namespace = _add_namespace(default_namespace);
 			var root = _remember_namespace(_root_namespace);
@@ -29,17 +29,12 @@ namespace Fools.DotNet.Native
 		public override IEnumerable<TypeStore> references { get { return _assembly.AssemblyReferences.Select(a => new NativeAssemblyReference(_compiler, a)); } }
 		public override Namespace default_namespace { get { return _default_namespace; } }
 
-		public void add_reference(IAssemblyReference assembly_name)
+		private void _add_reference(IAssemblyReference assembly)
 		{
-			_assembly.AssemblyReferences.Add(assembly_name);
+			_assembly.AssemblyReferences.Add(assembly);
 		}
 
-		public TypeDefinition get_type(string full_name)
-		{
-			return get_type(TypeName.of(full_name));
-		}
-
-		public TypeDefinition get_type(TypeName full_name)
+		public override TypeDefinition get_type(TypeName full_name)
 		{
 			return _namespaces[full_name.namespace_name].get_type(full_name.type_name);
 		}

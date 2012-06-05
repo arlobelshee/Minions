@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Cci;
 
 namespace Fools.DotNet.Native
@@ -18,6 +19,20 @@ namespace Fools.DotNet.Native
 		public override string name { get { return _target.Name.Value; } }
 
 		public override IEnumerable<TypeStore> references { get { return Enumerable<TypeStore>.Empty; } }
-		public override Namespace default_namespace { get { return new NativeNamespaceReference(_compiler, _target.ResolvedModule.NamespaceRoot); } }
+		public override Namespace default_namespace { get { return _namespace_for(_target.ResolvedModule.NamespaceRoot); } }
+
+		public override TypeDefinition get_type(TypeName full_name)
+		{
+			return
+				_namespace_for(
+					(INamespaceDefinition)
+						_target.ResolvedModule.UnitNamespaceRoot.GetMembersNamed(_compiler.name(full_name.namespace_name), false).Single())
+					.get_type(full_name.type_name);
+		}
+
+		private NativeNamespaceReference _namespace_for(INamespaceDefinition ns)
+		{
+			return new NativeNamespaceReference(_compiler, ns);
+		}
 	}
 }

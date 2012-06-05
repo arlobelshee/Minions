@@ -8,5 +8,11 @@ namespace Fools.DotNet
 		public abstract string name { get; }
 		public abstract IEnumerable<TypeStore> references { get; }
 		public abstract Namespace default_namespace { get; }
+		public abstract TypeDefinition get_type(TypeName full_name);
+
+		public TypeDefinition get_type(string full_name)
+		{
+			return get_type(TypeName.of(full_name));
+		}
 	}
 }
