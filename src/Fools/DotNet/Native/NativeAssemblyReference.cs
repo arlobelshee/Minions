@@ -22,9 +22,9 @@ namespace Fools.DotNet.Native
 		public override IEnumerable<TypeStore> references { get { return Enumerable<TypeStore>.Empty; } }
 		public override Namespace default_namespace { get { return _namespace_for(_target.ResolvedModule.NamespaceRoot); } }
 
-		public override Namespace ensure_namespace_exists(string ns)
+		public override Namespace ensure_namespace_exists(string ns_name)
 		{
-			throw new InvalidOperationException("This is a read-only assembly. You cannot add namespaces to it.");
+			throw new InvalidOperationException(string.Format("{0} is a read-only assembly. You cannot add the namespace {1} to it.", name, ns_name));
 		}
 
 		public override TypeDefinition get_type(TypeName full_name)

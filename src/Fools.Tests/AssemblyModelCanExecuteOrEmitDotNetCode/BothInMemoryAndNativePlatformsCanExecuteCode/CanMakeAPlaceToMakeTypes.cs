@@ -11,6 +11,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 	public class CanMakeAPlaceToMakeTypes
 	{
 		private const string _DEFAULT_NAMESPACE = "Fools.TestNamespace";
+		private const string _ARBITRARY_NAME = "subnamespace";
 
 		[Test]
 		public void library_should_determine_basics_from_default_namespace()
@@ -29,10 +30,9 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		public void library_should_allow_adding_namespaces()
 		{
 			var library = make_compiler().new_library(_DEFAULT_NAMESPACE);
-			var ns = library.ensure_namespace_exists(_DEFAULT_NAMESPACE + ".subnamespace");
-			ns.name.Should().Be(_DEFAULT_NAMESPACE + ".subnamespace");
-			library.ensure_namespace_exists(_DEFAULT_NAMESPACE + ".subnamespace").Should().BeSameAs(ns);
-			// next up: ensure that we can ask the base namespace for this namespace. Should that return the hierarchical child or not?
+			var ns = library.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME);
+			ns.name.Should().Be(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME);
+			library.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME).Should().BeSameAs(ns);
 		}
 
 		protected virtual Compiler make_compiler()

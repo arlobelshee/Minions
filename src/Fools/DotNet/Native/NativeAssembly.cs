@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Cci;
@@ -35,10 +34,10 @@ namespace Fools.DotNet.Native
 			_assembly.AssemblyReferences.Add(assembly);
 		}
 
-		public override Namespace ensure_namespace_exists(string ns)
+		public override Namespace ensure_namespace_exists(string ns_name)
 		{
 			Namespace result;
-			return _namespaces.TryGetValue(ns, out result) ? result : _add_namespace(ns);
+			return _namespaces.TryGetValue(ns_name, out result) ? result : _add_namespace(ns_name);
 		}
 
 		public override TypeDefinition get_type(TypeName full_name)
