@@ -19,12 +19,12 @@ namespace Fools.DotNet.Native
 
 		public override string name { get { return _target.Name.Value; } }
 
-		public override TypeDefinition get_type(string type_name)
+		public override TypeDefinition get_continuation_definition(string type_name)
 		{
 			return _members[type_name];
 		}
 
-		public override TypeDefinition ensure_type_exists(string type_name)
+		public override TypeDefinition ensure_continuation_definition_exists(string type_name)
 		{
 			TypeDefinition result;
 			return _members.TryGetValue(type_name, out result) ? result : _remember_type(_create_class(type_name));

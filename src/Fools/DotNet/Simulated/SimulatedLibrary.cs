@@ -42,7 +42,7 @@ namespace Fools.DotNet.Simulated
 
 		public override TypeDefinition get_type(TypeName full_name)
 		{
-			return _namespaces[full_name.namespace_name].get_type(full_name.type_name);
+			return _namespaces[full_name.namespace_name].get_continuation_definition(full_name.type_name);
 		}
 	}
 }

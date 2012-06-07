@@ -18,12 +18,12 @@ namespace Fools.DotNet.Simulated
 
 		public override string name { get { return _name; } }
 
-		public override TypeDefinition get_type(string type_name)
+		public override TypeDefinition get_continuation_definition(string type_name)
 		{
 			return _members[type_name];
 		}
 
-		public override TypeDefinition ensure_type_exists(string type_name)
+		public override TypeDefinition ensure_continuation_definition_exists(string type_name)
 		{
 			SimulatedTypeDefinition result;
 			return _members.TryGetValue(type_name, out result) ? result : _remember(new SimulatedTypeDefinition(this, type_name));

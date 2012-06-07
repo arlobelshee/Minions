@@ -39,10 +39,10 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		public void namespaces_should_allow_creating_types()
 		{
 			var test_subject = make_compiler().new_library(_DEFAULT_NAMESPACE).default_namespace;
-			var result = test_subject.ensure_type_exists(_ARBITRARY_NAME);
+			var result = test_subject.ensure_continuation_definition_exists(_ARBITRARY_NAME);
 			result.name.Should().Be(_ARBITRARY_NAME);
-			test_subject.get_type(_ARBITRARY_NAME).Should().BeSameAs(result);
-			test_subject.ensure_type_exists(_ARBITRARY_NAME).Should().BeSameAs(result);
+			test_subject.get_continuation_definition(_ARBITRARY_NAME).Should().BeSameAs(result);
+			test_subject.ensure_continuation_definition_exists(_ARBITRARY_NAME).Should().BeSameAs(result);
 		}
 
 		protected virtual Compiler make_compiler()

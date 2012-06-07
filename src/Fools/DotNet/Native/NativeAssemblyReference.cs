@@ -33,7 +33,7 @@ namespace Fools.DotNet.Native
 				_namespace_for(
 					(INamespaceDefinition)
 						_target.ResolvedModule.UnitNamespaceRoot.GetMembersNamed(_compiler.name(full_name.namespace_name), false).Single())
-					.get_type(full_name.type_name);
+					.get_continuation_definition(full_name.type_name);
 		}
 
 		private NativeNamespaceReference _namespace_for(INamespaceDefinition ns)
