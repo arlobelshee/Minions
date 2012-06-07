@@ -118,6 +118,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanExecuteCode\CanDescribeContinuationSignatures.cs" />
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanExecuteCode\CanMakeAPlaceToMakeContinuationFrames.cs" />
     <Compile Include="Basic recognition\BlockAndStatementParsing.cs" />
     <Compile Include="Basic recognition\DetectLines.cs" />
