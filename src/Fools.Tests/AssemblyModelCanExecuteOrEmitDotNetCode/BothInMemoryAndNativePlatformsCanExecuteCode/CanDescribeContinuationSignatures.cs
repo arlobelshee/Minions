@@ -8,11 +8,15 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		[Test]
 		public void arguments_should_be_equality_comparable()
 		{
-			var test_subject = new ContinuationArguments();
+			var test_subject = new Argument("type.name", "argument_name");
 		}
 	}
 
-	public class ContinuationArguments
+	public class Argument
 	{
+		public Argument(string type_name, string name)
+		{
+			
+		}
 	}
 }

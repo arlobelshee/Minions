@@ -2,12 +2,12 @@ using Microsoft.Cci.MutableCodeModel;
 
 namespace Fools.DotNet.Native
 {
-	internal class NativeTypeDefinition : TypeDefinition
+	internal class NativeFrameDefinition : FrameDefinition
 	{
 		private readonly NativeNamespace _ns;
 		private readonly NamedTypeDefinition _target;
 
-		public NativeTypeDefinition(NativeNamespace ns, NamedTypeDefinition target)
+		public NativeFrameDefinition(NativeNamespace ns, NamedTypeDefinition target)
 		{
 			_ns = ns;
 			_target = target;

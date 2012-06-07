@@ -127,13 +127,13 @@
     <Compile Include="DotNet\Namespace.cs" />
     <Compile Include="DotNet\Native\NativeNamespace.cs" />
     <Compile Include="DotNet\Native\NativeNamespaceReference.cs" />
-    <Compile Include="DotNet\Native\NativeTypeDefinition.cs" />
-    <Compile Include="DotNet\Native\NativeTypeDefinitionReference.cs" />
+    <Compile Include="DotNet\Native\NativeFrameDefinition.cs" />
+    <Compile Include="DotNet\Native\NativeFrameDefinitionReference.cs" />
     <Compile Include="DotNet\Simulated\SimulatedCompiler.cs" />
     <Compile Include="DotNet\Simulated\SimulatedLibrary.cs" />
     <Compile Include="DotNet\Simulated\SimulatedNamespace.cs" />
-    <Compile Include="DotNet\Simulated\SimulatedTypeDefinition.cs" />
-    <Compile Include="DotNet\TypeDefinition.cs" />
+    <Compile Include="DotNet\Simulated\SimulatedFrameDefinition.cs" />
+    <Compile Include="DotNet\FrameDefinition.cs" />
     <Compile Include="DotNet\TypeName.cs" />
     <Compile Include="DotNet\TypeStore.cs" />
     <Compile Include="DotNet\Compiler.cs" />

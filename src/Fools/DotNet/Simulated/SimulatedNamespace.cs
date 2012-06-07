@@ -7,8 +7,8 @@ namespace Fools.DotNet.Simulated
 		private readonly SimulatedLibrary _assembly;
 		private readonly string _name;
 
-		private readonly Dictionary<string, SimulatedTypeDefinition> _members =
-			new Dictionary<string, SimulatedTypeDefinition>();
+		private readonly Dictionary<string, SimulatedFrameDefinition> _members =
+			new Dictionary<string, SimulatedFrameDefinition>();
 
 		public SimulatedNamespace(SimulatedLibrary assembly, string name)
 		{
@@ -18,20 +18,20 @@ namespace Fools.DotNet.Simulated
 
 		public override string name { get { return _name; } }
 
-		public override TypeDefinition get_continuation_definition(string type_name)
+		public override FrameDefinition get_continuation_definition(string type_name)
 		{
 			return _members[type_name];
 		}
 
-		public override TypeDefinition ensure_continuation_definition_exists(string type_name)
+		public override FrameDefinition ensure_continuation_definition_exists(string type_name)
 		{
-			SimulatedTypeDefinition result;
-			return _members.TryGetValue(type_name, out result) ? result : _remember(new SimulatedTypeDefinition(this, type_name));
+			SimulatedFrameDefinition result;
+			return _members.TryGetValue(type_name, out result) ? result : _remember(new SimulatedFrameDefinition(this, type_name));
 		}
 
-		private SimulatedTypeDefinition _remember(SimulatedTypeDefinition simulated_type_definition)
+		private SimulatedFrameDefinition _remember(SimulatedFrameDefinition simulated_frame_definition)
 		{
-			return _members[simulated_type_definition.name] = simulated_type_definition;
+			return _members[simulated_frame_definition.name] = simulated_frame_definition;
 		}
 	}
 }

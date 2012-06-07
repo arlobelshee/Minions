@@ -40,12 +40,12 @@ namespace Fools.DotNet.Native
 			return _namespaces.TryGetValue(ns_name, out result) ? result : _add_namespace(ns_name);
 		}
 
-		public override TypeDefinition get_type(TypeName full_name)
+		public override FrameDefinition get_type(TypeName full_name)
 		{
 			return _namespaces[full_name.namespace_name].get_continuation_definition(full_name.type_name);
 		}
 
-		public TypeDefinition get_raw_type(string type_name)
+		public FrameDefinition get_raw_type(string type_name)
 		{
 			return _namespaces[string.Empty].get_continuation_definition(type_name);
 		}

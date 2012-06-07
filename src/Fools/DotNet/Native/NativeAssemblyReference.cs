@@ -27,7 +27,7 @@ namespace Fools.DotNet.Native
 			throw new InvalidOperationException(string.Format("{0} is a read-only assembly. You cannot add the namespace {1} to it.", name, ns_name));
 		}
 
-		public override TypeDefinition get_type(TypeName full_name)
+		public override FrameDefinition get_type(TypeName full_name)
 		{
 			return
 				_namespace_for(

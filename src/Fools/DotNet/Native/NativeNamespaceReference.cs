@@ -16,12 +16,12 @@ namespace Fools.DotNet.Native
 		}
 
 		public override string name { get { return _target.Name.Value; } }
-		public override TypeDefinition get_continuation_definition(string type_name)
+		public override FrameDefinition get_continuation_definition(string type_name)
 		{
-			return new NativeTypeDefinitionReference(this, _target.GetMembersNamed(_compiler.name(type_name), false).Single());
+			return new NativeFrameDefinitionReference(this, _target.GetMembersNamed(_compiler.name(type_name), false).Single());
 		}
 
-		public override TypeDefinition ensure_continuation_definition_exists(string type_name)
+		public override FrameDefinition ensure_continuation_definition_exists(string type_name)
 		{
 			throw new InvalidOperationException(string.Format("{0} is a read-only namespace. You cannot add the type {1} to it.", name, type_name));
 		}

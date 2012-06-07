@@ -8,7 +8,7 @@ namespace Fools.DotNet.Native
 		private readonly NativeCompiler _compiler;
 		private readonly Assembly _assembly;
 		private readonly UnitNamespace _target;
-		private readonly Dictionary<string, TypeDefinition> _members = new Dictionary<string, TypeDefinition>();
+		private readonly Dictionary<string, FrameDefinition> _members = new Dictionary<string, FrameDefinition>();
 
 		public NativeNamespace(NativeCompiler compiler, Assembly assembly, UnitNamespace target)
 		{
@@ -19,14 +19,14 @@ namespace Fools.DotNet.Native
 
 		public override string name { get { return _target.Name.Value; } }
 
-		public override TypeDefinition get_continuation_definition(string type_name)
+		public override FrameDefinition get_continuation_definition(string type_name)
 		{
 			return _members[type_name];
 		}
 
-		public override TypeDefinition ensure_continuation_definition_exists(string type_name)
+		public override FrameDefinition ensure_continuation_definition_exists(string type_name)
 		{
-			TypeDefinition result;
+			FrameDefinition result;
 			return _members.TryGetValue(type_name, out result) ? result : _remember_type(_create_class(type_name));
 		}
 
@@ -44,9 +44,9 @@ namespace Fools.DotNet.Native
 			return new_type;
 		}
 
-		private TypeDefinition _remember_type(NamespaceTypeDefinition target)
+		private FrameDefinition _remember_type(NamespaceTypeDefinition target)
 		{
-			var result = new NativeTypeDefinition(this, target);
+			var result = new NativeFrameDefinition(this, target);
 			return _members[result.name] = result;
 		}
 

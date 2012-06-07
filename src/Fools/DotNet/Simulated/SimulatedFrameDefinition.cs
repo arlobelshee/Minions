@@ -1,11 +1,11 @@
 namespace Fools.DotNet.Simulated
 {
-	public class SimulatedTypeDefinition : TypeDefinition
+	public class SimulatedFrameDefinition : FrameDefinition
 	{
 		private readonly SimulatedNamespace _ns;
 		private readonly string _name;
 
-		public SimulatedTypeDefinition(SimulatedNamespace ns, string name)
+		public SimulatedFrameDefinition(SimulatedNamespace ns, string name)
 		{
 			_ns = ns;
 			_name = name;

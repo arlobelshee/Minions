@@ -2,12 +2,12 @@ using Microsoft.Cci;
 
 namespace Fools.DotNet.Native
 {
-	public class NativeTypeDefinitionReference : TypeDefinition
+	public class NativeFrameDefinitionReference : FrameDefinition
 	{
 		private readonly NativeNamespaceReference _namespace;
 		private readonly INamespaceMember _target;
 
-		public NativeTypeDefinitionReference(NativeNamespaceReference @namespace, INamespaceMember target)
+		public NativeFrameDefinitionReference(NativeNamespaceReference @namespace, INamespaceMember target)
 		{
 			_namespace = @namespace;
 			_target = target;
