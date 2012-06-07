@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanExecuteCode
 {
 	[TestFixture]
-	public class CanMakeAPlaceToMakeTypes
+	public class CanMakeAPlaceToMakeContinuationFrames
 	{
 		private const string _DEFAULT_NAMESPACE = "Fools.TestNamespace";
 		private const string _ARBITRARY_NAME = "subnamespace";
@@ -52,7 +52,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 	}
 
 	[Explicit]
-	public class CanMakeAPlaceToMakeTypesNative : CanMakeAPlaceToMakeTypes
+	public class CanMakeAPlaceToMakeContinuationFramesNative : CanMakeAPlaceToMakeContinuationFrames
 	{
 		[Test]
 		public void native_library_should_create_type_for_module()
