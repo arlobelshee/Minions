@@ -29,10 +29,20 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		[Test]
 		public void library_should_allow_adding_namespaces()
 		{
-			var library = make_compiler().new_library(_DEFAULT_NAMESPACE);
-			var ns = library.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME);
+			var test_subject = make_compiler().new_library(_DEFAULT_NAMESPACE);
+			var ns = test_subject.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME);
 			ns.name.Should().Be(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME);
-			library.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME).Should().BeSameAs(ns);
+			test_subject.ensure_namespace_exists(_DEFAULT_NAMESPACE + "." + _ARBITRARY_NAME).Should().BeSameAs(ns);
+		}
+
+		[Test]
+		public void namespaces_should_allow_creating_types()
+		{
+			var test_subject = make_compiler().new_library(_DEFAULT_NAMESPACE).default_namespace;
+			var result = test_subject.ensure_type_exists(_ARBITRARY_NAME);
+			result.name.Should().Be(_ARBITRARY_NAME);
+			test_subject.get_type(_ARBITRARY_NAME).Should().BeSameAs(result);
+			test_subject.ensure_type_exists(_ARBITRARY_NAME).Should().BeSameAs(result);
 		}
 
 		protected virtual Compiler make_compiler()

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Cci;
 using System.Linq;
 
@@ -18,6 +19,11 @@ namespace Fools.DotNet.Native
 		public override TypeDefinition get_type(string type_name)
 		{
 			return new NativeTypeDefinitionReference(this, _target.GetMembersNamed(_compiler.name(type_name), false).Single());
+		}
+
+		public override TypeDefinition ensure_type_exists(string type_name)
+		{
+			throw new InvalidOperationException(string.Format("{0} is a read-only namespace. You cannot add the type {1} to it.", name, type_name));
 		}
 	}
 }

@@ -24,7 +24,13 @@ namespace Fools.DotNet.Native
 			return _members[type_name];
 		}
 
-		public TypeDefinition create_class(string class_name)
+		public override TypeDefinition ensure_type_exists(string type_name)
+		{
+			TypeDefinition result;
+			return _members.TryGetValue(type_name, out result) ? result : _remember_type(_create_class(type_name));
+		}
+
+		private NamespaceTypeDefinition _create_class(string class_name)
 		{
 			var new_type = new NamespaceTypeDefinition
 			               {
@@ -35,14 +41,13 @@ namespace Fools.DotNet.Native
 			               };
 			_target.Members.Add(new_type);
 			_assembly.AllTypes.Add(new_type);
-			return _remember_type(new_type);
+			return new_type;
 		}
 
 		private TypeDefinition _remember_type(NamespaceTypeDefinition target)
 		{
 			var result = new NativeTypeDefinition(this, target);
-			_members.Add(result.name, result);
-			return result;
+			return _members[result.name] = result;
 		}
 	}
 }

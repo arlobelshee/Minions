@@ -21,7 +21,7 @@ namespace Fools.DotNet.Native
 			_root_namespace = _create_root_namespace();
 			_default_namespace = _add_namespace(default_namespace);
 			var root = _remember_namespace(_root_namespace);
-			root.create_class("<Module>");
+			root.ensure_type_exists("<Module>");
 		}
 
 		public override string file_name { get { return _assembly.ModuleName.Value; } }
