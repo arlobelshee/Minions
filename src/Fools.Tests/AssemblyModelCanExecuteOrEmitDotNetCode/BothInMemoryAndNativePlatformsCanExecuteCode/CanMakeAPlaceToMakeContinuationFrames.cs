@@ -36,13 +36,23 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		}
 
 		[Test]
-		public void namespaces_should_allow_creating_types()
+		public void namespaces_should_allow_creating_continuation_definitions()
 		{
 			var test_subject = make_compiler().new_library(_DEFAULT_NAMESPACE).default_namespace;
 			var result = test_subject.ensure_continuation_definition_exists(_ARBITRARY_NAME);
 			result.name.Should().Be(_ARBITRARY_NAME);
 			test_subject.get_continuation_definition(_ARBITRARY_NAME).Should().BeSameAs(result);
 			test_subject.ensure_continuation_definition_exists(_ARBITRARY_NAME).Should().BeSameAs(result);
+		}
+
+		[Test]
+		public void namespaces_should_allow_creating_user_defined_types()
+		{
+			var test_subject = make_compiler().new_library(_DEFAULT_NAMESPACE).default_namespace;
+			var result = test_subject.ensure_udt_exists(_ARBITRARY_NAME);
+			result.name.Should().Be(_ARBITRARY_NAME);
+			test_subject.get_udt(_ARBITRARY_NAME).Should().BeSameAs(result);
+			test_subject.ensure_udt_exists(_ARBITRARY_NAME).Should().BeSameAs(result);
 		}
 
 		protected virtual Compiler make_compiler()

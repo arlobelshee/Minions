@@ -1,14 +1,14 @@
 using System.Collections.Generic;
+using Fools.DotNet.Native;
 
 namespace Fools.DotNet.Simulated
 {
-	public class SimulatedNamespace : Namespace
+	internal class SimulatedNamespace : Namespace
 	{
 		private readonly SimulatedLibrary _assembly;
 		private readonly string _name;
 
-		private readonly Dictionary<string, SimulatedFrameDefinition> _members =
-			new Dictionary<string, SimulatedFrameDefinition>();
+		private readonly Dictionary<string, Definition> _members = new Dictionary<string, Definition>();
 
 		public SimulatedNamespace(SimulatedLibrary assembly, string name)
 		{
@@ -20,18 +20,38 @@ namespace Fools.DotNet.Simulated
 
 		public override FrameDefinition get_continuation_definition(string type_name)
 		{
-			return _members[type_name];
+			return (FrameDefinition) _members[type_name];
 		}
 
 		public override FrameDefinition ensure_continuation_definition_exists(string type_name)
 		{
-			SimulatedFrameDefinition result;
-			return _members.TryGetValue(type_name, out result) ? result : _remember(new SimulatedFrameDefinition(this, type_name));
+			Definition result;
+			return _members.TryGetValue(type_name, out result)
+				? (FrameDefinition) result
+				: _remember(new SimulatedFrameDefinition(this, type_name));
 		}
 
-		private SimulatedFrameDefinition _remember(SimulatedFrameDefinition simulated_frame_definition)
+		public override UserDefinedType get_udt(string type_name)
 		{
-			return _members[simulated_frame_definition.name] = simulated_frame_definition;
+			return (UserDefinedType) _members[type_name];
+		}
+
+		public override UserDefinedType ensure_udt_exists(string type_name)
+		{
+			Definition result;
+			return _members.TryGetValue(type_name, out result)
+				? (UserDefinedType) result
+				: _remember(new SimulatedUserDefinedType(this, type_name));
+		}
+
+		private SimulatedFrameDefinition _remember(FrameDefinition simulated_frame_definition)
+		{
+			return (SimulatedFrameDefinition) (_members[simulated_frame_definition.name] = simulated_frame_definition);
+		}
+
+		private SimulatedUserDefinedType _remember(UserDefinedType simulated_frame_definition)
+		{
+			return (SimulatedUserDefinedType) (_members[simulated_frame_definition.name] = simulated_frame_definition);
 		}
 	}
 }

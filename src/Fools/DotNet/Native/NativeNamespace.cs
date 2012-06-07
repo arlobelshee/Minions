@@ -3,12 +3,12 @@ using Microsoft.Cci.MutableCodeModel;
 
 namespace Fools.DotNet.Native
 {
-	public class NativeNamespace : Namespace
+	internal class NativeNamespace : Namespace
 	{
 		private readonly NativeCompiler _compiler;
 		private readonly Assembly _assembly;
 		private readonly UnitNamespace _target;
-		private readonly Dictionary<string, FrameDefinition> _members = new Dictionary<string, FrameDefinition>();
+		private readonly Dictionary<string, Definition> _members = new Dictionary<string, Definition>();
 
 		public NativeNamespace(NativeCompiler compiler, Assembly assembly, UnitNamespace target)
 		{
@@ -21,13 +21,24 @@ namespace Fools.DotNet.Native
 
 		public override FrameDefinition get_continuation_definition(string type_name)
 		{
-			return _members[type_name];
+			return (FrameDefinition) _members[type_name];
 		}
 
 		public override FrameDefinition ensure_continuation_definition_exists(string type_name)
 		{
-			FrameDefinition result;
-			return _members.TryGetValue(type_name, out result) ? result : _remember_type(_create_class(type_name));
+			Definition result;
+			return _members.TryGetValue(type_name, out result) ? (FrameDefinition) result : _remember_frame(_create_class(type_name));
+		}
+
+		public override UserDefinedType get_udt(string type_name)
+		{
+			return (UserDefinedType) _members[type_name];
+		}
+
+		public override UserDefinedType ensure_udt_exists(string type_name)
+		{
+			Definition result;
+			return _members.TryGetValue(type_name, out result) ? (UserDefinedType) result : _remember_udt(_create_class(type_name));
 		}
 
 		private NamespaceTypeDefinition _create_class(string class_name)
@@ -44,15 +55,21 @@ namespace Fools.DotNet.Native
 			return new_type;
 		}
 
-		private FrameDefinition _remember_type(NamespaceTypeDefinition target)
+		private FrameDefinition _remember_frame(NamespaceTypeDefinition target)
 		{
 			var result = new NativeFrameDefinition(this, target);
-			return _members[result.name] = result;
+			return (FrameDefinition) (_members[result.name] = result);
+		}
+
+		private UserDefinedType _remember_udt(NamespaceTypeDefinition target)
+		{
+			var result = new NativeUserDefinedType(this, target);
+			return (UserDefinedType) (_members[result.name] = result);
 		}
 
 		public void create_raw_type(string type_name)
 		{
-			_remember_type(_create_class(type_name));
+			_remember_frame(_create_class(type_name));
 		}
 	}
 }

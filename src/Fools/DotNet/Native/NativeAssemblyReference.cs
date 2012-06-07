@@ -5,7 +5,7 @@ using Microsoft.Cci;
 
 namespace Fools.DotNet.Native
 {
-	public class NativeAssemblyReference : TypeStore
+	internal class NativeAssemblyReference : TypeStore
 	{
 		private readonly IAssemblyReference _target;
 		private readonly NativeCompiler _compiler;

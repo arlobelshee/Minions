@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Fools.DotNet.Simulated
 {
-	public class SimulatedLibrary : TypeStore
+	internal class SimulatedLibrary : TypeStore
 	{
 		private readonly SimulatedCompiler _compiler;
 		private readonly string _name;
