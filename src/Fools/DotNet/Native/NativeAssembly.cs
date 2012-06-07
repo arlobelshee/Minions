@@ -11,7 +11,7 @@ namespace Fools.DotNet.Native
 		private readonly Assembly _assembly;
 		private readonly NativeNamespace _default_namespace;
 		private readonly RootUnitNamespace _root_namespace;
-		private readonly Dictionary<string, Namespace> _namespaces = new Dictionary<string, Namespace>();
+		private readonly Dictionary<string, NativeNamespace> _namespaces = new Dictionary<string, NativeNamespace>();
 
 		public NativeAssembly(NativeCompiler compiler, string default_namespace, ModuleKind kind)
 		{
@@ -21,7 +21,7 @@ namespace Fools.DotNet.Native
 			_root_namespace = _create_root_namespace();
 			_default_namespace = _add_namespace(default_namespace);
 			var root = _remember_namespace(_root_namespace);
-			root.ensure_type_exists("<Module>");
+			root.create_raw_type("<Module>");
 		}
 
 		public override string file_name { get { return _assembly.ModuleName.Value; } }
@@ -36,13 +36,18 @@ namespace Fools.DotNet.Native
 
 		public override Namespace ensure_namespace_exists(string ns_name)
 		{
-			Namespace result;
+			NativeNamespace result;
 			return _namespaces.TryGetValue(ns_name, out result) ? result : _add_namespace(ns_name);
 		}
 
 		public override TypeDefinition get_type(TypeName full_name)
 		{
 			return _namespaces[full_name.namespace_name].get_type(full_name.type_name);
+		}
+
+		public TypeDefinition get_raw_type(string type_name)
+		{
+			return _namespaces[string.Empty].get_type(type_name);
 		}
 
 		private Assembly _create_assembly_impl(string default_namespace_name, ModuleKind kind)
@@ -81,8 +86,7 @@ namespace Fools.DotNet.Native
 		private NativeNamespace _remember_namespace(UnitNamespace ns)
 		{
 			var result = new NativeNamespace(_compiler, _assembly, ns);
-			_namespaces.Add(result.name, result);
-			return result;
+			return _namespaces[result.name] = result;
 		}
 	}
 }

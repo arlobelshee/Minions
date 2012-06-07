@@ -49,5 +49,10 @@ namespace Fools.DotNet.Native
 			var result = new NativeTypeDefinition(this, target);
 			return _members[result.name] = result;
 		}
+
+		public void create_raw_type(string type_name)
+		{
+			_remember_type(_create_class(type_name));
+		}
 	}
 }

@@ -59,7 +59,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 		{
 			var compiler = new NativeCompiler();
 			var test_subject = new NativeAssembly(compiler, "irrelevant", ModuleKind.DynamicallyLinkedLibrary);
-			var module_description = test_subject.get_type("<Module>");
+			var module_description = test_subject.get_raw_type("<Module>");
 			module_description.name.Should().Be("<Module>");
 			module_description.name_space.name.Should().Be(string.Empty);
 		}
