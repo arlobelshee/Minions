@@ -120,6 +120,8 @@
   <ItemGroup>
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanExecuteCode\CanDescribeContinuationSignatures.cs" />
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanExecuteCode\CanMakeAPlaceToMakeContinuationsAndUdts.cs" />
+    <Compile Include="Support\TestData.cs" />
+    <Compile Include="Support\TestUdt.cs" />
     <Compile Include="Basic recognition\BlockAndStatementParsing.cs" />
     <Compile Include="Basic recognition\DetectLines.cs" />
     <Compile Include="Basic recognition\RecognizeAssignments.cs" />

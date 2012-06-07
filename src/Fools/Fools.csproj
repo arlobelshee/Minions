@@ -123,6 +123,7 @@
     <Compile Include="Compilation\Recognizing\Transformation.cs" />
     <Compile Include="Compilation\UnderstandFools.cs" />
     <Compile Include="Compilation\Stage.cs" />
+    <Compile Include="DotNet\Argument.cs" />
     <Compile Include="DotNet\Definition.cs" />
     <Compile Include="DotNet\DotNetCode.cs" />
     <Compile Include="DotNet\Namespace.cs" />
