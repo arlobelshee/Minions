@@ -18,7 +18,7 @@ namespace Fools.Tests.Support
 
 		public override string ToString()
 		{
-			return string.Format("{{Type {0}}}", name);
+			return string.Format("<Type {0}>", name);
 		}
 
 		public bool Equals(TestUdt other)

@@ -7,7 +7,7 @@ namespace Fools.DotNet
 
 		public override string ToString()
 		{
-			return string.Format("{{Type {0}.{1}}}", name_space.name, name);
+			return string.Format("<Type {0}.{1}>", name_space.name, name);
 		}
 	}
 }
