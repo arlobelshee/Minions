@@ -29,7 +29,8 @@ I watch."""   # Multiline string literal.
 """\
 hi\t\
 """ == "hi\t" # You can use escape sequences and escape newlines within a multiline string literal.
-```def thunder():
+```\
+def thunder():
 	pass
 ```   # Multiline code literal
 literal.json {
@@ -47,15 +48,19 @@ _   # The "I don't care" variable. Used when a variable is required but you want
 # arguments, use the _ pseudo-value to skip an optional argument.
 
 msg = input()   # Simple function call
-{current, prev} = fib(prev, current)   # Call a function and bind its multiple positional return values
+{pref, current} = fib(prev, current)   # Call a function and bind its multiple positional return values
 {_, _, clip_region} = graphics.settings()   # Call a function and ignore some of its return values
 {_, _, clip_region, draw_buffer=offscreen_bitmap} = graphics.settings()   # Bind to a named return value
 square{operand} = multiply{operand, operand}  # Curries multiply. Square is now a function of one positional arg named operand that passes that into positional args 1 & 2 of mul.
 square = operand => multiply(operand, operand)   # The same as the above, but using lambda syntax.
 fib = (prev, current) => current, prev+current   # More what lambdas are meant for. Defines fib as a function from two variables to two variables.
+fancy = given alpha, beta:    # Anonymous closure block (similar to C#'s lambda statement).
+	k = alpha + _some_member_variable
+	n = beta / some.local.variable
+	return {k, n}
 save_order.click += factory.build_car{
-	model_for(_model_name),
-	(color, options) = compute_options(
+	model_for(_model_name),    # binding to a positional arg
+	(color, options) = compute_options(    # binding to multiple args by name
 		model_for(_model_name), _prefered_colors, _doors, _additional_options)
 }   # A far more complicated currying. Everything in the currying is lazy-evaluated per call. So if the value of _model_name changes, then model_for() will be called with a different value and return a different object.
 
@@ -66,7 +71,7 @@ build_car = curry factory.build_car:
 		model = model_for(_model_name)
 	args:
 		model   # passing a positional arg
-		(color, options) = compute_options(
+		(color, options) = compute_options(   # binding to multiple args by name
 			model, _prefered_colors, _doors, _additional_options)
 save_order.click += build_car
 
@@ -103,7 +108,8 @@ def do.something():
 # Therefore this example would call the do.something method. On the first iteration
 # two declarations are possible matches: the do variable and the do.something method.
 # do.something matches 2 segments, while do matches only 1. We have only a single match
-# for the most segments, so the algorithm terminates.
+# for the most segments, so we choose that. We have matched all segments, so do not
+# need to recurse.
 
 # Classes
 # ------------------
@@ -134,24 +140,57 @@ def List(item_type):
 		ListNode last
 	return type_cache.store(item_type, ListWrapper)
 
+# A clss declaration defines 3 things:
+# * A UDT that has those fields.
+# * A constructor function, named the same as the class, that takes all those fields as
+#   an argument set.
+# * A Typeclass named the same as the class. This is bound only to that class, via the direct
+#   mapping.
+
+# Also note that all variables (arguments, locals, fields, etc) are non-nullable. The
+# only way to get null-like behavior is to be explicit, using constructs such as Maybe,
+# Lazy, general laziness, or the Null Object pattern.
+
+# Typeclasses
+# -----------
+
+# Fools uses typeclasses (a la Haskell) to allow polymorphic functions.
+
+# Most OO languages use types to do two different things:
+# * Define what an instance is and has. Bundle together some data and some operations.
+# * Declare where it can be used and how. E.g., what a function requires out of its
+#   args and guarantees about its returns.
+
+# Such OO languages then define a number of rules, such as inheritance and generics,
+# that allow a function to be less restrictive in its inputs and define a pattern on
+# its outputs.
+
+# Fools, like Haskell, does this differently. Instead, these concepts are make explicit.
+# * Classes define what an instance is and has.
+# * Typeclasses declare what a function needs and guarantees.
+# * Typeclass bindings allow the coder to say how to treat a particular class as a
+#   particular typeclass.
+
+# Typeclasses can also have default bindings. Some do; some do not.
+
 # Default typeclasses
 # ------------------
 
 # Fools has a few built-in default typeclasses. These allow classes to be used
 # in some common contexts. The default typeclasses and their implementations are:
 
-# Equals -- for objects, compares by equality on all fields. For containers, compares by item
-# HashCode -- like Equals, but with a different function applied to primitives.
+# Equals -- compares object by equality on all fields. Compares containers by item
+# HashCode -- like Equals, but hashes instead of comparing.
+# Less -- compares object by < on all fields, in declaration order. Compares containers by item
 # PrettyString -- transform into a string suitable for display to an end user. Defaults to calling ProgrammerString.
 # ProgrammerString -- make a string suitable for programmers. This is a Json-like representation, with type info shown in a special way.
-# constructor for all fields -- provided unless another constructor is supplied.
 
 # example programmer strings:
 
 for_programmers(3)  -> "3"
 for_programmers(ast.FunctionNode(
-	name: "asf",
-	parameters: List(ast.ParameterNode)(
+	name = "asf",
+	parameters = List(ast.ParameterNode)(
 		ast.ParameterNode("string", "foo"),
 		ast.ParameterNode("int", "bar")),
 	body = ast.Block(ast.PassStatement())
@@ -177,6 +216,42 @@ for_programmers(ast.FunctionNode(
 	}
 }"""
 
+# Explicit static typing
+# ---------------
+
+# Each function is required to fully specify the typeclasses of each arg and each
+# return value. There is no inference.
+
+# API and access control specifiers
+# ---------------------------------
+
+# There are no access specifiers (public, private, etc) in Fools. Instead we follow the
+# Python way: everything is public. Names that start with an underscore are intended
+# by their author to be implementation details. You can use them if you need to, but
+# must understand that you may then be impacted by innocent refactorings. So you should
+# avoid touching underscore variables whenever you don't mean to reach into some guts.
+
+# This works pretty well for the Python community. However, it is not enough for some
+# purposes. In particular, we would like to allow libraries to make backwards-compatability
+# guarantees. They need to be able to say "if you use this library correctly, then we
+# will not change its existing behavior lightly. And if we do, we'll give you a loud
+# warning and a migration path."
+
+# We use the @api decorator for this.
+
+# Simply decorate any class or function with @api to state that it is part of the
+# public surface. The testing and ship support tools are aware of this decorator. When
+# you do an official shipment of a particular library (you decide when a shipment
+# is official on a per-library basis), then the tool will record the set of @api
+# elements. The test framework support a validate_api test. Declare that you want
+# one of those, and it will ensure that you have never removed any @api elements
+# that have been shipped (you can add them).
+
+# This is not enough to verify that the semantics remain unchanged. However, it does
+# guarantee that code that depends on your library will still compile. If they choose
+# to allow binary upgrades, their code can use a newer version of your library without
+# even recompiling.
+
 # Universes and Fools
 # ------------------
 
@@ -187,17 +262,13 @@ for_programmers(ast.FunctionNode(
 
 # For declarations, you use a set of keywords that look and behave like the decorators
 # in minions. Thus, the following code compiles the same and runs the same in Minions and
-# in fools, but it is actually implemented slightly differently by the compiler.
+# in Fools even though it is parsed slightly differently by the compiler.
 
 @compile_time
 @with.minion.per_declaration()
 def List(item_type):
-	# This isn't optimal. It also has thread safety issues.
-	# Can we do a conditionally-locking read? Grab a read lock, and
-	# release it if we find a match. If not, await an upgrade to write. After each write,
-	# recheck those who are blocked (some might have unblocked), then release the next write.
-	# only go back to allowing readers once we've drained all those waiting to write.
-	# This is a common pattern. We should probably pull it out somewhere.
+	# This isn't optimal.
+	# It would have thread safety issues were it not single-threaded and async.
 	type_cache = List.universe.create_once(Cache(Type))
 	return.if_valid type_cache.look_up(item_type)
 	class ListNode:
@@ -217,11 +288,10 @@ def List(item_type):
 @with.universe.per_declaration(read)  # Not a separate minion. Share a universe across all calls to List. Only need read access (init is always allowed; the universe becomes read-only immediately after init)
 def List(item_type):
 	init:   # Runs once, the first time the method is called.
-		My.type_cache = Cache(Type)   # Define a universe-level variable, not just a local.
-	body:   # The main implementation of the function.
-		cache = reader/writer:   # Does a valid read/write lock implementation, such as the double-checked locking pattern. Compiler can choose any pattern that it thinks will be efficient.
+		type_cache = Dictionary(Type, Type)
+		My.cache = reader/writer:   # Does a valid read/write lock implementation, such as the double-checked locking pattern. Compiler can choose any pattern that it thinks will be efficient. Stores this to a universe-shared varaible, not just a local.
 			read:   # Executes with semantics equivalent to having a read lock. Some algorithms won't need any locking at all for this.
-				return type_cache.look_up(item_type)
+				return type_cache.look_up(item_type)    # Returns a Maybe<Type>
 			write:   # Executes with semantics equivalent to a write lock.
 				class ListNode:
 					item_type value
@@ -230,7 +300,31 @@ def List(item_type):
 				class ListWrapper:
 					ListNode first
 					ListNode last
+				return type_cache.store(item_type, ListWrapper)    # Returns the item stored.
+	body:   # The main implementation of the function.
+		return cache.read() ?? cache.write()    # The ?? operator coalesces a Maybe.
+
+# Same code without the comments. This is what you would typically see.
+
+
+@compile_time
+@with.universe.per_declaration(read)
+def List(item_type):
+	init:
+		type_cache = Dictionary(Type, Type)
+		My.cache = reader/writer:
+			read:
+				return type_cache.look_up(item_type)
+			write:
+				class ListNode:
+					item_type value
+					ListNode next
+					ListNode previous
+				class ListWrapper:
+					ListNode first
+					ListNode last
 				return type_cache.store(item_type, ListWrapper)
+	body:
 		return cache.read() ?? cache.write()
 
 # The multi-block form of a function def would also allow a "guard" block and a "verify" block. All non-supplied
@@ -300,6 +394,26 @@ comprehend.block python_exception_block:
 ###############################
 # Second, the full syntax in Minions:
 ###############################
+
+# Adds type inference
+# ---------------------
+
+# Functions can still state typeclasses for any args and returns for which
+# the want to be explicit. However, they can also not state the typeclass
+# for a particular arg/return in order to tell the compiler to infer
+# that type.
+
+# Inferred functions may actually generate multiple different implementations,
+# if they are called by callers which do not share typeclasses, but all of
+# which would result in a valid compile of the function. Not stating a type
+# is similar to (but with different resolution rules than) using a template
+# in C++. The compiler will attempt to minimize the number of function instances
+# that it emits, by using any declared typeclasses to unify as much as possible.
+
+# Note that there is not a binary format for an uncompiled function (at least,
+# not yet). Therefore all @api functions should be fully typed (no inference).
+# @api helps with this. It both designates a given function (or class) as explicitly
+# part of the API and ensures that all typing is explicit.
 
 # Adds support for decorators:
 # ------------------------
