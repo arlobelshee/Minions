@@ -1,7 +1,7 @@
 using System;
 using Fools.Utils;
 
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public class Argument : IEquatable<Argument>
 	{

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Fools.DotNet.Native;
+using Fools.Declaration.Native;
 
-namespace Fools.DotNet.Simulated
+namespace Fools.Declaration.Simulated
 {
 	internal class SimulatedNamespace : Namespace
 	{

@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using Fools.DotNet;
+﻿using Fools.Declaration;
 using Fools.Tests.Support;
 using NUnit.Framework;
 
-namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanExecuteCode
+namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanModelDeclarations
 {
 	[TestFixture]
 	public class CanDescribeContinuationSignatures

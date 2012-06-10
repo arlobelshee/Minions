@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Cci;
 using Microsoft.Cci.MutableCodeModel;
 
-namespace Fools.DotNet.Native
+namespace Fools.Declaration.Native
 {
 	public class NativeAssembly : TypeStore
 	{

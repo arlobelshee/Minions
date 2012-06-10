@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fools.DotNet.Simulated
+namespace Fools.Declaration.Simulated
 {
 	internal class SimulatedLibrary : TypeStore
 	{

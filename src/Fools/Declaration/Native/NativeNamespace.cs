@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Cci.MutableCodeModel;
 
-namespace Fools.DotNet.Native
+namespace Fools.Declaration.Native
 {
 	internal class NativeNamespace : Namespace
 	{

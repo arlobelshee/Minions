@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public abstract class TypeStore
 	{

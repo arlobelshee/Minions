@@ -1,5 +1,5 @@
 using System;
-using Fools.DotNet;
+using Fools.Declaration;
 
 namespace Fools.Tests.Support
 {

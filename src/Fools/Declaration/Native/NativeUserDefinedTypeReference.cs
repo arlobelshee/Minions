@@ -1,6 +1,6 @@
 using Microsoft.Cci;
 
-namespace Fools.DotNet.Native
+namespace Fools.Declaration.Native
 {
 	internal class NativeUserDefinedTypeReference : UserDefinedType
 	{

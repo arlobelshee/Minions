@@ -1,4 +1,4 @@
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public class Definition
 	{

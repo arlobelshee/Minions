@@ -1,4 +1,4 @@
-namespace Fools.DotNet.Simulated
+namespace Fools.Declaration.Simulated
 {
 	public class SimulatedCompiler : Compiler
 	{

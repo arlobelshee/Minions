@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Fools.DotNet;
-using Fools.DotNet.Native;
+using Fools.Declaration;
+using Fools.Declaration.Native;
 using Microsoft.Cci;
 using NUnit.Framework;
 
-namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanExecuteCode
+namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNativePlatformsCanModelDeclarations
 {
 	[TestFixture]
-	public class CanMakeAPlaceToMakeContinuationsAndUdts
+	public class CanMakeAPlaceToStoreDeclarations
 	{
 		private const string _DEFAULT_NAMESPACE = "Fools.TestNamespace";
 		private const string _ARBITRARY_NAME = "subnamespace";
@@ -62,7 +62,7 @@ namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.BothInMemoryAndNat
 	}
 
 	[Explicit]
-	public class CanMakeAPlaceToMakeContinuationsAndUdtsNative : CanMakeAPlaceToMakeContinuationsAndUdts
+	public class CanMakeAPlaceToStoreDeclarationsNative : CanMakeAPlaceToStoreDeclarations
 	{
 		[Test]
 		public void native_library_should_create_type_for_module()

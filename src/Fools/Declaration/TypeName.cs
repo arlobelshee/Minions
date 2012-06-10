@@ -1,6 +1,6 @@
 using System;
 
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public class TypeName
 	{

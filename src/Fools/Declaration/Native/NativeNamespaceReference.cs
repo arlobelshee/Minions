@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Cci;
 
-namespace Fools.DotNet.Native
+namespace Fools.Declaration.Native
 {
 	internal class NativeNamespaceReference : Namespace
 	{

@@ -1,7 +1,7 @@
-using Fools.DotNet.Native;
-using Fools.DotNet.Simulated;
+using Fools.Declaration.Native;
+using Fools.Declaration.Simulated;
 
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public static class DotNetCode
 	{

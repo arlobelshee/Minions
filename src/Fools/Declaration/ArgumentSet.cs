@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Fools.Utils;
 
-namespace Fools.DotNet
+namespace Fools.Declaration
 {
 	public class ArgumentSet : IEquatable<ArgumentSet>
 	{
