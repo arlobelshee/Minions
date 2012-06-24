@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanModelDeclarations\CanDescribeContinuationSignatures.cs" />
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanModelDeclarations\CanMakeAPlaceToStoreDeclarations.cs" />
+    <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\ExecutionEngineCanExecuteFrames.cs" />
     <Compile Include="Support\TestData.cs" />
     <Compile Include="Support\TestUdt.cs" />
     <Compile Include="Basic recognition\BlockAndStatementParsing.cs" />
@@ -148,7 +149,6 @@
   <ItemGroup>
     <Folder Include="AssemblyModelCanExecuteOrEmitDotNetCode\CreateRuntimeSimulatorCallsFromEitherKindOfDeclarations\" />
     <Folder Include="AssemblyModelCanExecuteOrEmitDotNetCode\NativePlatformCanEmitAssemblies\" />
-    <Folder Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
