@@ -121,6 +121,9 @@
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanModelDeclarations\CanDescribeContinuationSignatures.cs" />
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\BothInMemoryAndNativePlatformsCanModelDeclarations\CanMakeAPlaceToStoreDeclarations.cs" />
     <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\ExecutionEngineCanExecuteFrames.cs" />
+    <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\FoolInterpreter.cs" />
+    <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\ReadOnlyVoidFrame.cs" />
+    <Compile Include="AssemblyModelCanExecuteOrEmitDotNetCode\SimualtorExecutesFools\WriteOnlyRecordingVoidFrame.cs" />
     <Compile Include="Support\TestData.cs" />
     <Compile Include="Support\TestUdt.cs" />
     <Compile Include="Basic recognition\BlockAndStatementParsing.cs" />

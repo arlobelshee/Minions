@@ -1,10 +1,63 @@
-﻿using NUnit.Framework;
+﻿using Fools.Declaration.Simulated;
+using Fools.Platform;
+using NUnit.Framework;
 
 namespace Fools.Tests.AssemblyModelCanExecuteOrEmitDotNetCode.SimualtorExecutesFools
 {
 	[TestFixture]
 	public class ExecutionEngineCanExecuteFrames
 	{
+		[Test]
+		public void execute_frame_that_has_no_subsequent_work_to_do()
+		{
+			// create a function declaration (no-op body).
+			var no_op_fn =
+				new SimulatedCompiler().new_library("testy").default_namespace.ensure_continuation_definition_exists("no.op");
+
+			// Create an execution engine (interpreter).
+			var interpreter = new FoolInterpreter();
+
+			// Create a bound continuation from the declaration.
+			var call = interpreter.load(no_op_fn);
+
+			// Create input and output frames that match this continuation.
+			var inputs = new ReadOnlyVoidFrame();
+			var outputs = new WriteOnlyRecordingVoidFrame();
+			var universes = new Universe[0];
+
+			// Execute the continuation on those inputs and outputs.
+			interpreter.interpret(call, universes, inputs, outputs);
+
+			// Nothing should happen.
+		}
+
+		[Test]
+		public void execute_increment_on_value_and_return_result()
+		{
+			//// create a function declaration (no-op body).
+			//var increment_function =
+			//   new SimulatedCompiler().new_library("testy").default_namespace.ensure_continuation_definition_exists("increment");
+			//increment_function.body(...);
+			//increment_function.inputs(typeof(int));
+			//increment_function.outputs(typeof(int));
+
+			//// Create an execution engine (interpreter).
+			//var interpreter = new FoolInterpreter();
+
+			//// Create a bound continuation from the declaration.
+			//var call = interpreter.load(increment_function);
+
+			//// Create input and output frames that match this continuation.
+			//var inputs = new ReadOnlyFrame<int>(6);
+			//var outputs = new WriteOnlyRecordingFrame<int>();
+			//var universes = new Universe[0];
+
+			//// Execute the continuation on those inputs and outputs.
+			//interpreter.interpret(call, universes, inputs, outputs);
+
+			//outputs.positional_value(0).Should().Be(7);
+		}
+
 		[Test, Ignore]
 		public void frames_execute_and_return_the_next_frame_to_execute()
 		{

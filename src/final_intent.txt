@@ -104,3 +104,37 @@ The closure nature of these explicit futures can probably be hidden from the lan
 
 The low-level execution model doesn't need most of the language constructs. It doesn't need type safety (already checked). It doesn't need functions, really - just instruction sequences & a global symbol table. Function refs should probably be symbolic, even though that causes perf penalties. Intern all those strings and we're good enough - back to pointer comparisons at that point. We can probably just use the default function implementation of the underlying platform. We transform a minions function and its continuation-based all into a function that takes args: frame instance, args instance (flyweight the void case), returns instance (same flyweight), and perhaps a global symbol table (perhaps can do without). Transform all minions calls into appropriate calls to these functions. Crazy enough that it just might work - and with good perf if it does. The function may also need to take or return something that allows me to do CPS. I'd like to handle full co-routines, so need to have the data to allow the function to effectively yield and resume (though that could be managed by compiling such a function into multiple functions and dispatching between them as needed).
 
+
+
+
+def hello_world():
+	a = "world"
+	print("Hello #{a}".format(locals()))
+	return "bob"
+
+class DoneCare
+{
+	public static IEnumerable<Call> hello_world_1(IEnumerable<Universes> universes, Frame<> inputs, Frame<string> ouputs)
+	{
+		outputs[0] = new Variable<string>("a", "world");
+		return new[] { new Call(builtin._beginPrint, outputs, hello_world_2) };
+	}
+
+	public static IEnumerable<Call> hello_world_2(IEnumerable<Universes> universes, Frame<> inputs, Frame<string> ouputs)
+	{
+		outputs[0] = new Variable<string>("", "bob");
+		return new []{};
+	}
+}
+
+var hello_world_1 = function(universes, inputs, ouputs)
+{
+	outputs[0] = new Variable("a", "world");
+	return [new Call(builtin._beginPrint, outputs, hello_world_2)];
+}
+
+var hello_world_2 = function(universes, inputs, ouputs)
+{
+	outputs[0] = new Variable("", "bob");
+	return new Array[0];
+}
