@@ -25,7 +25,7 @@ namespace Fools.Tests
 			// on LLVM for other platforms (if necessary, eventually).
 
 		/*
-		 var minion = new Fool();
+		 var minion = new Minion();
 			var code = new Scope(max_stack_depth:2);
 			code.commands.add.load_universe(Universe.FOOL_DEFAULT);
 			var variable_value = new FoolString("hello");

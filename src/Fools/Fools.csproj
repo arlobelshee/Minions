@@ -152,6 +152,13 @@
     <Compile Include="Model\Execution\FunctionCall.cs" />
     <Compile Include="Model\Static\StackFrame.cs" />
     <Compile Include="Model\Execution\VariableGroup.cs" />
+    <Compile Include="Platform\Message.cs" />
+    <Compile Include="Platform\Minion.cs" />
+    <Compile Include="Platform\MinionCommandCenter.cs" />
+    <Compile Include="Platform\Output.cs" />
+    <Compile Include="Platform\Rope.cs" />
+    <Compile Include="Platform\Sequence.cs" />
+    <Compile Include="Platform\UniverseAwareScheduler.cs" />
     <Compile Include="Utils\Require.cs" />
     <Compile Include="Compilation\Generation\CodeUnit.cs" />
     <Compile Include="Compilation\Generation\MethodBuilder.cs" />
