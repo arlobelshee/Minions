@@ -1,0 +1,8 @@
+use language Minimal
+
+def my_function(input):
+	return "hello " + for.programmers(input)
+
+@minion
+def hello_monster():
+	print(my_function(3))
