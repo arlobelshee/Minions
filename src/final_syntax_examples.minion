@@ -438,11 +438,11 @@ circuit Clock:
 # invocations (for runtime DSLs), or anywhere else you might ivoke compilation.
 
 project contents:
-	file group circuits:
+	circuits file group:
 		src/**/*.circuit
-	file group minions:
+	minions file group:
 		src/**/*.minion
-	file group resources:
+	resources file group:
 		images/**/*.*
 		javascript/**/*.js
 		css/**/*.css
