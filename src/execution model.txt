@@ -1,0 +1,31 @@
+Execution Model
+--------------------
+
+The program provides Missions to be performed and instructions about how to perform those Missions. The runtime then allocates Fools/Minions to handle those Missions.
+
+A Minion is the unit of work/execution. Each Minion performs one Mission at a time - even if it is blocked waiting for something. Minions are inherently lazy and thus very good at waiting. Minions are also cheap to hire. Mission Control can create as many Minions as needed, even giving the same Mission to multiple different Minions (depending on the Mission Briefing).
+
+Missions typically need to be performed by Minions with certain knowledge and permissions. This is designated in terms of Universes. Each Universe is a set of data (related objcts) that is accessed as a whole. Missions can require know, manipulate, or operate-in access to a Universe (read, write, and read-write for those of you who don't speak Minion). Minions are granted those permissions when they take on a Mission Activity; reader/writer lock rules apply. This is all defined in the Mission Briefing.
+
+Information can be transferred between Universes only by value. Data in distinct Universes can never refer to each other. Many Missions will involve destroying Universes; this must not disrupt the Missions being performed in other Universes. This by-value information exchange may be optimized by the simulator (e.g., to use copy on write with transfer on destruction), but that optimization must be entirely unobservable from the perspective of any Minion.
+
+Each Minion also has its own local knowledge. It lives in its own Universe. This Universe, however, is a little different: no other Minion can read it (no mind reading) or perform missions there (no mind control). As such, it can safely reference information held in other Universes.
+
+When a Universe is destroyed, all Minions performing Mission Activities there are immediatley killed (aka, anyone operating in that Universe). So are any Minions that ever attempt to access information from that Universe. Minions that simply have knowledge of the destroyed Universe are not killed - not until they attempt to use that knowledge to get data. Minions simply manipulating a destroyed Universe are not killed. The attempted manipulation simply has no effect.
+
+The Mission Briefing contains everything that Mission Control needs to send Minions on Missions.
+	* Mission Objective. How to know when a Mission is completed and the Minion performing it can be killed (all Minions are always killed after performing their Missions).
+	* Permission information. What Universes the Minions will be aware of or operating in.
+	* Mission Instructions. How to carry out the mission.
+	* Resource Constraints. Information on whether this Mission should be performed by a fixed number of Minions or by an endless sea of Minions, spending limits for Minions on a per-Assignment basis, plus any other constraints that apply.
+	* How to clean up after a Minion that died failing to carry out a Mission. This could be due to an unexpected circumstance (error) in the field, or could be because Mission Control sent an assassin after him (e.g., during process shutdown). Cleanup is simply another Mission, though typically a very simple one.
+
+Mission Instructions are defined in terms of Messages and Assignments.
+
+A Message is a signal that can be sent and received. Typically a message will trigger other actions, in response to other standing Missions. However, there is no guarantee of action by other Minions. A Message is simply sent back to Mission Control or to all Minions currently handling a particular Mission. It might not result in any action.
+
+An Assignment is a well-defined set of work. It is represented at execution time as a delimited continuation (which may well be a chain of smaller continuations) ovr a sequence of instructions. It is represented in the language as some higher-level construct (typically a function/method, but possibly a generator, co-routine, or something else).
+
+Each Minion is required to check in with Mission Control to get each Assignment in its Mission. Mission Control then ensures that the Minion does not exceed any spending limits during performance of that Mission. A Minion that exceeds any limit is immediately punished with assassination. A new Minion may be hired to continue or re-start the Mission or the Mission may be declared a failure, depending on information in the spending limits of the Mission Briefing.
+
+Assignments need not be finite: Evil Overlords send Minions on hopeless Missions all the time. However, a Minion on infinite Assignment must still check in with Mission Control periodically, or it will exceed its budget and be assassinated.

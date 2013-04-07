@@ -1,0 +1,21 @@
+Stuff about compiler structure
+------------------------------------
+
+1. Nanopass compiler, like pegasus. But use conditions instead of errors.
+	* Condition can be in one of 3 states: unknown, true, false.
+	* Passes require conditions be true in order to run.
+	* Passes can depend directly on other passes (e.g., compile code down into something that another pass can compile). In that case, they inject a blocking condition into the other pass of the form "<new pass> has been run."
+	* Condition IDs are namespaced. Of form ":com.example:namespace:namespace:some user readable condition name". There is one known alias: ":gh:<github username>:condition name". For example, all the language core stuff will look like ":gh:minions:whatever condition".
+
+2. Compiler is just one tool that wants language analysis. So there is a standard language analysis pipeline.
+	* 3 phases: parse, understand, simplification. Each tool plugs in as a consumer of one of these steps (usually after undersand or simplify).
+		* Parse: transform the text into an AST. Decorate it with any errors you can find just from the text.
+		* Understand: decorate the AST with more information. Find semantic errors. Also extend semantic knowledge. For example, do type resolution and add that info to the tree.
+		* Simplify: transform the AST into an execution model. Strip out higher-level constructs. Simplification might fail locally, but should always succeed globally. If there is a problem in one section of the AST, it should handle all other sections of the AST. This is important for tools that want to understand the execution model perspective of code that is in the process of being written. However, simplification should never add new errors or info to the tree. All such activities should be performed during understanding. If a section of the tree exits understanding without error nodes, then simplification is guaranteed to succeed for that section.
+	* Therefore, understanding and parsing insert any errors directly into the AST: all code always parses and produces an AST.
+	* A given tool (such as a code generator) may choose to abort on some input (say, a tree with fatal errors in it). But other tools (such as a code visualizer) need to handle that input successfully.
+
+3. Extension is via type classes.
+	* When declaring a new language feature, the block comprehension covers only the operations in the phases.
+	* Tools actions are specified via type classes on the types that appear in the trees they take as input (usually either the post-understanding AST or the post-simplification AST).
+
