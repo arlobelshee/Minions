@@ -65,7 +65,7 @@
     <Compile Include="Interpretation\Interpreter.cs" />
     <Compile Include="Interpretation\Maybe.cs" />
     <Compile Include="Interpretation\Require.cs" />
-    <Compile Include="Interpretation\Universe.cs" />
+    <Compile Include="Interpretation\Building.cs" />
     <Compile Include="Parsing\FindBlocksAndLines.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\StackJanitor.cs" />

@@ -8,7 +8,7 @@ namespace Fools.cs.Tests.Interpretation
 	public class Interpreter : IDisposable
 	{
 		private readonly FoolsLanguageApi _fools;
-		private readonly List<Universe> _universes = new List<Universe>();
+		private readonly List<Building> _universes = new List<Building>();
 		private readonly List<Fool> _active_fools = new List<Fool>();
 		private readonly TaskFactory _task_source;
 
@@ -31,13 +31,9 @@ namespace Fools.cs.Tests.Interpretation
 			return _task_source.ContinueWhenAll(_active_fools.Select(f => f.stop()).ToArray(), (results) => { });
 		}
 
-		internal void remember(Universe universe)
+		internal void remember(Building building)
 		{
-			_universes.Add(universe);
-		}
-
-		internal void fool_always_requires(Fool who, Universe what_data, Universe.Access access_level)
-		{
+			_universes.Add(building);
 		}
 
 		internal void begin_scheduling(Fool who)
@@ -48,6 +44,11 @@ namespace Fools.cs.Tests.Interpretation
 		internal Task create_task()
 		{
 			return _task_source.StartNew(() => { });
+		}
+
+		public void execute()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

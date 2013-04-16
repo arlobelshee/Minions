@@ -1,3 +1,5 @@
+using System;
+
 namespace Fools.cs.Tests.Interpretation
 {
 	public class FoolsLanguageApi
@@ -9,17 +11,19 @@ namespace Fools.cs.Tests.Interpretation
 			_interpreter = interpreter;
 		}
 
-		public Universe create_universe()
+		public Building create_building()
 		{
-			return new Universe(_interpreter);
+			return new Building(_interpreter);
 		}
 
-		public Fool create_fool_in(Universe universe)
+		public Mission define_mission(
+			string name,
+			BuildingAccess[] whole_mission_locations,
+			Mission.CompletionCriterion mission_is_done,
+			ResourceBudget whole_mission_budget,
+			Cleanup cleanup)
 		{
-			var result = new Fool(_interpreter);
-			_interpreter.fool_always_requires(result, universe, Universe.Access.ReadWrite);
-			_interpreter.begin_scheduling(result);
-			return result;
+			throw new NotImplementedException();
 		}
 	}
 }
