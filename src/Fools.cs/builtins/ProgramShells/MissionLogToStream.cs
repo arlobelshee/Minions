@@ -13,10 +13,10 @@ namespace Fools.cs.builtins.ProgramShells
 	{
 		public static IEnumerable<MessageSubscription> interesting_messages()
 		{
-			return new[] {MessageSubscription.to<Write__Normal>(send_message)};
+			return new[] {MessageSubscription.to<WriteToLog>(send_message)};
 		}
 
-		public static void send_message(Write__Normal message)
+		public static void send_message(WriteToLog message)
 		{
 			throw new NotImplementedException();
 		}

@@ -19,7 +19,7 @@ namespace Fools.cs.Tests.Platform
 		{
 			var subscriptions = MissionLogToStream.interesting_messages();
 			subscriptions.Should()
-				.Contain(MessageSubscription.to<Write__Normal>(MissionLogToStream.send_message));
+				.Contain(MessageSubscription.to<WriteToLog>(MissionLogToStream.send_message));
 		}
 	}
 }
