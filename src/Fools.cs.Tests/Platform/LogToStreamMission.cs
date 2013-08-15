@@ -3,6 +3,7 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
+using System.IO;
 using FluentAssertions;
 using Fools.cs.builtins;
 using Fools.cs.builtins.ProgramShells;
@@ -20,6 +21,13 @@ namespace Fools.cs.Tests.Platform
 			var subscriptions = MissionLogToStream.interesting_messages();
 			subscriptions.Should()
 				.Contain(MessageSubscription.to<WriteToLog>(MissionLogToStream.send_message));
+		}
+
+		[Test]
+		public void normal_level_messages_should_be_written_by_default()
+		{
+			var destination = new MemoryStream();
+			var test_subject = new MissionLogToStream();
 		}
 	}
 }

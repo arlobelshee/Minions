@@ -3,13 +3,8 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using FluentAssertions;
 using Fools.cs.Api;
-using Fools.cs.Utilities;
 using Fools.cs.messages;
 using NUnit.Framework;
 
