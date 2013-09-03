@@ -26,6 +26,45 @@
 	<member name="M:FluentAssertions.AssertionExtensions.ShouldNotThrow(System.Action,System.String,System.Object[])">
 		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
 	</member>
+	<member name="M:FluentAssertions.Specialized.ActionAssertions.ShouldThrow``1(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Specialized.ActionAssertions.ShouldNotThrow``1(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Specialized.ActionAssertions.ShouldNotThrow(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldThrow``1(System.Action,System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldNotThrow``1(System.Action,System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldNotThrow(System.Action,System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldThrow``1(System.Func{System.Threading.Tasks.Task},System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldNotThrow``1(System.Func{System.Threading.Tasks.Task},System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.ExceptionExtensionsNet40.ShouldNotThrow(System.Func{System.Threading.Tasks.Task},System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Specialized.AsyncFunctionAssertions.ShouldThrow``1(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Specialized.AsyncFunctionAssertions.ShouldNotThrow(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Specialized.AsyncFunctionAssertions.ShouldNotThrow``1(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="P:FluentAssertions.Specialized.AsyncFunctionAssertions.Subject">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
 	<member name="M:FluentAssertions.AssertionExtensions.Should(System.Boolean)">
 		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
 	</member>
