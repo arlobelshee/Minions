@@ -35,7 +35,7 @@ namespace Fools.cs.Tests.Compilation
 					local_passes(new AppendToName("is a dog", conditions(), conditions("species identified")),
 						new AppendToName("that runs fast", conditions("species identified"), conditions())),
 					global_passes());
-			var result = test_subject.compile(ProgramFragment.with_declarations(data);
+			var result = test_subject.compile(ProgramFragment.with_declarations(data));
 			data.feature.Should()
 				.Be("This minion");
 			result.declarations.Single()
