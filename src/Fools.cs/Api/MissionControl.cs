@@ -38,6 +38,7 @@ namespace Fools.cs.Api
 		{
 			_cancellation.Cancel();
 			_cancellation.Dispose();
+			_overlord_throne.Dispose();
 		}
 
 		public void send_out_fools_to<TLab>([NotNull] MissionDescription<TLab> mission) where TLab : class

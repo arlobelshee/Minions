@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Fools.cs.Utilities
 {
-	public abstract class WaitableCounter
+	public abstract class WaitableCounter : IDisposable
 	{
 		[NotNull]
 		public static WaitableCounter starting_at(int initial_value)
@@ -66,6 +66,11 @@ namespace Fools.cs.Utilities
 			{
 				return _is_signaled.IsSet;
 			}
+
+			public override void Dispose()
+			{
+				_is_signaled.Dispose();
+			}
 		}
 
 		private class NonCountingCounter : WaitableCounter
@@ -83,6 +88,10 @@ namespace Fools.cs.Utilities
 			{
 				return true;
 			}
+
+			public override void Dispose() {}
 		}
+
+		public abstract void Dispose();
 	}
 }

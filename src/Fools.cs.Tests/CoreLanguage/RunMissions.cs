@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace Fools.cs.Tests.CoreLanguage
 {
 	[TestFixture]
-	public class RunMissions
+	public class RunMissions : IDisposable
 	{
 		[Test]
 		public void mission_control_should_spawn_missions_parts_when_spawn_messages_arrive()
@@ -141,6 +141,11 @@ namespace Fools.cs.Tests.CoreLanguage
 				_orcs.Count.Should()
 					.Be(0);
 			}
+		}
+
+		public void Dispose()
+		{
+			_all_orcs_are_sent.Dispose();
 		}
 	}
 

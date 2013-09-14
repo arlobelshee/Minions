@@ -32,9 +32,11 @@ namespace Fools.cs.Api
 		[NotNull]
 		public Program result { get { return _result; } }
 
-		public void compile([NotNull] ProgramFragment data)
+		[NotNull]
+		public Program compile([NotNull] ProgramFragment data)
 		{
 			_result = _result.merge(_process(data, _local_passes));
+			return _result;
 		}
 
 		[NotNull]

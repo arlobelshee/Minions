@@ -3,12 +3,13 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
+using System;
 using System.Threading;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public class OverlordThrone
+	public class OverlordThrone : IDisposable
 	{
 		private AppErrorLevel _result = AppErrorLevel.Ok;
 		[NotNull] private readonly ManualResetEventSlim _program_complete = new ManualResetEventSlim(false);
@@ -31,6 +32,16 @@ namespace Fools.cs.Api
 		{
 			lab._result = message.result;
 			lab._program_complete.Set();
+		}
+
+		public void Dispose()
+		{
+			if (!_program_complete.IsSet)
+			{
+				_result = AppErrorLevel.Unknown;
+				_program_complete.Set();
+			}
+			_program_complete.Dispose();
 		}
 	}
 }
