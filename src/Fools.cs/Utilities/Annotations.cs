@@ -490,6 +490,22 @@ namespace Fools.cs.Utilities
 	}
 
 	/// <summary>
+	/// This attribute is intended to mark interfaces which are used for mocking in TDA-style code.
+	/// </summary>
+	[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+	[PublicAPI]
+	public sealed class UsedForMockingAttribute : Attribute
+	{
+		public string comment { get; private set; }
+
+		public UsedForMockingAttribute() { }
+		public UsedForMockingAttribute(string comment)
+		{
+			this.comment = comment;
+		}
+	}
+
+	/// <summary>
 	/// Tells code analysis engine if the parameter is completely handled when the invoked method is on stack. 
 	/// If the parameter is a delegate, indicates that delegate is executed while the method is executed.
 	/// If the parameter is an enumerable, indicates that it is enumerated while the method is executed.

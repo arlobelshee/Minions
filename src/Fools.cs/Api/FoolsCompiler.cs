@@ -7,40 +7,31 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using Fools.cs.AST;
 using Fools.cs.TransformAst;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
 	[PublicAPI]
-	public class FoolsCompiler
+	public class FoolsCompiler<T> where T : class
 	{
-		[NotNull] private readonly ReadOnlyCollection<NanoPass<ProgramFragment>> _local_passes;
-		[NotNull] private readonly ReadOnlyCollection<NanoPass<Program>> _global_passes;
-		[NotNull] private Program _result = Program.empty();
+		[NotNull] private readonly ReadOnlyCollection<NanoPass<T>> _local_passes;
 
-		public FoolsCompiler([NotNull] ReadOnlyCollection<NanoPass<ProgramFragment>> local_passes,
-			[NotNull] ReadOnlyCollection<NanoPass<Program>> global_passes)
+		public FoolsCompiler([NotNull] ReadOnlyCollection<NanoPass<T>> local_passes)
 		{
 			_local_passes = local_passes;
-			_global_passes = global_passes;
 		}
 
-		public FoolsCompiler() : this(NanoPass<ProgramFragment>.all, NanoPass<Program>.all) {}
+		public FoolsCompiler() : this(NanoPass<T>.all) {}
 
 		[NotNull]
-		public Program result { get { return _result; } }
-
-		[NotNull]
-		public Program compile([NotNull] ProgramFragment data)
+		public T compile([NotNull] T data)
 		{
-			_result = _result.merge(_process(data, _local_passes));
-			return _result;
+			return _process(data, _local_passes);
 		}
 
 		[NotNull]
-		private static T _process<T>([NotNull] T data, [NotNull] ReadOnlyCollection<NanoPass<T>> passes)
+		private static T _process([NotNull] T data, [NotNull] ReadOnlyCollection<NanoPass<T>> passes)
 		{
 			var current_state = new NonNullList<AstStateCondition>();
 			var remaining_passes = passes;
@@ -60,10 +51,8 @@ namespace Fools.cs.Api
 					throw new InvalidOperationException(
 						"Compilation will never finish. There are remaining passes to execute, but none of them can be executed as none have all their conditions met. Please fix your set of passes.");
 				}
-				var new_data = ready_passes.Aggregate(data, apply_one_pass<T>(current_state));
-				// ReSharper disable CompareNonConstrainedGenericWithNull
+				var new_data = ready_passes.Aggregate(data, apply_one_pass(current_state));
 				Debug.Assert(new_data != null, "new_data != null");
-				// ReSharper restore CompareNonConstrainedGenericWithNull
 				data = new_data;
 				remaining_passes = remaining_passes.Where(p => !ready_passes.Contains(p))
 					.ToList()
@@ -73,13 +62,11 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		private static Func<T, NanoPass<T>, T> apply_one_pass<T>([NotNull] NonNullList<AstStateCondition> current_state)
+		private static Func<T, NanoPass<T>, T> apply_one_pass([NotNull] NonNullList<AstStateCondition> current_state)
 		{
 			return (current, pass) => {
 				Debug.Assert(pass != null, "pass != null");
-				// ReSharper disable CompareNonConstrainedGenericWithNull
 				Debug.Assert(current != null, "current != null");
-				// ReSharper restore CompareNonConstrainedGenericWithNull
 				return pass.run(current, current_state.Add);
 			};
 		}

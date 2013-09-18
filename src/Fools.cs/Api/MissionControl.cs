@@ -11,7 +11,7 @@ using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public class MissionControl : IDisposable
+	public class MissionControl : IDisposable, MissionLocation
 	{
 		[NotNull] private readonly TaskFactory _task_factory;
 		[NotNull] private readonly CancellationTokenSource _cancellation;
@@ -41,7 +41,7 @@ namespace Fools.cs.Api
 			_overlord_throne.Dispose();
 		}
 
-		public void send_out_fools_to<TLab>([NotNull] MissionDescription<TLab> mission) where TLab : class
+		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission) where TLab : class
 		{
 			_postal_carrier.do_work(
 				mail_room => mission.spawning_messages.each(message_type => // ReSharper disable PossibleNullReferenceException
@@ -53,7 +53,7 @@ namespace Fools.cs.Api
 				_noop);
 		}
 
-		public void announce([NotNull] MailMessage what_happened)
+		public void announce(MailMessage what_happened)
 		{
 			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
 				mail_room
@@ -85,11 +85,11 @@ namespace Fools.cs.Api
 			[NotNull] MailMessage constructor_message) where TLab : class
 		{
 			var fool = new Fool<TLab>(_create_starting_task(), mission.make_lab());
-			execute_fool_ctor(mission, done_creating_fool, constructor_message, fool);
-			subscribe_handlers_for_rest_of_mission(mission, fool);
+			_execute_fool_ctor(mission, done_creating_fool, constructor_message, fool);
+			_subscribe_handlers_for_rest_of_mission(mission, fool);
 		}
 
-		private static void execute_fool_ctor<TLab>([NotNull] MissionDescription<TLab> mission,
+		private static void _execute_fool_ctor<TLab>([NotNull] MissionDescription<TLab> mission,
 			[NotNull] Action done_creating_fool,
 			[NotNull] MailMessage constructor_message,
 			[NotNull] Fool<TLab> fool) where TLab : class
@@ -99,7 +99,7 @@ namespace Fools.cs.Api
 			else fool.process_message(constructor_impl.Value, constructor_message, done_creating_fool);
 		}
 
-		private void subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
+		private void _subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
 			[NotNull] Fool<TLab> fool) where TLab : class
 		{
 			_postal_carrier.upon_completion_of_this_task(
