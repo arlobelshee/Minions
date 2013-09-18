@@ -250,7 +250,7 @@ namespace Fools.cs.Utilities
 	/// <item>Value    ::= true | false | null | notnull | canbenull</item>
 	/// </list>
 	/// If method has single input parameter, it's name could be omitted. <br/>
-	/// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output means that the methos doesn't return normally. <br/>
+	/// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output means that the method doesn't return normally. <br/>
 	/// <c>canbenull</c> annotation is only applicable for output parameters. <br/>
 	/// You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute with rows separated by semicolon. <br/>
 	/// </syntax>
@@ -364,6 +364,7 @@ namespace Fools.cs.Utilities
 	/// so this symbol will not be marked as unused (as well as by other usage inspections)
 	/// </summary>
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
+	[PublicAPI]
 	public sealed class UsedImplicitlyAttribute : Attribute
 	{
 		[UsedImplicitly]
@@ -396,6 +397,7 @@ namespace Fools.cs.Utilities
 	/// to not mark symbols marked with such attributes as unused (as well as by other usage inspections)
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	[PublicAPI]
 	public sealed class MeansImplicitUseAttribute : Attribute
 	{
 		[UsedImplicitly]
@@ -493,6 +495,7 @@ namespace Fools.cs.Utilities
 	/// This attribute is intended to mark interfaces which are used for mocking in TDA-style code.
 	/// </summary>
 	[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+	[AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
 	[PublicAPI]
 	public sealed class UsedForMockingAttribute : Attribute
 	{
@@ -530,7 +533,7 @@ namespace Fools.cs.Utilities
 	/// public void Foo()
 	/// {
 	///   const int a=2, b=2;
-	///   Multiply(a, b); // Waring: Return value of pure method is not used
+	///   Multiply(a, b); // Warning: Return value of pure method is not used
 	/// }
 	/// </code>
 	/// </example>

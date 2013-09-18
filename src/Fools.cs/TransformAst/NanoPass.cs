@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Fools.cs.Utilities;
@@ -28,9 +27,8 @@ namespace Fools.cs.TransformAst
 					// ReSharper disable PossibleNullReferenceException
 					var constructor = t.GetConstructor(new Type[] {});
 					// ReSharper restore PossibleNullReferenceException
-					Debug.Assert(constructor != null,
-						"Programmmer error: NanoPasses are required to have default constructors.",
-						"{0} is missing a default constructor. Please add one.",
+					ProgrammerError.report_if(constructor != null,
+						"NanoPasses are required to have default constructors. {0} is missing a default constructor. Please add one.",
 						t.FullName);
 					return (NanoPass<TTarget>) constructor.Invoke(new object[] {});
 				})
@@ -48,12 +46,10 @@ namespace Fools.cs.TransformAst
 
 		[NotNull]
 		// ReSharper disable ReturnTypeCanBeEnumerable.Global
-		public ReadOnlyCollection<AstStateCondition> requires
+		public ReadOnlyCollection<AstStateCondition> requires // ReSharper restore ReturnTypeCanBeEnumerable.Global
 		{
 			get { return _requires; }
 		}
-
-		// ReSharper restore ReturnTypeCanBeEnumerable.Global
 
 		[NotNull]
 		public abstract TTarget run([NotNull] TTarget data, [NotNull] Action<AstStateCondition> add_condition);

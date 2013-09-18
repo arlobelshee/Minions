@@ -127,6 +127,7 @@
     <Compile Include="Api\MissionLocation.cs" />
     <Compile Include="Api\OverlordThrone.cs" />
     <Compile Include="Api\CommandLineApp\UniversalCommands.cs" />
+    <Compile Include="Utilities\ProgrammerError.cs" />
     <Compile Include="Utilities\WaitableCounter.cs" />
     <Compile Include="Utilities\LinqExtensions.cs" />
     <Compile Include="Utilities\NonNullDictionary.cs" />
