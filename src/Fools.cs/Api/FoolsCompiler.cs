@@ -29,28 +29,41 @@ namespace Fools.cs.Api
 		[NotNull]
 		public T compile([NotNull] T data)
 		{
-			while (_local_passes.Count > 0)
+			while (compilation_requires_more_work())
 			{
-				var ready_passes = _local_passes.Where(p => {
-					Debug.Assert(p != null, "p != null");
-					return p.requires.Aggregate(true,
-						(prev, cond) => {
-							Debug.Assert(cond != null, "cond != null");
-							return prev && _current_state.Contains(cond);
-						});
-				})
-					.ToList();
-				if (ready_passes.Count == 0)
-				{
-					throw new InvalidOperationException(
-						"Compilation will never finish. There are remaining passes to execute, but none of them can be executed as none have all their conditions met. Please fix your set of passes.");
-				}
-				var new_data = ready_passes.Aggregate(data, apply_one_pass(_current_state));
-				Debug.Assert(new_data != null, "new_data != null");
-				data = new_data;
-				_local_passes.RemoveAll(ready_passes.Contains);
+				data = compile_one_step(data);
 			}
 			return data;
+		}
+
+		public bool compilation_requires_more_work()
+		{
+			return _local_passes.Count > 0;
+		}
+
+		[NotNull]
+		public T compile_one_step([NotNull] T data)
+		{
+			var ready_passes = _local_passes.Where(all_preconditions_are_satisfied)
+				.ToList();
+			if (ready_passes.Count == 0)
+			{
+				throw new InvalidOperationException(
+					"Compilation will never finish. There are remaining passes to execute, but none of them can be executed as none have all their conditions met. Please fix your set of passes.");
+			}
+			var new_data = ready_passes.Aggregate(data, apply_one_pass(_current_state));
+			ProgrammerError.report_if(new_data != null,
+				"Result of a compilation pass was null. Passes should always return a value.");
+			_local_passes.RemoveAll(ready_passes.Contains);
+			return new_data;
+		}
+
+		private bool all_preconditions_are_satisfied([NotNull] NanoPass<T> p)
+		{
+			return p.requires.Aggregate(true,
+				// ReSharper disable AssignNullToNotNullAttribute
+				(prev, cond) => prev && _current_state.Contains(cond));
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
 		[NotNull]
