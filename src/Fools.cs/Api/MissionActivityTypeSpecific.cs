@@ -24,6 +24,8 @@ namespace Fools.cs.Api
 			_message_response(lab, (TMessage) message);
 		}
 
+		public override Type message_type { get { return typeof (TMessage); } }
+
 		public override bool Equals(MissionActivity<TLab> other)
 		{
 			var other_activity = other as MissionActivityTypeSpecific<TLab, TMessage>;

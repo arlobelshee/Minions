@@ -24,7 +24,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				should_be_no_orcs();
 				test_subject.send_out_fools_to(raid);
 				test_subject.announce(new ElvesFound());
-				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(100))
+				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(200))
 					.Should()
 					.BeTrue();
 				should_have_spawned_orcs(2);
@@ -113,7 +113,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[NotNull]
 		private MissionDescription<OrcishRaidProgress> orc_raid()
 		{
-			var raid = new MissionDescription<OrcishRaidProgress>(() => new OrcishRaidProgress(9));
+			var raid = NewMission.in_lab(() => new OrcishRaidProgress(9));
 			raid.send_new_fool_when<ElvesFound>()
 				.and_have_it(_start_new_raid);
 			raid.fools_shall_do<SayGo>(_begin_raiding);

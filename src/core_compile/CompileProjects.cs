@@ -7,6 +7,7 @@ using System;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
+using core_compile.Messages;
 
 namespace core_compile
 {
@@ -21,10 +22,10 @@ namespace core_compile
 
 		public static void submit_missions_to([NotNull] MissionLocation mission_control)
 		{
-			var watch_for_projects_to_compile =
-				new MissionDescription<CompileProjects>(() => new CompileProjects(mission_control));
+			var watch_for_projects_to_compile = NewMission.in_lab(() => new CompileProjects(mission_control));
 			watch_for_projects_to_compile.send_new_fool_when<AppRun<CompilerUserInteractionModel>>()
-				.and_have_it(start_compiling_projects);
+				.and_have_it(start_compiling_projects)
+				.fools_shall_do<FoolsProjectCompileFinished>(finished_one_project);
 			mission_control.send_out_fools_to(watch_for_projects_to_compile);
 
 			CompileOneProject.submit_missions_to(mission_control);
@@ -35,6 +36,11 @@ namespace core_compile
 		{
 			Console.WriteLine("I would be parsing the project file here.");
 			lab._mission_control.announce(new AppQuit(AppErrorLevel.Ok));
+		}
+
+		public static void finished_one_project(CompileProjects lab, FoolsProjectCompileFinished message)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

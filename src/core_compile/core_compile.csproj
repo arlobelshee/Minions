@@ -50,6 +50,8 @@
     <Compile Include="CompileOneProject.cs" />
     <Compile Include="CompileProjects.cs" />
     <Compile Include="CompilerUserInteractionModel.cs" />
+    <Compile Include="Messages\FoolsProjectFound.cs" />
+    <Compile Include="Messages\FoolsProjectCompileFinished.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

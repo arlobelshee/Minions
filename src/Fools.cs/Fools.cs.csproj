@@ -127,6 +127,7 @@
     <Compile Include="Api\MissionControl.cs" />
     <Compile Include="Api\MissionDescription.cs" />
     <Compile Include="Api\MissionLocation.cs" />
+    <Compile Include="Api\NewMission.cs" />
     <Compile Include="Api\OverlordThrone.cs" />
     <Compile Include="Api\CommandLineApp\UniversalCommands.cs" />
     <Compile Include="Utilities\Mismatches.cs" />

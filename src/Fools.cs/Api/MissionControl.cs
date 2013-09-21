@@ -94,21 +94,23 @@ namespace Fools.cs.Api
 			[NotNull] MailMessage constructor_message,
 			[NotNull] Fool<TLab> fool) where TLab : class
 		{
-			var constructor_impl = mission.message_handlers.FirstOrDefault(item => item.Key == constructor_message.GetType());
-			if (constructor_impl.Value == null) done_creating_fool();
-			else fool.process_message(constructor_impl.Value, constructor_message, done_creating_fool);
+			var mission_activity = mission.activity_for(constructor_message);
+			if (mission_activity == null) done_creating_fool();
+			else fool.process_message(mission_activity, constructor_message, done_creating_fool);
 		}
 
 		private void _subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
 			[NotNull] Fool<TLab> fool) where TLab : class
 		{
-			_postal_carrier.upon_completion_of_this_task(
-				mail_room => mission.message_handlers.each(kv => // ReSharper disable PossibleNullReferenceException
-					mail_room
-						// ReSharper restore PossibleNullReferenceException
-						.subscribe( // ReSharper disable AssignNullToNotNullAttribute
-							kv.Key, (message, done_handling_message) => fool.process_message(kv.Value, message, done_handling_message))));
-			// ReSharper restore AssignNullToNotNullAttribute
+			_postal_carrier.upon_completion_of_this_task(mail_room => mission.activities.each(activity => {
+				if (activity == null) return;
+				// ReSharper disable PossibleNullReferenceException
+				mail_room.subscribe(activity.message_type,
+					// ReSharper restore PossibleNullReferenceException
+					// ReSharper disable AssignNullToNotNullAttribute
+					(message, done_handling_message) => fool.process_message(activity, message, done_handling_message));
+				// ReSharper restore AssignNullToNotNullAttribute
+			}));
 		}
 
 		private static void _noop() {}

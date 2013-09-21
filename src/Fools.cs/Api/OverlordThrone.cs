@@ -22,7 +22,7 @@ namespace Fools.cs.Api
 
 		public void submit_missions_to([NotNull] MissionControl mission_control)
 		{
-			var tell_overlord_when_all_work_is_done = new MissionDescription<OverlordThrone>(() => this);
+			var tell_overlord_when_all_work_is_done = NewMission.in_lab(() => this);
 			tell_overlord_when_all_work_is_done.send_new_fool_when<DoMyBidding>();
 			tell_overlord_when_all_work_is_done.fools_shall_do<AppQuit>(stop_program);
 			mission_control.send_out_fools_to(tell_overlord_when_all_work_is_done);

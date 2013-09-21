@@ -8,6 +8,7 @@ using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
 using NSubstitute;
 using NUnit.Framework;
+using core_compile.Messages;
 
 namespace core_compile.tests.InteractWithUser
 {
@@ -24,9 +25,12 @@ namespace core_compile.tests.InteractWithUser
 				.send_out_fools_to(mission<CompileProjects>()
 					.spawn_per<AppRun<CompilerUserInteractionModel>>()
 					.when<AppRun<CompilerUserInteractionModel>>(CompileProjects.start_compiling_projects)
+					.when<FoolsProjectCompileFinished>(CompileProjects.finished_one_project)
 					.build());
 			control.Received()
 				.send_out_fools_to(mission<CompileOneProject>()
+					.spawn_per<FoolsProjectFound>()
+					.when<FoolsProjectFound>(CompileOneProject.start_compiling)
 					.build());
 		}
 

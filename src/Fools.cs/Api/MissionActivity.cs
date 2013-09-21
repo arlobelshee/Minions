@@ -4,21 +4,27 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
+using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
 	public abstract class MissionActivity<TLab> : IEquatable<MissionActivity<TLab>> where TLab : class
 	{
-		public void execute(TLab lab, MailMessage message)
+		[NotNull]
+		public abstract Type message_type { get; }
+
+		public void execute([NotNull] TLab lab, [NotNull] MailMessage message)
 		{
 			perform_action(lab, message);
 		}
 
-		protected abstract void perform_action(TLab lab, MailMessage message);
-		public abstract bool Equals(MissionActivity<TLab> other);
+		protected abstract void perform_action([NotNull] TLab lab, [NotNull] MailMessage message);
+
+		public abstract bool Equals([CanBeNull] MissionActivity<TLab> other);
+
 		protected abstract int hash();
 
-		public override bool Equals(object obj)
+		public override bool Equals([CanBeNull] object obj)
 		{
 			return Equals(obj as MissionActivity<TLab>);
 		}
