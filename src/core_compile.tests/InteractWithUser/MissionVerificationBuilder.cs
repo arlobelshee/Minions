@@ -14,7 +14,7 @@ namespace core_compile.tests.InteractWithUser
 {
 	internal class MissionVerificationBuilder<TLab> where TLab : class
 	{
-		[NotNull] private readonly NonNullList<Delegate> _actions = new NonNullList<Delegate>();
+		[NotNull] private readonly NonNullList<MissionActivity<TLab>> _activities = new NonNullList<MissionActivity<TLab>>();
 		[NotNull] private readonly NonNullList<Type> _spawning_messages = new NonNullList<Type>();
 
 		[NotNull]
@@ -25,16 +25,16 @@ namespace core_compile.tests.InteractWithUser
 		}
 
 		[NotNull]
-		public MissionVerificationBuilder<TLab> when<TMessage>([NotNull] Action<TLab, TMessage> do_what)
+		public MissionVerificationBuilder<TLab> when<TMessage>([NotNull] Action<TLab, TMessage> do_what) where TMessage : MailMessage
 		{
-			_actions.Add(do_what);
+			_activities.Add(new MissionActivityTypeSpecific<TLab, TMessage>(do_what));
 			return this;
 		}
 
 		[NotNull]
 		public MissionDescription<TLab> build()
 		{
-			var matcher = new MissionDescriptionMatcher<TLab>(_spawning_messages, _actions);
+			var matcher = new MissionDescriptionMatcher<TLab>(_spawning_messages, _activities);
 			return _make_arg_spec(matcher);
 		}
 

@@ -26,7 +26,10 @@ namespace Fools.cs.Api
 		public IEnumerable<Type> spawning_messages { get { return _spawning_messages; } }
 
 		[NotNull]
-		public Dictionary<Type, MissionActivity<TLab>> message_handlers { get { return _responses; } }
+		public IEnumerable<KeyValuePair<Type, MissionActivity<TLab>>> message_handlers { get { return _responses; } }
+
+		[NotNull]
+		public IEnumerable<MissionActivity<TLab>> activities { get { return _responses.Values; } }
 
 		[NotNull]
 		public MissionSpawnOptions<TStartMessage> send_new_fool_when<TStartMessage>() where TStartMessage : MailMessage
