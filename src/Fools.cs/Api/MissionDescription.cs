@@ -14,8 +14,8 @@ namespace Fools.cs.Api
 		[NotNull] private readonly Func<TLab> _lab_constructor;
 		[NotNull] private readonly List<Type> _spawning_messages = new List<Type>();
 
-		[NotNull] private readonly Dictionary<Type, Action<TLab, object>> _responses =
-			new Dictionary<Type, Action<TLab, object>>();
+		[NotNull] private readonly Dictionary<Type, MissionActivity<TLab>> _responses =
+			new Dictionary<Type, MissionActivity<TLab>>();
 
 		public MissionDescription([NotNull] Func<TLab> lab_constructor)
 		{
@@ -26,7 +26,7 @@ namespace Fools.cs.Api
 		public IEnumerable<Type> spawning_messages { get { return _spawning_messages; } }
 
 		[NotNull]
-		public IEnumerable<KeyValuePair<Type, Action<TLab, object>>> message_handlers { get { return _responses; } }
+		public Dictionary<Type, MissionActivity<TLab>> message_handlers { get { return _responses; } }
 
 		[NotNull]
 		public MissionSpawnOptions<TStartMessage> send_new_fool_when<TStartMessage>() where TStartMessage : MailMessage
@@ -39,7 +39,7 @@ namespace Fools.cs.Api
 		public MissionDescription<TLab> fools_shall_do<TMessage>([NotNull] Action<TLab, TMessage> message_response)
 			where TMessage : MailMessage
 		{
-			_responses[typeof (TMessage)] = (lab, m) => message_response(lab, (TMessage) m);
+			_responses[typeof (TMessage)] = new MissionActivityTypeSpecific<TLab, TMessage>(message_response);
 			return this;
 		}
 

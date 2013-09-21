@@ -24,11 +24,11 @@ namespace Fools.cs.Api
 			_lab = lab;
 		}
 
-		public void process_message([NotNull] Action<TLab, MailMessage> action,
+		public void process_message([NotNull] MissionActivity<TLab> activity,
 			[NotNull] MailMessage message,
 			[NotNull] Action done)
 		{
-			_do_work(lab => action(lab, message), done);
+			_do_work(lab => activity.execute(lab, message), done);
 		}
 
 		public bool do_work_and_wait([NotNull] Action<TLab> work, TimeSpan wait_duration)
@@ -58,7 +58,7 @@ namespace Fools.cs.Api
 			Task next_operation;
 			lock (_task_lock)
 			{
-				next_operation = _previous_operation.ContinueWith(r => {
+				next_operation = _previous_operation.ContinueWith(ignored_result_of_previous_task => {
 					try
 					{
 						work(_lab);
@@ -69,7 +69,7 @@ namespace Fools.cs.Api
 					catch (Exception ex)
 					{
 						Console.WriteLine(ex);
-						// TODO: What about exceptions thrown by action? When should they be observed?
+						// TODO: What about exceptions thrown by the action? When should they be observed?
 					}
 					_upon_completion.Clear();
 					done();

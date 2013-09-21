@@ -122,6 +122,8 @@
     <Compile Include="Api\FoolsCompiler.cs" />
     <Compile Include="Api\MailMessage.cs" />
     <Compile Include="Api\MailRoom.cs" />
+    <Compile Include="Api\MissionActivity.cs" />
+    <Compile Include="Api\MissionActivityTypeSpecific.cs" />
     <Compile Include="Api\MissionControl.cs" />
     <Compile Include="Api\MissionDescription.cs" />
     <Compile Include="Api\MissionLocation.cs" />
