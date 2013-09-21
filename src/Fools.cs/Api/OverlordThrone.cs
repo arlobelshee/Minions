@@ -14,17 +14,17 @@ namespace Fools.cs.Api
 		private AppErrorLevel _result = AppErrorLevel.Ok;
 		[NotNull] private readonly ManualResetEventSlim _program_complete = new ManualResetEventSlim(false);
 
-		public AppErrorLevel watch_the_fools_dance()
+		public AppErrorLevel while_I_watch_the_fools_dance()
 		{
 			_program_complete.Wait();
 			return _result;
 		}
 
-		public void submit_missions_to([NotNull] MissionControl mission_control)
+		public void submit_missions_to([NotNull] FoolSupplyHouse mission_control)
 		{
 			var tell_overlord_when_all_work_is_done = NewMission.in_lab(() => this);
 			tell_overlord_when_all_work_is_done.send_new_fool_when<DoMyBidding>();
-			tell_overlord_when_all_work_is_done.fools_shall_do<AppQuit>(stop_program);
+			tell_overlord_when_all_work_is_done.whenever<AppQuit>(stop_program);
 			mission_control.send_out_fools_to(tell_overlord_when_all_work_is_done);
 		}
 

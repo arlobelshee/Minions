@@ -12,20 +12,20 @@ namespace Fools.cs.Api.CommandLineApp
 {
 	public class CommandLineProgram<TViewModel> where TViewModel : UniversalCommands
 	{
-		[NotNull] private readonly MissionControl _mission_control;
+		[NotNull] private readonly DeadDrop _app_execution;
 
-		private CommandLineProgram([NotNull] MissionControl mission_control)
+		private CommandLineProgram([NotNull] DeadDrop app_execution)
 		{
-			_mission_control = mission_control;
+			_app_execution = app_execution;
 		}
 
-		public static void submit_missions_to([NotNull] MissionControl mission_control)
+		public static void show_him_what_you_do([NotNull] MissionLocation app_execution)
 		{
-			var interact_with_user = NewMission.in_lab(() => new CommandLineProgram<TViewModel>(mission_control));
+			var interact_with_user = NewMission.in_lab(() => new CommandLineProgram<TViewModel>(app_execution));
 			interact_with_user.send_new_fool_when<DoMyBidding>()
 				.and_have_it(figure_out_what_the_user_wants);
-			interact_with_user.fools_shall_do<AppAbort>(print_usage);
-			mission_control.send_out_fools_to(interact_with_user);
+			interact_with_user.whenever<AppAbort>(print_usage);
+			app_execution.send_out_fools_to(interact_with_user);
 		}
 
 		private static void figure_out_what_the_user_wants([NotNull] CommandLineProgram<TViewModel> lab,
@@ -48,12 +48,12 @@ namespace Fools.cs.Api.CommandLineApp
 			}
 			catch (Exception ex)
 			{
-				_mission_control.announce(new AppAbort(ex, ex is ArgException ? AppErrorLevel.BadCommandArgs : AppErrorLevel.Unknown));
+				_app_execution.announce(new AppAbort(ex, ex is ArgException ? AppErrorLevel.BadCommandArgs : AppErrorLevel.Unknown));
 				return;
 			}
 			Debug.Assert(user_commands != null, "user_commands != null");
-			if (user_commands.help) _mission_control.announce(new AppAbort(null, AppErrorLevel.Ok));
-			else _mission_control.announce(new AppRun<TViewModel>(user_commands));
+			if (user_commands.help) _app_execution.announce(new AppAbort(null, AppErrorLevel.Ok));
+			else _app_execution.announce(new AppRun<TViewModel>(user_commands));
 		}
 
 		private void print_usage([CanBeNull] Exception exception, AppErrorLevel error_level)
@@ -63,7 +63,7 @@ namespace Fools.cs.Api.CommandLineApp
 				// ReSharper restore PossibleNullReferenceException
 				.Write();
 			if (exception != null) Console.WriteLine(exception.Message);
-			_mission_control.announce(new AppQuit(error_level));
+			_app_execution.announce(new AppQuit(error_level));
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace core_compile
 			_mission_control = mission_control;
 		}
 
-		public static void submit_missions_to([NotNull] MissionLocation mission_control)
+		public static void show_him_what_you_do([NotNull] MissionLocation mission_control)
 		{
 			var compile_a_project_when_found = NewMission.in_lab(() => new CompileOneProject(mission_control));
 			compile_a_project_when_found.send_new_fool_when<FoolsProjectFound>()

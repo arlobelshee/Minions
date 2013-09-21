@@ -115,6 +115,7 @@
     <Compile Include="Api\CommandLineApp\AppAbort.cs" />
     <Compile Include="Api\AppErrorLevel.cs" />
     <Compile Include="Api\CommandLineApp\CommandLineProgram.cs" />
+    <Compile Include="Api\DeadDrop.cs" />
     <Compile Include="Api\DoMyBidding.cs" />
     <Compile Include="Api\AppQuit.cs" />
     <Compile Include="Api\CommandLineApp\AppRun.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Api\MailRoom.cs" />
     <Compile Include="Api\MissionActivity.cs" />
     <Compile Include="Api\MissionActivityTypeSpecific.cs" />
-    <Compile Include="Api\MissionControl.cs" />
+    <Compile Include="Api\FoolSupplyHouse.cs" />
     <Compile Include="Api\MissionDescription.cs" />
     <Compile Include="Api\MissionLocation.cs" />
     <Compile Include="Api\NewMission.cs" />

@@ -18,11 +18,12 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void mission_control_should_spawn_missions_parts_when_spawn_messages_arrive()
 		{
-			using (var test_subject = new MissionControl())
+			using (var test_subject = new FoolSupplyHouse())
 			{
 				var raid = orc_raid();
 				should_be_no_orcs();
 				test_subject.send_out_fools_to(raid);
+				should_be_no_orcs();
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(200))
 					.Should()
@@ -34,11 +35,11 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void mission_control_should_execute_mission_parts_when_messages_arrive()
 		{
-			using (var test_subject = new MissionControl())
+			using (var test_subject = new FoolSupplyHouse())
 			{
 				test_subject.send_out_fools_to(orc_raid());
 				test_subject.announce(new ElvesFound());
-				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMinutes(100))
+				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMilliseconds(100))
 					.Should()
 					.BeTrue();
 				should_have_spawned_orcs(1);
@@ -96,7 +97,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				_target_number_of_orcs = count;
 				if (_target_number_of_orcs <= _orcs.Count) _all_orcs_are_sent.Set();
 			}
-			_all_orcs_are_sent.Wait(TimeSpan.FromMinutes(100))
+			_all_orcs_are_sent.Wait(TimeSpan.FromMilliseconds(100))
 				.Should()
 				.BeTrue();
 		}
@@ -115,8 +116,9 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var raid = NewMission.in_lab(() => new OrcishRaidProgress(9));
 			raid.send_new_fool_when<ElvesFound>()
-				.and_have_it(_start_new_raid);
-			raid.fools_shall_do<SayGo>(_begin_raiding);
+				.and_have_it(_start_new_raid)
+				.after_that()
+				.whenever<SayGo>(_begin_raiding);
 			return raid;
 		}
 

@@ -20,15 +20,14 @@ namespace core_compile
 			_mission_control = mission_control;
 		}
 
-		public static void submit_missions_to([NotNull] MissionLocation mission_control)
+		public static void show_him_what_you_do([NotNull] MissionLocation mission_control)
 		{
 			var watch_for_projects_to_compile = NewMission.in_lab(() => new CompileProjects(mission_control));
 			watch_for_projects_to_compile.send_new_fool_when<AppRun<CompilerUserInteractionModel>>()
 				.and_have_it(start_compiling_projects)
-				.fools_shall_do<FoolsProjectCompileFinished>(finished_one_project);
+				.after_that()
+				.whenever<FoolsProjectCompileFinished>(finished_one_project);
 			mission_control.send_out_fools_to(watch_for_projects_to_compile);
-
-			CompileOneProject.submit_missions_to(mission_control);
 		}
 
 		public static void start_compiling_projects([NotNull] CompileProjects lab,

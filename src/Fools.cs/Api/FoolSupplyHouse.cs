@@ -1,4 +1,4 @@
-﻿// MissionControl.cs
+﻿// FoolSupplyHouse.cs
 // 
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
@@ -11,14 +11,14 @@ using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public class MissionControl : IDisposable, MissionLocation
+	public class FoolSupplyHouse : IDisposable, MissionLocation
 	{
 		[NotNull] private readonly TaskFactory _task_factory;
 		[NotNull] private readonly CancellationTokenSource _cancellation;
 		[NotNull] private readonly Fool<MailRoom> _postal_carrier;
 		[NotNull] private readonly OverlordThrone _overlord_throne;
 
-		public MissionControl()
+		public FoolSupplyHouse()
 		{
 			_overlord_throne = new OverlordThrone();
 			_cancellation = new CancellationTokenSource();
@@ -41,6 +41,13 @@ namespace Fools.cs.Api
 			_overlord_throne.Dispose();
 		}
 
+		[NotNull]
+		public FoolSupplyHouse tell_me_why_I_shouldnt_kill_you([NotNull] Action<MissionLocation> missions_we_can_do)
+		{
+			missions_we_can_do(this);
+			return this;
+		}
+
 		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission) where TLab : class
 		{
 			_postal_carrier.do_work(
@@ -51,6 +58,13 @@ namespace Fools.cs.Api
 						.subscribe(message_type, (message, done) => _spawn_fool(mission, done, message))),
 				// ReSharper restore AssignNullToNotNullAttribute
 				_noop);
+		}
+
+		[NotNull]
+		public OverlordThrone fine_do_my_bidding([NotNull] string[] args)
+		{
+			announce(new DoMyBidding(args));
+			return overlord_throne;
 		}
 
 		public void announce(MailMessage what_happened)

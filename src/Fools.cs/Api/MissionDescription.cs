@@ -56,7 +56,7 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		public MissionDescription<TLab> fools_shall_do<TMessage>([NotNull] Action<TLab, TMessage> message_response)
+		public MissionDescription<TLab> whenever<TMessage>([NotNull] Action<TLab, TMessage> message_response)
 			where TMessage : MailMessage
 		{
 			_responses[typeof (TMessage)] = new MissionActivityTypeSpecific<TLab, TMessage>(message_response);
@@ -73,9 +73,15 @@ namespace Fools.cs.Api
 			}
 
 			[NotNull]
-			public MissionDescription<TLab> and_have_it([NotNull] Action<TLab, TMessage> message_response)
+			public MissionSpawnOptions<TMessage> and_have_it([NotNull] Action<TLab, TMessage> message_response)
 			{
-				_mission_to_update.fools_shall_do(message_response);
+				_mission_to_update.whenever(message_response);
+				return this;
+			}
+
+			[NotNull]
+			public MissionDescription<TLab> after_that()
+			{
 				return _mission_to_update;
 			}
 		}

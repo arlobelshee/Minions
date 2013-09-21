@@ -4,7 +4,6 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using Fools.cs.Api;
-using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
 
 namespace core_compile
@@ -15,13 +14,11 @@ namespace core_compile
 		// ReSharper disable InconsistentNaming
 		private static int Main([NotNull] string[] args) // ReSharper restore InconsistentNaming
 		{
-			using (var mission_control = new MissionControl())
+			using (var fools = new FoolSupplyHouse())
 			{
-				CommandLineProgram<CompilerUserInteractionModel>.submit_missions_to(mission_control);
-				CompileProjects.submit_missions_to(mission_control);
-
-				mission_control.announce(new DoMyBidding(args));
-				return (int) mission_control.overlord_throne.watch_the_fools_dance();
+				return (int) fools.tell_me_why_I_shouldnt_kill_you(Missions.we_can_do)
+					.fine_do_my_bidding(args)
+					.while_I_watch_the_fools_dance();
 			}
 		}
 	}
