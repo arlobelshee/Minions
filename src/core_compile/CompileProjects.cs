@@ -10,16 +10,16 @@ using Fools.cs.Utilities;
 
 namespace core_compile
 {
-	internal class CompileProjects
+	public class CompileProjects
 	{
-		[NotNull] private readonly MissionControl _mission_control;
+		[NotNull] private readonly MissionLocation _mission_control;
 
-		private CompileProjects([NotNull] MissionControl mission_control)
+		private CompileProjects([NotNull] MissionLocation mission_control)
 		{
 			_mission_control = mission_control;
 		}
 
-		public static void submit_missions_to([NotNull] MissionControl mission_control)
+		public static void submit_missions_to([NotNull] MissionLocation mission_control)
 		{
 			var watch_for_projects_to_compile =
 				new MissionDescription<CompileProjects>(() => new CompileProjects(mission_control));
@@ -30,27 +30,11 @@ namespace core_compile
 			CompileOneProject.submit_missions_to(mission_control);
 		}
 
-		private static void start_compiling_projects([NotNull] CompileProjects lab,
+		public static void start_compiling_projects([NotNull] CompileProjects lab,
 			AppRun<CompilerUserInteractionModel> message)
 		{
 			Console.WriteLine("I would be parsing the project file here.");
 			lab._mission_control.announce(new AppQuit(AppErrorLevel.Ok));
-		}
-	}
-
-	internal class CompileOneProject
-	{
-		[NotNull] private readonly MissionControl _mission_control;
-
-		private CompileOneProject([NotNull] MissionControl mission_control)
-		{
-			_mission_control = mission_control;
-		}
-
-		public static void submit_missions_to([NotNull] MissionControl mission_control)
-		{
-			var watch_for_projects_to_compile =
-				new MissionDescription<CompileOneProject>(() => new CompileOneProject(mission_control));
 		}
 	}
 }

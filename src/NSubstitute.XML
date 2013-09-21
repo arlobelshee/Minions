@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<assembly name="NSubstitute">
+	<member name="M:NSubstitute.Arg.Any``1">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Is``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Is``1(System.Linq.Expressions.Expression{System.Predicate{``0}})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Invoke">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Invoke``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Invoke``2(``0,``1)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Invoke``3(``0,``1,``2)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Invoke``4(``0,``1,``2,``3)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.InvokeDelegate``1(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Arg.Do``1(System.Action{``0})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.IArgumentMatcher.IsSatisfiedBy(System.Object)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.IDescribeNonMatches.DescribeFor(System.Object)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Core.ConfiguredCall.AndDoes(System.Action{NSubstitute.Core.CallInfo})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Core.Extensions.Zip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Core.Extensions.IsCompatibleWith(System.Object,System.Type)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Core.Extensions.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Experimental.Received.InOrder(System.Action)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.IArgumentMatcher`1.IsSatisfiedBy(`0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Raise.EventWith``1(System.Object,``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Raise.EventWith``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Raise.EventWith``1">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Raise.Event">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Raise.Event``1(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Substitute.For``1(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Substitute.For``2(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Substitute.For``3(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Substitute.For(System.Type[],System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.Returns``1(``0,``0,``0[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.Returns``1(``0,System.Func{NSubstitute.Core.CallInfo,``0},System.Func{NSubstitute.Core.CallInfo,``0}[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ReturnsForAnyArgs``1(``0,``0,``0[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ReturnsForAnyArgs``1(``0,System.Func{NSubstitute.Core.CallInfo,``0},System.Func{NSubstitute.Core.CallInfo,``0}[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.Received``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.Received``1(``0,System.Int32)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.DidNotReceive``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ReceivedWithAnyArgs``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ReceivedWithAnyArgs``1(``0,System.Int32)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.DidNotReceiveWithAnyArgs``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ClearReceivedCalls``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.When``1(``0,System.Action{``0})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.WhenForAnyArgs``1(``0,System.Action{``0})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.SubstituteExtensions.ReceivedCalls``1(``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:NSubstitute.Core.WhenCalled`1.Do(System.Action{NSubstitute.Core.CallInfo})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+</assembly>

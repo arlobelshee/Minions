@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using Fools.cs.TransformAst;
 using Fools.cs.Utilities;
@@ -69,11 +68,11 @@ namespace Fools.cs.Api
 		[NotNull]
 		private static Func<T, NanoPass<T>, T> apply_one_pass([NotNull] NonNullList<AstStateCondition> current_state)
 		{
-			return (current, pass) => {
-				Debug.Assert(pass != null, "pass != null");
-				Debug.Assert(current != null, "current != null");
-				return pass.run(current, current_state.Add);
-			};
+			// ReSharper disable AssignNullToNotNullAttribute
+			// ReSharper disable PossibleNullReferenceException
+			return (current, pass) => pass.run(current, current_state.Add);
+			// ReSharper restore PossibleNullReferenceException
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 	}
 }

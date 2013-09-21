@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InteractWithUser\CompileRequestedProjects.cs" />
+    <Compile Include="InteractWithUser\MissionDescriptionMatcher.cs" />
+    <Compile Include="InteractWithUser\MissionVerificationBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +63,10 @@
     <Folder Include="CompileOneProject\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\core_compile\core_compile.csproj">
+      <Project>{AA6F7F5B-0028-4E61-9A28-3EC99D1744FE}</Project>
+      <Name>core_compile</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fools.cs\Fools.cs.csproj">
       <Project>{917ECD06-9ABF-4DE2-AA39-D19981577246}</Project>
       <Name>Fools.cs</Name>
