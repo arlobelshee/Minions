@@ -9,6 +9,7 @@ using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
+	[PublicAPI]
 	public class OverlordThrone : IDisposable
 	{
 		private AppErrorLevel _result = AppErrorLevel.Ok;
@@ -20,7 +21,7 @@ namespace Fools.cs.Api
 			return _result;
 		}
 
-		public void submit_missions_to([NotNull] FoolSupplyHouse mission_control)
+		public void show_him_what_you_do([NotNull] FoolSupplyHouse mission_control)
 		{
 			var tell_overlord_when_all_work_is_done = NewMission.in_lab(() => this);
 			tell_overlord_when_all_work_is_done.send_new_fool_when<DoMyBidding>();

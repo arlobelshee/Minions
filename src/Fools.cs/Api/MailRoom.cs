@@ -4,8 +4,8 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
-using Fools.cs.Utilities;
 using System.Linq;
+using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
@@ -18,8 +18,7 @@ namespace Fools.cs.Api
 		[NotNull] private readonly NonNullDictionary<string, NonNullList<MessageHandler>> _listeners =
 			new NonNullDictionary<string, NonNullList<MessageHandler>>();
 
-		[NotNull]
-		private readonly NonNullList<MessageHandler> _universal_listeners = new NonNullList<MessageHandler>();
+		[NotNull] private readonly NonNullList<MessageHandler> _universal_listeners = new NonNullList<MessageHandler>();
 
 		private MailRoom(MailRoom home_office)
 		{
@@ -34,6 +33,17 @@ namespace Fools.cs.Api
 			return new MailRoom(this);
 		}
 
+		public void inform_about_message([NotNull] Type message_type)
+		{
+			var key = key_for(message_type);
+			if (!_listeners.ContainsKey(key)) _listeners[key] = new NonNullList<MessageHandler>();
+		}
+
+		public void inform_about_message<TMessage>() where TMessage : MailMessage
+		{
+			inform_about_message(typeof (TMessage));
+		}
+
 		public void subscribe<TMessage>([NotNull] Action<TMessage, Action> listener) where TMessage : MailMessage
 		{
 			subscribe(typeof (TMessage), (m, done) => listener((TMessage) m, done));
@@ -42,13 +52,7 @@ namespace Fools.cs.Api
 		public void subscribe([NotNull] Type message_type, [NotNull] MessageHandler on_message)
 		{
 			var key = key_for(message_type);
-			NonNullList<MessageHandler> subscribers;
-			if (!_listeners.TryGetValue(key, out subscribers))
-			{
-				subscribers = new NonNullList<MessageHandler>();
-				_listeners[key] = subscribers;
-			}
-			subscribers.Add(on_message);
+			_listeners[key].Add(on_message);
 		}
 
 		public void subscribe_to_all([NotNull] MessageHandler listener)
@@ -101,12 +105,13 @@ namespace Fools.cs.Api
 			[NotNull] MailMessage what_happened,
 			[NotNull] WaitableCounter items_being_processed)
 		{
-			listeners.ToArray().each(recipient => {
-				items_being_processed.begin();
-				// ReSharper disable PossibleNullReferenceException
-				recipient // ReSharper restore PossibleNullReferenceException
-					(what_happened, items_being_processed.done);
-			});
+			listeners.ToArray()
+				.each(recipient => {
+					items_being_processed.begin();
+					// ReSharper disable PossibleNullReferenceException
+					recipient // ReSharper restore PossibleNullReferenceException
+						(what_happened, items_being_processed.done);
+				});
 		}
 
 		[NotNull]

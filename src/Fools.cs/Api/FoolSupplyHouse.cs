@@ -17,6 +17,7 @@ namespace Fools.cs.Api
 		[NotNull] private readonly CancellationTokenSource _cancellation;
 		[NotNull] private readonly Fool<MailRoom> _postal_carrier;
 		[NotNull] private readonly OverlordThrone _overlord_throne;
+		[NotNull] private readonly MailRoom _main_drop;
 
 		public FoolSupplyHouse()
 		{
@@ -26,13 +27,11 @@ namespace Fools.cs.Api
 				TaskCreationOptions.PreferFairness,
 				TaskContinuationOptions.ExecuteSynchronously,
 				TaskScheduler.Default);
-			_postal_carrier = new Fool<MailRoom>(_create_starting_task(), new MailRoom());
+			_main_drop = new MailRoom();
+			_postal_carrier = new Fool<MailRoom>(_create_starting_task(), _main_drop);
 
-			_overlord_throne.submit_missions_to(this);
+			_overlord_throne.show_him_what_you_do(this);
 		}
-
-		[NotNull]
-		public OverlordThrone overlord_throne { get { return _overlord_throne; } }
 
 		public void Dispose()
 		{
@@ -50,21 +49,33 @@ namespace Fools.cs.Api
 
 		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission) where TLab : class
 		{
-			_postal_carrier.do_work(
-				mail_room => mission.spawning_messages.each(message_type => // ReSharper disable PossibleNullReferenceException
-					mail_room
-						// ReSharper restore PossibleNullReferenceException
-						// ReSharper disable AssignNullToNotNullAttribute
-						.subscribe(message_type, (message, done) => _spawn_fool(mission, done, message))),
-				// ReSharper restore AssignNullToNotNullAttribute
-				_noop);
+			_inform_main_drop_about_messages_used(mission);
+			_subscribe_fool_factory_to_respond_to_spawning_messages(mission);
+		}
+
+		private void _subscribe_fool_factory_to_respond_to_spawning_messages<TLab>([NotNull] MissionDescription<TLab> mission)
+			where TLab : class
+		{
+			mission.spawning_messages.each(message_type => _main_drop
+				// ReSharper disable AssignNullToNotNullAttribute
+				.subscribe(message_type, (message, done) => _spawn_fool(mission, done, message)));
+			// ReSharper restore AssignNullToNotNullAttribute
+		}
+
+		private void _inform_main_drop_about_messages_used<TLab>([NotNull] MissionDescription<TLab> mission)
+			where TLab : class
+		{
+			mission.spawning_messages.each(_main_drop.inform_about_message);
+			// ReSharper disable PossibleNullReferenceException
+			mission.activities.each(activity => _main_drop.inform_about_message(activity.message_type));
+			// ReSharper restore PossibleNullReferenceException
 		}
 
 		[NotNull]
 		public OverlordThrone fine_do_my_bidding([NotNull] string[] args)
 		{
 			announce(new DoMyBidding(args));
-			return overlord_throne;
+			return _overlord_throne;
 		}
 
 		public void announce(MailMessage what_happened)

@@ -28,7 +28,9 @@ namespace Fools.cs.Api
 			[NotNull] MailMessage message,
 			[NotNull] Action done)
 		{
+			// ReSharper disable AssignNullToNotNullAttribute
 			_do_work(lab => activity.execute(lab, message), done);
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
 		public bool do_work_and_wait([NotNull] Action<TLab> work, TimeSpan wait_duration)

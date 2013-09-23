@@ -24,6 +24,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				should_be_no_orcs();
 				test_subject.send_out_fools_to(raid);
 				should_be_no_orcs();
+				test_subject.fine_do_my_bidding(new string[] {});
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(200))
 					.Should()
@@ -38,6 +39,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			using (var test_subject = new FoolSupplyHouse())
 			{
 				test_subject.send_out_fools_to(orc_raid());
+				test_subject.fine_do_my_bidding(new string[] { });
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMilliseconds(100))
 					.Should()

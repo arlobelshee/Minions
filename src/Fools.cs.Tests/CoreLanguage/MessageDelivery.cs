@@ -21,6 +21,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void announce_and_wait_should_only_return_after_all_recipients_have_completed()
 		{
 			var test_subject = new MailRoom();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(message_handler_that_finishes);
 			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(50))
 				.Should()
@@ -33,6 +34,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void announce_and_wait_should_time_out_but_not_cancel_tasks_if_tasks_never_finish()
 		{
 			var test_subject = new MailRoom();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(message_handler_that_never_finishes);
 			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(10))
 				.Should()
@@ -45,6 +47,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void announce_should_return_after_all_recipients_have_been_notified_but_before_they_finish()
 		{
 			var test_subject = new MailRoom();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(message_handler_that_never_finishes);
 			test_subject.announce(new SillyMessage("hi"));
 			_log.Should()
@@ -56,6 +59,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = new MailRoom();
 			var log = store_silly_values();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(log.accept);
 			test_subject.announce_and_wait(new SillyMessage("1"), TimeSpan.FromMilliseconds(50));
 			test_subject.announce_and_wait(new SillyMessage("2"), TimeSpan.FromMilliseconds(50));
@@ -69,6 +73,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			var home_office = new MailRoom();
 			var log = store_silly_values();
 			var mail_target = home_office.create_satellite_office();
+			home_office.inform_about_message<SillyMessage>();
+			mail_target.inform_about_message<SillyMessage>();
 			home_office.subscribe<SillyMessage>(log.accept);
 			mail_target.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(50));
 			log.received.Should()
@@ -80,6 +86,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = new MailRoom();
 			var log = store_silly_values();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(log.accept);
 			test_subject.announce_and_wait(new SillyMessage("silly"), TimeSpan.FromMilliseconds(50));
 			test_subject.announce_and_wait(new SeriousMessage("serious"), TimeSpan.FromMilliseconds(50));
@@ -91,6 +98,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void subscribing_for_a_message_while_processing_that_message_should_result_in_new_subscriber_not_receiving_message()
 		{
 			var test_subject = new MailRoom();
+			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
 			test_subject.subscribe<SillyMessage>(new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
 			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(100))
