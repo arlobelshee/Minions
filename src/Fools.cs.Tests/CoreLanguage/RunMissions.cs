@@ -16,15 +16,27 @@ namespace Fools.cs.Tests.CoreLanguage
 	public class RunMissions : IDisposable
 	{
 		[Test]
+		public void mission_control_should_execute_mission_parts_when_messages_arrive()
+		{
+			using (var fools = new FoolSupplyHouse())
+			{
+				var test_subject = fools.tell_me_why_I_shouldnt_kill_you(_offer_to_raid_the_elves);
+				test_subject.announce(new ElvesFound());
+				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMilliseconds(100))
+					.Should()
+					.BeTrue();
+				should_have_spawned_orcs(1);
+				all_orcs_should_have_raided();
+			}
+		}
+
+		[Test]
 		public void mission_control_should_spawn_missions_parts_when_spawn_messages_arrive()
 		{
-			using (var test_subject = new FoolSupplyHouse())
+			using (var fools = new FoolSupplyHouse())
 			{
-				var raid = orc_raid();
+				var test_subject = fools.tell_me_why_I_shouldnt_kill_you(_offer_to_raid_the_elves);
 				should_be_no_orcs();
-				test_subject.send_out_fools_to(raid);
-				should_be_no_orcs();
-				test_subject.fine_do_my_bidding(new string[] {});
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(200))
 					.Should()
@@ -33,20 +45,10 @@ namespace Fools.cs.Tests.CoreLanguage
 			}
 		}
 
-		[Test]
-		public void mission_control_should_execute_mission_parts_when_messages_arrive()
+		[Test, Ignore("Not implemented")]
+		public void two_diferent_missions_can_spawn_from_same_message()
 		{
-			using (var test_subject = new FoolSupplyHouse())
-			{
-				test_subject.send_out_fools_to(orc_raid());
-				test_subject.fine_do_my_bidding(new string[] { });
-				test_subject.announce(new ElvesFound());
-				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMilliseconds(100))
-					.Should()
-					.BeTrue();
-				should_have_spawned_orcs(1);
-				all_orcs_should_have_raided();
-			}
+			throw new NotImplementedException();
 		}
 
 		[SetUp]
@@ -65,6 +67,11 @@ namespace Fools.cs.Tests.CoreLanguage
 			_orcs.ForEach(o => o.Dispose());
 			// ReSharper restore PossibleNullReferenceException
 			_orcs.Clear();
+		}
+
+		private void _offer_to_raid_the_elves([NotNull] MissionLocation mission_location)
+		{
+			mission_location.send_out_fools_to(orc_raid());
 		}
 
 		private class OrcishRaidProgress : IDisposable

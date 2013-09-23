@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ActiveCity.cs" />
     <Compile Include="Api\CommandLineApp\AppAbort.cs" />
     <Compile Include="Api\AppErrorLevel.cs" />
     <Compile Include="Api\CommandLineApp\CommandLineProgram.cs" />
