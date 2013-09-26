@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Missions.cs" />
+    <Compile Include="For.cs" />
     <Compile Include="CompileOneProject.cs" />
     <Compile Include="CompileProjects.cs" />
     <Compile Include="CompilerUserInteractionModel.cs" />

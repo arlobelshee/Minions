@@ -28,7 +28,7 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		public ActiveCity tell_me_why_I_shouldnt_kill_you([NotNull] Action<MissionLocation> missions_we_can_do)
+		public ActiveCity build_me_a_city([NotNull] Action<MissionLocation> missions_we_can_do)
 		{
 			missions_we_can_do(this);
 			_overlord_throne.show_him_what_you_do(this);

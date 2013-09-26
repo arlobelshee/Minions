@@ -1,0 +1,9 @@
+The world consists of Cities & Regions (computers). Fools operate only within one City. Mail may be sent to Buildings regardless of City.
+
+Fools subscribe to MessageDrops; each building has one (and there may be others?).
+
+Buildings are constructed via ConstructionSites during mission definition. In this phase, the Overlord specifies all of the missions that will need to happen. These can request MessageDrops / buildings from the City. They will be given the address of a ConstructionSite. They register all messages with that site; it configures its mail room. The Missios are also forwarded to FoolsInc. It sbscribes more message handlers for spawning fools.
+
+In message delivery, no guarantee exists about when Fools will spawn. That is what announce and wait is for. Message sends will be processed bby the sending Fool. Subscribed Fools will be held iin a ConcurrentBag; this gives snapshot semantics.
+
+Once init has happened, it is no longer possible to add new message types. It is possible to add new subscribers for a nown type. Mission definitions are static; no Fool will subscribe or unsubscribe except at its lifetime boundaries.

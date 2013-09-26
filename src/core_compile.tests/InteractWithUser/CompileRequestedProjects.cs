@@ -19,7 +19,7 @@ namespace core_compile.tests.InteractWithUser
 		public void should_define_all_the_missions()
 		{
 			var control = Substitute.For<MissionLocation>();
-			Missions.we_can_do(control);
+			For.my_amusement(control);
 
 			control.Received()
 				.send_out_fools_to(mission<CompileProjects>()

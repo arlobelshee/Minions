@@ -15,7 +15,7 @@ namespace Fools.cs.Api
 		private AppErrorLevel _result = AppErrorLevel.Ok;
 		[NotNull] private readonly ManualResetEventSlim _program_complete = new ManualResetEventSlim(false);
 
-		public AppErrorLevel while_I_watch_the_fools_dance()
+		public AppErrorLevel while_I_wait_for_the_world_to_end()
 		{
 			_program_complete.Wait();
 			return _result;

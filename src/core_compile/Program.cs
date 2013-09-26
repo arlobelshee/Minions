@@ -16,9 +16,9 @@ namespace core_compile
 		{
 			using (var fools = new FoolSupplyHouse())
 			{
-				return (int) fools.tell_me_why_I_shouldnt_kill_you(Missions.we_can_do)
-					.fine_do_my_bidding(args)
-					.while_I_watch_the_fools_dance();
+				return (int) fools.build_me_a_city(For.my_amusement)
+					.make_the_fools_dance(args)
+					.while_I_wait_for_the_world_to_end();
 			}
 		}
 	}

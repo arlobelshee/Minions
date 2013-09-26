@@ -48,7 +48,7 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		public OverlordThrone fine_do_my_bidding([NotNull] string[] args)
+		public OverlordThrone make_the_fools_dance([NotNull] string[] args)
 		{
 			announce(new DoMyBidding(args));
 			return _overlord_throne;

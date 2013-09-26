@@ -20,7 +20,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			using (var fools = new FoolSupplyHouse())
 			{
-				var test_subject = fools.tell_me_why_I_shouldnt_kill_you(_offer_to_raid_the_elves);
+				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new SayGo(), TimeSpan.FromMilliseconds(100))
 					.Should()
@@ -35,7 +35,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			using (var fools = new FoolSupplyHouse())
 			{
-				var test_subject = fools.tell_me_why_I_shouldnt_kill_you(_offer_to_raid_the_elves);
+				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);
 				should_be_no_orcs();
 				test_subject.announce(new ElvesFound());
 				test_subject.announce_and_wait(new ElvesFound(), TimeSpan.FromMilliseconds(200))
