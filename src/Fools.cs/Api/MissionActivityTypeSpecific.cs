@@ -41,7 +41,9 @@ namespace Fools.cs.Api
 
 		public override string ToString()
 		{
+			// ReSharper disable PossibleNullReferenceException
 			return string.Format("when {0}, do {1}", typeof (TMessage).Name, _message_response.Method.if_valid(m => m.Name));
+			// ReSharper restore PossibleNullReferenceException
 		}
 	}
 }

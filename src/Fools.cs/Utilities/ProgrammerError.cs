@@ -7,11 +7,11 @@ using System;
 
 namespace Fools.cs.Utilities
 {
-	[PublicAPI]
+	[PublicAPI, Serializable]
 	public class ProgrammerError : Exception
 	{
 		private ProgrammerError([NotNull] string message_format, [NotNull] object[] format_data)
-			: base("Programmer error! "+string.Format(message_format, format_data)) {}
+			: base("Programmer error! " + string.Format(message_format, format_data)) {}
 
 		[StringFormatMethod("message_format"), ContractAnnotation("condition:false =>halt")]
 		// ReSharper disable UnusedParameter.Local

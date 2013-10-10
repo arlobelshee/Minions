@@ -12,7 +12,7 @@ namespace core_compile
 {
 	public class CompileOneProject
 	{
-		[NotNull] private readonly MissionLocation _mission_control;
+		[NotNull, UsedImplicitly] private readonly MissionLocation _mission_control;
 
 		private CompileOneProject([NotNull] MissionLocation mission_control)
 		{
