@@ -42,7 +42,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			var first = _map.secret_location(arbitrary_purpose);
 			var second = _map.secret_location(arbitrary_purpose);
 			first.Should()
-				.NotBeSameAs(second);
+				.BeOfType<UndisclosedLocation>()
+				.And.NotBeSameAs(second);
 		}
 
 		[Test]
@@ -51,7 +52,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			var first = _map.public_location(PublicBuildings.APPLICATION);
 			var second = _map.public_location(PublicBuildings.APPLICATION);
 			first.Should()
-				.BeSameAs(second);
+				.BeOfType<PublicBuilding>()
+				.And.BeSameAs(second);
 		}
 
 		[Test]
@@ -71,6 +73,27 @@ namespace Fools.cs.Tests.CoreLanguage
 		[NotNull] private CityMap _map;
 	}
 
+	public class UndisclosedLocation : ConstructionSite
+	{
+		private UndisclosedLocation([NotNull] string name) : base(name) {}
+
+		[NotNull]
+		public static ConstructionSite to_do([NotNull] string purpose)
+		{
+			return new UndisclosedLocation(String.Format("an undisclosed location for {0}", purpose));
+		}
+	}
+
+	public class PublicBuilding : ConstructionSite
+	{
+		private PublicBuilding([NotNull] string name) : base(name) {}
+
+		public static ConstructionSite named([NotNull] string name)
+		{
+			return new PublicBuilding(name);
+		}
+	}
+
 	public class City : IDisposable
 	{
 		[NotNull] public readonly MissionControl fools = new MissionControl();
@@ -86,7 +109,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[NotNull]
 		public ConstructionSite public_location([NotNull] string building_name)
 		{
-			var site = _well_known_sites.GetOrAdd(building_name, name => new ConstructionSite(name));
+			var site = _well_known_sites.GetOrAdd(building_name, PublicBuilding.named);
 			Debug.Assert(site != null, "Well-known sites should always exist.");
 			return site;
 		}
@@ -94,13 +117,13 @@ namespace Fools.cs.Tests.CoreLanguage
 		[NotNull]
 		public ConstructionSite secret_location([NotNull] string purpose)
 		{
-			return new ConstructionSite(string.Format("an undisclosed location for {0}", purpose));
+			return UndisclosedLocation.to_do(purpose);
 		}
 	}
 
 	public class ConstructionSite
 	{
-		public ConstructionSite([NotNull] string name)
+		protected ConstructionSite([NotNull] string name)
 		{
 			this.name = name;
 		}
