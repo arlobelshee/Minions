@@ -65,8 +65,10 @@
   <ItemGroup>
     <Compile Include="Compilation\ConditionsSuportEquality.cs" />
     <Compile Include="Compilation\TransformAstIntoExecutionModel.cs" />
+    <Compile Include="CoreLanguage\DefineMissions.cs" />
     <Compile Include="CoreLanguage\MessageDelivery.cs" />
     <Compile Include="CoreLanguage\PrettyPrinting.cs" />
+    <Compile Include="CoreLanguage\PublicBuildings.cs" />
     <Compile Include="CoreLanguage\RunMissions.cs" />
     <Compile Include="ImplementationConcerns\ProcessCounter.cs" />
     <Compile Include="Parsing\FindBlocksAndLines.cs" />
