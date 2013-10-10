@@ -178,4 +178,10 @@
 	<member name="M:FluentAssertions.AssertionExtensions.As``1(System.Object)">
 		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
 	</member>
+	<member name="M:FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType``1(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="P:FluentAssertions.AndConstraint`1.And">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
 </assembly>
