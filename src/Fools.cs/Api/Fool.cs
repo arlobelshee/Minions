@@ -18,9 +18,9 @@ namespace Fools.cs.Api
 		[NotNull] private readonly object _task_lock = new object();
 		[NotNull] private readonly List<Action<TLab>> _upon_completion = new List<Action<TLab>>();
 
-		public Fool([NotNull] Task previous_operation, [NotNull] TLab lab)
+		public Fool([NotNull] Task root_task, [NotNull] TLab lab)
 		{
-			_previous_operation = previous_operation;
+			_previous_operation = root_task;
 			_lab = lab;
 		}
 
