@@ -63,6 +63,12 @@ namespace Fools.cs.Tests.CoreLanguage
 				.Be(PublicBuildings.APPLICATION);
 		}
 
+		[Test]
+		public void should_be_able_to_ask_mission_control_for_a_mission_definition()
+		{
+			
+		}
+
 		[SetUp]
 		public void set_up()
 		{
