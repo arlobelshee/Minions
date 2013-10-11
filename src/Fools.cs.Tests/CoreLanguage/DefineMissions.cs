@@ -16,14 +16,6 @@ namespace Fools.cs.Tests.CoreLanguage
 	public class DefineMissions
 	{
 		[Test]
-		public void anonyous_locations_should_know_their_purpose()
-		{
-			var first = _map.secret_location("watching the game");
-			first.name.Should()
-				.Be("an undisclosed location for watching the game");
-		}
-
-		[Test]
 		public void city_should_expose_building_commission_and_mission_control()
 		{
 			using (var test_subject = new City())
@@ -38,12 +30,19 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void each_anonymous_location_should_be_distinct()
 		{
-			const string arbitrary_purpose = "watching the game";
-			var first = _map.secret_location(arbitrary_purpose);
-			var second = _map.secret_location(arbitrary_purpose);
+			var first = _map.secret_location(_arbitrary_purpose);
+			var second = _map.secret_location(_arbitrary_purpose);
 			first.Should()
 				.BeOfType<UndisclosedLocation>()
 				.And.NotBeSameAs(second);
+		}
+
+		[Test]
+		public void anonyous_locations_should_know_their_purpose()
+		{
+			var first = _map.secret_location("watching the game");
+			first.name.Should()
+				.Be("an undisclosed location for watching the game");
 		}
 
 		[Test]
@@ -69,6 +68,8 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			_map = new CityMap();
 		}
+
+		private const string _arbitrary_purpose = "watching the game";
 
 		[NotNull] private CityMap _map;
 	}
