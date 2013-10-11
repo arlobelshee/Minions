@@ -121,6 +121,7 @@
     <Compile Include="Api\AppQuit.cs" />
     <Compile Include="Api\CommandLineApp\AppRun.cs" />
     <Compile Include="Api\Fool.cs" />
+    <Compile Include="Api\FoolFactory.cs" />
     <Compile Include="Api\FoolsCompiler.cs" />
     <Compile Include="Api\MailMessage.cs" />
     <Compile Include="Api\MailRoom.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Api\OverlordThrone.cs" />
     <Compile Include="Api\CommandLineApp\UniversalCommands.cs" />
     <Compile Include="Utilities\Mismatches.cs" />
+    <Compile Include="Utilities\NonBlockingBarrier.cs" />
     <Compile Include="Utilities\ProgrammerError.cs" />
     <Compile Include="Utilities\WaitableCounter.cs" />
     <Compile Include="Utilities\LinqExtensions.cs" />

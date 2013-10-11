@@ -24,15 +24,6 @@ namespace Fools.cs.Api
 			_lab = lab;
 		}
 
-		public void process_message([NotNull] MissionActivity<TLab> activity,
-			[NotNull] MailMessage message,
-			[NotNull] Action done)
-		{
-			// ReSharper disable AssignNullToNotNullAttribute
-			_do_work(lab => activity.execute(lab, message), done);
-			// ReSharper restore AssignNullToNotNullAttribute
-		}
-
 		public bool do_work_and_wait([NotNull] Action<TLab> work, TimeSpan wait_duration)
 		{
 			return _do_work(work, () => { })

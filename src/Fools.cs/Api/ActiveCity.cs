@@ -5,36 +5,28 @@
 
 using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
 	public class ActiveCity : IDisposable
 	{
-		[NotNull] private readonly TaskFactory _task_factory;
-		[NotNull] private readonly CancellationTokenSource _cancellation;
 		[NotNull] private readonly Fool<MailRoom> _postal_carrier;
 		[NotNull] private readonly OverlordThrone _overlord_throne;
 		[NotNull] private readonly MailRoom _main_drop;
+		[NotNull] private readonly FoolFactory _fool_factory;
 
 		public ActiveCity([NotNull] OverlordThrone overlord_throne, [NotNull] MailRoom main_drop)
 		{
 			_overlord_throne = overlord_throne;
-			_cancellation = new CancellationTokenSource();
-			_task_factory = new TaskFactory(_cancellation.Token,
-				TaskCreationOptions.PreferFairness,
-				TaskContinuationOptions.ExecuteSynchronously,
-				TaskScheduler.Default);
 			_main_drop = main_drop;
-			_postal_carrier = new Fool<MailRoom>(_create_starting_task(), _main_drop);
+			_fool_factory = FoolFactory.using_background_threads();
+			_postal_carrier = _fool_factory.create_fool(_main_drop);
 		}
 
 		public void Dispose()
 		{
-			_cancellation.Cancel();
-			_cancellation.Dispose();
+			_fool_factory.Dispose();
 			_overlord_throne.Dispose();
 		}
 
@@ -44,7 +36,7 @@ namespace Fools.cs.Api
 				mail_room
 					// ReSharper restore PossibleNullReferenceException
 					.announce(what_happened),
-				_noop);
+				FoolFactory.noop);
 		}
 
 		[NotNull]
@@ -75,17 +67,11 @@ namespace Fools.cs.Api
 				wait_duration) && result.GetValueOrDefault(false);
 		}
 
-		[NotNull]
-		public Task _create_starting_task()
-		{
-			return _task_factory.StartNew(_noop);
-		}
-
 		private void _spawn_fool<TLab>([NotNull] MissionDescription<TLab> mission,
 			[NotNull] Action done_creating_fool,
 			[NotNull] MailMessage constructor_message) where TLab : class
 		{
-			var fool = new Fool<TLab>(_create_starting_task(), mission.make_lab());
+			var fool = _fool_factory.create_fool(mission.make_lab());
 			_execute_fool_ctor(mission, done_creating_fool, constructor_message, fool);
 			_subscribe_handlers_for_rest_of_mission(mission, fool);
 		}
@@ -97,7 +83,9 @@ namespace Fools.cs.Api
 		{
 			var mission_activity = mission.activity_for(constructor_message);
 			if (mission_activity == null) done_creating_fool();
-			else fool.process_message(mission_activity, constructor_message, done_creating_fool);
+			else // ReSharper disable AssignNullToNotNullAttribute
+				fool.do_work(lab => mission_activity.execute(lab, constructor_message), done_creating_fool);
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
 		private void _subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
@@ -109,11 +97,9 @@ namespace Fools.cs.Api
 				mail_room.subscribe(activity.message_type,
 					// ReSharper restore PossibleNullReferenceException
 					// ReSharper disable AssignNullToNotNullAttribute
-					(message, done_handling_message) => fool.process_message(activity, message, done_handling_message));
+					(message, done_handling_message) => fool.do_work(lab => activity.execute(lab, message), done_handling_message));
 				// ReSharper restore AssignNullToNotNullAttribute
 			}));
 		}
-
-		private static void _noop() {}
 	}
 }
