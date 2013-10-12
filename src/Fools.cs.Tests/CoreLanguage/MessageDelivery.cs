@@ -29,7 +29,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				.Should()
 				.BeTrue();
 			_log.Should()
-				.ContainInOrder(new object[] {"Notified: hi", "Finished: hi"});
+				.Equal(new object[] {"Notified: hi", "Finished: hi"});
 		}
 
 		[Test]
@@ -43,7 +43,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				.Should()
 				.BeFalse();
 			_log.Should()
-				.ContainInOrder(new object[] {"Notified: hi"});
+				.Equal(new object[] {"Notified: hi"});
 		}
 
 		[Test]
@@ -54,7 +54,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			test_subject.subscribe<SillyMessage>(message_handler_that_never_finishes);
 			test_subject.announce(new SillyMessage("hi"));
 			_log.Should()
-				.ContainInOrder(new object[] {"Notified: hi"});
+				.Equal(new object[] {"Notified: hi"});
 		}
 
 		[Test]
@@ -67,7 +67,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			test_subject.announce(new SillyMessage("1"));
 			test_subject.announce(new SillyMessage("2"));
 			log.received.Should()
-				.ContainInOrder(new object[] {"1", "2"});
+				.Equal(new object[] {"1", "2"});
 		}
 
 		[Test]
@@ -81,7 +81,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			home_office.subscribe<SillyMessage>(log.accept);
 			mail_target.announce(new SillyMessage("hi"));
 			log.received.Should()
-				.ContainInOrder(new object[] {"hi"});
+				.Equal(new object[] {"hi"});
 		}
 
 		[Test]
@@ -94,7 +94,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			test_subject.announce(new SillyMessage("silly"));
 			test_subject.announce(new SeriousMessage("serious"));
 			log.received.Should()
-				.ContainInOrder(new object[] {"silly"});
+				.Equal(new object[] {"silly"});
 		}
 
 		[Test]
@@ -112,7 +112,7 @@ namespace Fools.cs.Tests.CoreLanguage
 				.Should()
 				.BeTrue();
 			_log.Should()
-				.ContainInOrder(new object[] {"Counted 3: hi", "Counted 3: hi"});
+				.Equal(new object[] {"Counted 3: hi", "Counted 3: hi"});
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			test_subject.announce(new SillyMessage("silly"));
 			test_subject.announce(new SeriousMessage("serious"));
 			log.received.Should()
-				.ContainInOrder(new object[] {"silly", "serious"});
+				.Equal(new object[] {"silly", "serious"});
 		}
 
 		[SetUp]
