@@ -22,6 +22,7 @@ namespace Fools.cs.Api
 			_active_city = new ActiveCity(_overlord_throne, _main_drop);
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_overlord_throne", Justification = "Instance is owned by a different object.")]
 		public void Dispose()
 		{
 			_active_city.Dispose();

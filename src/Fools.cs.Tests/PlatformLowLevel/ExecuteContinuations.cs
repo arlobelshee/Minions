@@ -15,10 +15,8 @@ using NUnit.Framework;
 namespace Fools.cs.Tests.PlatformLowLevel
 {
 	[TestFixture]
-	public class ExecuteContinuations
+	public class ExecuteContinuaions : IDisposable
 	{
-		private const string _unused = "arbitrary value";
-
 		[Test]
 		public void each_fool_should_only_do_one_thing_at_a_time()
 		{
@@ -29,7 +27,9 @@ namespace Fools.cs.Tests.PlatformLowLevel
 					wait_until_ready_to_work();
 					steps_processed.Enqueue(1);
 				});
+			// ReSharper disable ImplicitlyCapturedClosure
 			schedule_work(fool, () => steps_processed.Enqueue(2));
+			// ReSharper restore ImplicitlyCapturedClosure
 			schedule_work(fool,
 				() => {
 					worker_is_done();
@@ -53,6 +53,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 		{
 			var steps = new List<int>();
 			var test_subject = _factory.create_fool(_unused);
+			// ReSharper disable ImplicitlyCapturedClosure
 			test_subject.do_work(lab => {
 				test_subject.upon_completion_of_this_task(lab2 => steps.Add(2));
 				steps.Add(1);
@@ -61,6 +62,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 					steps.Add(3);
 					_worker_done.Set();
 				});
+			// ReSharper restore ImplicitlyCapturedClosure
 
 			_worker_done.Wait(_brief_delay)
 				.Should()
@@ -159,6 +161,10 @@ namespace Fools.cs.Tests.PlatformLowLevel
 			_last_fool_wait_succeeded = _ready_for_worker.Wait(_brief_delay);
 			_ready_for_worker.Reset();
 		}
+
+		public void Dispose() {}
+
+		private const string _unused = "arbitrary value";
 
 		private static readonly TimeSpan _brief_delay = TimeSpan.FromMilliseconds(100);
 		[NotNull] private ConcurrentQueue<string> _tasks_completed;
