@@ -39,31 +39,30 @@ namespace Fools.cs.Api
 			_upon_completion.Add(work);
 		}
 
-		[NotNull]
-		private Task _do_work([NotNull] Action<TLab> work, [NotNull] Action done)
+		private void _do_work([NotNull] Action<TLab> work, [NotNull] Action done)
 		{
-			Task next_operation;
+			Action<Task> next_operation = ignored_result_of_previous_task =>
+			{
+				try
+				{
+					work(_lab);
+					_upon_completion.ForEach(w => // ReSharper disable PossibleNullReferenceException
+						w(_lab));
+					// ReSharper restore PossibleNullReferenceException
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex);
+					// TODO: What about exceptions thrown by the action? When should they be observed?
+				}
+				_upon_completion.Clear();
+				done();
+			};
+
 			lock (_task_lock)
 			{
-				next_operation = _previous_operation.ContinueWith(ignored_result_of_previous_task => {
-					try
-					{
-						work(_lab);
-						_upon_completion.ForEach(w => // ReSharper disable PossibleNullReferenceException
-							w(_lab));
-						// ReSharper restore PossibleNullReferenceException
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine(ex);
-						// TODO: What about exceptions thrown by the action? When should they be observed?
-					}
-					_upon_completion.Clear();
-					done();
-				});
-				_previous_operation = next_operation;
+				_previous_operation = _previous_operation.ContinueWith(next_operation);
 			}
-			return next_operation;
 		}
 	}
 }

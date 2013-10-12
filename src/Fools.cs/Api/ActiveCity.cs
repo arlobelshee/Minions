@@ -55,7 +55,7 @@ namespace Fools.cs.Api
 			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
-		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, Action when_done)
+		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, [NotNull] Action when_done)
 		{
 			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
 				mail_room
