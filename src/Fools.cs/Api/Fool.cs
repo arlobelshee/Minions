@@ -24,12 +24,6 @@ namespace Fools.cs.Api
 			_lab = lab;
 		}
 
-		public bool do_work_and_wait([NotNull] Action<TLab> work, TimeSpan wait_duration)
-		{
-			return _do_work(work, () => { })
-				.Wait(wait_duration);
-		}
-
 		public void do_work([NotNull] Action<TLab> work, [NotNull] Action done)
 		{
 			_do_work(work, done);

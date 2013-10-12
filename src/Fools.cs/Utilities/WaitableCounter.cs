@@ -8,12 +8,12 @@ using System.Threading;
 
 namespace Fools.cs.Utilities
 {
-	public abstract class WaitableCounter : IDisposable
+	public abstract class WaitableCounter
 	{
 		[NotNull]
-		public static WaitableCounter starting_at(int initial_value)
+		public static WaitableCounter starting_at(int initial_value, [NotNull] Action when_done)
 		{
-			return new CountingImpl(initial_value);
+			return new NonBlockingCountingImpl(initial_value, when_done);
 		}
 
 		[NotNull]
@@ -24,52 +24,27 @@ namespace Fools.cs.Utilities
 
 		public abstract void begin();
 		public abstract void done();
-		public abstract bool wait(TimeSpan wait_duration);
-		public abstract bool is_signaled();
 
-		private class CountingImpl : WaitableCounter
+		private class NonBlockingCountingImpl : WaitableCounter
 		{
 			private int _count;
-			[NotNull] private readonly object _guard = new object();
-			[NotNull] private readonly ManualResetEventSlim _is_signaled;
+			[NotNull] private readonly Action _when_done;
 
-			public CountingImpl(int initial_value)
+			public NonBlockingCountingImpl(int initial_value, [NotNull] Action when_done)
 			{
 				_count = initial_value;
-				_is_signaled = new ManualResetEventSlim(initial_value == 0);
+				_when_done = when_done;
 			}
 
 			public override void begin()
 			{
-				lock (_guard)
-				{
-					++_count;
-					_is_signaled.Reset();
-				}
+				Interlocked.Increment(ref _count);
 			}
 
 			public override void done()
 			{
-				lock (_guard)
-				{
-					--_count;
-					if (_count == 0) _is_signaled.Set();
-				}
-			}
-
-			public override bool wait(TimeSpan wait_duration)
-			{
-				return _is_signaled.Wait(wait_duration);
-			}
-
-			public override bool is_signaled()
-			{
-				return _is_signaled.IsSet;
-			}
-
-			public override void Dispose()
-			{
-				_is_signaled.Dispose();
+				var current_count = Interlocked.Decrement(ref _count);
+				if (current_count == 0) _when_done();
 			}
 		}
 
@@ -78,20 +53,6 @@ namespace Fools.cs.Utilities
 			public override void begin() {}
 
 			public override void done() {}
-
-			public override bool wait(TimeSpan wait_duration)
-			{
-				return true;
-			}
-
-			public override bool is_signaled()
-			{
-				return true;
-			}
-
-			public override void Dispose() {}
 		}
-
-		public abstract void Dispose();
 	}
 }

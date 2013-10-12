@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using FluentAssertions;
 using Fools.cs.Api;
+using Fools.cs.Tests.Support;
 using Fools.cs.Utilities;
 using NUnit.Framework;
 
@@ -64,7 +65,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 				});
 			// ReSharper restore ImplicitlyCapturedClosure
 
-			_worker_done.Wait(_brief_delay)
+			_worker_done.Wait(Consts.BRIEF_DELAY)
 				.Should()
 				.BeTrue();
 			steps.Should()
@@ -91,7 +92,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 				first.do_work(_tasks_completed.Enqueue, halfway_done.notify);
 				second.do_work(_tasks_completed.Enqueue, halfway_done.notify);
 
-				halfway_done.wait_until_count_reaches(1, _brief_delay)
+				halfway_done.wait_until_count_reaches(1, Consts.BRIEF_DELAY)
 					.Should()
 					.BeTrue();
 				halfway_done.remaining_count.Should()
@@ -101,7 +102,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 
 				third.do_work(_tasks_completed.Enqueue, halfway_done.notify);
 
-				done.Wait(_brief_delay)
+				done.Wait(Consts.BRIEF_DELAY)
 					.Should()
 					.BeTrue();
 
@@ -143,7 +144,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 		private void wait_for_worker_to_take_a_step()
 		{
 			_ready_for_worker.Set();
-			_worker_done.Wait(_brief_delay)
+			_worker_done.Wait(Consts.BRIEF_DELAY)
 				.Should()
 				.BeTrue();
 			_worker_done.Reset();
@@ -158,7 +159,7 @@ namespace Fools.cs.Tests.PlatformLowLevel
 
 		private void wait_until_ready_to_work()
 		{
-			_last_fool_wait_succeeded = _ready_for_worker.Wait(_brief_delay);
+			_last_fool_wait_succeeded = _ready_for_worker.Wait(Consts.BRIEF_DELAY);
 			_ready_for_worker.Reset();
 		}
 
@@ -166,7 +167,6 @@ namespace Fools.cs.Tests.PlatformLowLevel
 
 		private const string _unused = "arbitrary value";
 
-		private static readonly TimeSpan _brief_delay = TimeSpan.FromMilliseconds(100);
 		[NotNull] private ConcurrentQueue<string> _tasks_completed;
 		[NotNull] private ManualResetEventSlim _worker_done;
 		[NotNull] private ManualResetEventSlim _ready_for_worker;

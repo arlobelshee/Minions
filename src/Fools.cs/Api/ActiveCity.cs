@@ -55,16 +55,13 @@ namespace Fools.cs.Api
 			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
-		public bool announce_and_wait([NotNull] MailMessage what_happened, TimeSpan wait_duration)
+		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, Action when_done)
 		{
-			bool? result = null;
-			return _postal_carrier.do_work_and_wait(mail_room => {
-				result = // ReSharper disable PossibleNullReferenceException
-					mail_room
-						// ReSharper restore PossibleNullReferenceException
-						.announce_and_wait(what_happened, wait_duration);
-			},
-				wait_duration) && result.GetValueOrDefault(false);
+			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
+				mail_room
+					// ReSharper restore PossibleNullReferenceException
+					.announce_and_notify_when_done(what_happened, when_done),
+				FoolFactory.noop);
 		}
 
 		private void _spawn_fool<TLab>([NotNull] MissionDescription<TLab> mission,

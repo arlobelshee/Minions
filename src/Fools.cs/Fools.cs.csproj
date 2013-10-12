@@ -134,6 +134,7 @@
     <Compile Include="Api\NewMission.cs" />
     <Compile Include="Api\OverlordThrone.cs" />
     <Compile Include="Api\CommandLineApp\UniversalCommands.cs" />
+    <Compile Include="Utilities\NonBlockingTally.cs" />
     <Compile Include="Utilities\Mismatches.cs" />
     <Compile Include="Utilities\NonBlockingBarrier.cs" />
     <Compile Include="Utilities\ProgrammerError.cs" />

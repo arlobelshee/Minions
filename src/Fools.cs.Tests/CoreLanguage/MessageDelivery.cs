@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Fools.cs.Api;
 using Fools.cs.Interpret;
+using Fools.cs.Tests.Support;
 using Fools.cs.Utilities;
 using NUnit.Framework;
 
@@ -18,12 +19,13 @@ namespace Fools.cs.Tests.CoreLanguage
 	public class MessageDelivery
 	{
 		[Test]
-		public void announce_and_wait_should_only_return_after_all_recipients_have_completed()
+		public void announce_and_notify_should_return_immediately_but_only_signal_after_all_recipients_have_completed()
 		{
 			var test_subject = new MailRoom();
 			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(message_handler_that_finishes);
-			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(50))
+			test_subject.announce_and_notify_when_done(new SillyMessage("hi"), _notified.notify);
+			_notified.wait_until_count_reaches(1, Consts.TINY_DELAY)
 				.Should()
 				.BeTrue();
 			_log.Should()
@@ -31,12 +33,13 @@ namespace Fools.cs.Tests.CoreLanguage
 		}
 
 		[Test]
-		public void announce_and_wait_should_time_out_but_not_cancel_tasks_if_tasks_never_finish()
+		public void announce_and_notify_should_not_fire_if_tasks_never_finish()
 		{
 			var test_subject = new MailRoom();
 			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(message_handler_that_never_finishes);
-			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(10))
+			test_subject.announce_and_notify_when_done(new SillyMessage("hi"), _notified.notify);
+			_notified.wait_until_count_reaches(1, Consts.TINY_DELAY)
 				.Should()
 				.BeFalse();
 			_log.Should()
@@ -61,8 +64,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			var log = store_silly_values();
 			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(log.accept);
-			test_subject.announce_and_wait(new SillyMessage("1"), TimeSpan.FromMilliseconds(50));
-			test_subject.announce_and_wait(new SillyMessage("2"), TimeSpan.FromMilliseconds(50));
+			test_subject.announce(new SillyMessage("1"));
+			test_subject.announce(new SillyMessage("2"));
 			log.received.Should()
 				.ContainInOrder(new object[] {"1", "2"});
 		}
@@ -76,7 +79,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			home_office.inform_about_message<SillyMessage>();
 			mail_target.inform_about_message<SillyMessage>();
 			home_office.subscribe<SillyMessage>(log.accept);
-			mail_target.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(50));
+			mail_target.announce(new SillyMessage("hi"));
 			log.received.Should()
 				.ContainInOrder(new object[] {"hi"});
 		}
@@ -88,20 +91,24 @@ namespace Fools.cs.Tests.CoreLanguage
 			var log = store_silly_values();
 			test_subject.inform_about_message<SillyMessage>();
 			test_subject.subscribe<SillyMessage>(log.accept);
-			test_subject.announce_and_wait(new SillyMessage("silly"), TimeSpan.FromMilliseconds(50));
-			test_subject.announce_and_wait(new SeriousMessage("serious"), TimeSpan.FromMilliseconds(50));
+			test_subject.announce(new SillyMessage("silly"));
+			test_subject.announce(new SeriousMessage("serious"));
 			log.received.Should()
 				.ContainInOrder(new object[] {"silly"});
 		}
 
 		[Test]
-		public void subscribing_for_a_message_while_processing_that_message_should_result_in_new_subscriber_not_receiving_message()
+		public void
+			subscribing_for_a_message_while_processing_that_message_should_result_in_new_subscriber_not_receiving_message()
 		{
 			var test_subject = new MailRoom();
 			test_subject.inform_about_message<SillyMessage>();
-			test_subject.subscribe<SillyMessage>(new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
-			test_subject.subscribe<SillyMessage>(new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
-			test_subject.announce_and_wait(new SillyMessage("hi"), TimeSpan.FromMilliseconds(100))
+			test_subject.subscribe<SillyMessage>(
+				new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
+			test_subject.subscribe<SillyMessage>(
+				new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
+			test_subject.announce_and_notify_when_done(new SillyMessage("hi"), _notified.notify);
+			_notified.wait_until_count_reaches(1, Consts.TINY_DELAY)
 				.Should()
 				.BeTrue();
 			_log.Should()
@@ -115,22 +122,53 @@ namespace Fools.cs.Tests.CoreLanguage
 			var log = store_all_values();
 			test_subject.subscribe_to_all(log.accept);
 			test_subject.announce(new SillyMessage("silly"));
-			test_subject.announce_and_wait(new SeriousMessage("serious"), TimeSpan.Zero);
+			test_subject.announce(new SeriousMessage("serious"));
 			log.received.Should()
 				.ContainInOrder(new object[] {"silly", "serious"});
 		}
 
 		[SetUp]
-		public void set_up()
+		public void initialize()
 		{
+			_notified = NonBlockingTally.starting_at(0);
 			_log = new List<string>();
+		}
+
+		private void message_handler_that_finishes([NotNull] SillyMessage m, [NotNull] Action done)
+		{
+			_log.Add(string.Format("Notified: {0}", m.value));
+			new Task(() => {
+				_log.Add(string.Format("Finished: {0}", m.value));
+				done();
+			}).Start();
+		}
+
+		private void message_handler_that_never_finishes([NotNull] SillyMessage m, [NotNull] Action done)
+		{
+			_log.Add(string.Format("Notified: {0}", m.value));
+		}
+
+		[NotNull]
+		private static MessageLog<string, SillyMessage> store_silly_values()
+		{
+			// ReSharper disable PossibleNullReferenceException
+			return new MessageLog<string, SillyMessage>(m => m.value);
+			// ReSharper restore PossibleNullReferenceException
+		}
+
+		[NotNull]
+		private static MessageLog<string, MailMessage> store_all_values()
+		{
+			// ReSharper disable PossibleNullReferenceException
+			return new MessageLog<string, MailMessage>(m => ((SillyMessage) m).value);
+			// ReSharper restore PossibleNullReferenceException
 		}
 
 		private class RecursiveSubscriber
 		{
+			private readonly int _counter;
 			[NotNull] private readonly List<string> _log;
 			[NotNull] private readonly MailRoom _mail_room_for_recursive_subscriptions;
-			private readonly int _counter;
 
 			public RecursiveSubscriber(int counter,
 				[NotNull] MailRoom mail_room_for_recursive_subscriptions,
@@ -165,37 +203,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			}
 		}
 
-		private void message_handler_that_finishes([NotNull] SillyMessage m, [NotNull] Action done)
-		{
-			_log.Add(string.Format("Notified: {0}", m.value));
-			new Task(() => {
-				_log.Add(string.Format("Finished: {0}", m.value));
-				done();
-			}).Start();
-		}
-
-		private void message_handler_that_never_finishes([NotNull] SillyMessage m, [NotNull] Action done)
-		{
-			_log.Add(string.Format("Notified: {0}", m.value));
-		}
-
 		[NotNull] private List<string> _log;
-
-		[NotNull]
-		private static MessageLog<string, SillyMessage> store_silly_values()
-		{
-			// ReSharper disable PossibleNullReferenceException
-			return new MessageLog<string, SillyMessage>(m => m.value);
-			// ReSharper restore PossibleNullReferenceException
-		}
-
-		[NotNull]
-		private static MessageLog<string, MailMessage> store_all_values()
-		{
-			// ReSharper disable PossibleNullReferenceException
-			return new MessageLog<string, MailMessage>(m => ((SillyMessage) m).value);
-			// ReSharper restore PossibleNullReferenceException
-		}
+		[NotNull] private NonBlockingTally _notified;
 	}
 
 	public class SillyMessage : MailMessage

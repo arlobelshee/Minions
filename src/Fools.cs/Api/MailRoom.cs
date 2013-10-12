@@ -60,16 +60,15 @@ namespace Fools.cs.Api
 			_universal_listeners.Add(listener);
 		}
 
-		public bool announce_and_wait([NotNull] MailMessage what_happened, TimeSpan wait_duration)
-		{
-			var items_being_processed = WaitableCounter.starting_at(0);
-			_announce_impl(what_happened, items_being_processed);
-			return items_being_processed.wait(wait_duration);
-		}
-
 		public void announce([NotNull] MailMessage what_happened)
 		{
 			var items_being_processed = WaitableCounter.non_counting();
+			_announce_impl(what_happened, items_being_processed);
+		}
+
+		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, [NotNull] Action when_done)
+		{
+			var items_being_processed = WaitableCounter.starting_at(0, when_done);
 			_announce_impl(what_happened, items_being_processed);
 		}
 

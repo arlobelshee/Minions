@@ -13,63 +13,48 @@ namespace Fools.cs.Tests.ImplementationConcerns
 	public class ProcessCounter
 	{
 		[Test]
-		public void should_start_out_signalled_when_created_at_zero()
+		public void should_never_fire_on_construction()
 		{
-			WaitableCounter.starting_at(0)
-				.is_signaled()
-				.Should()
-				.BeTrue();
-		}
-
-		[Test]
-		public void should_start_out_non_signalled_when_created_at_positive_value()
-		{
-			WaitableCounter.starting_at(3)
-				.is_signaled()
-				.Should()
+			var fired = false;
+			WaitableCounter.starting_at(0, ()=>fired=true);
+			fired.Should()
 				.BeFalse();
 		}
 
 		[Test]
-		public void should_stop_being_signalled_when_processes_are_running()
+		public void should_fire_when_counter_reaches_zero()
 		{
-			var test_subject = WaitableCounter.starting_at(0);
-			test_subject.begin();
-			test_subject.is_signaled()
-				.Should()
-				.BeFalse();
-		}
-
-		[Test]
-		public void should_be_signalled_again_when_process_count_reaches_zero()
-		{
-			var test_subject = WaitableCounter.starting_at(0);
-			test_subject.begin();
-			test_subject.begin();
+			var fired = false;
+			var test_subject = WaitableCounter.starting_at(1, () => fired = true);
 			test_subject.done();
-			test_subject.done();
-			test_subject.is_signaled()
-				.Should()
+			fired.Should()
 				.BeTrue();
 		}
 
 		[Test]
-		public void should_be_able_to_go_between_signalled_and_non_signalled_when_processes_start_and_stop()
+		public void counter_should_match_done_minus_begin_plus_initial()
 		{
-			var test_subject = WaitableCounter.starting_at(0);
+			var fired = false;
+			var test_subject = WaitableCounter.starting_at(1, () => fired = true);
 			test_subject.begin();
 			test_subject.done();
-			test_subject.is_signaled()
-				.Should()
-				.BeTrue();
-			test_subject.begin();
-			test_subject.is_signaled()
-				.Should()
+			fired.Should()
 				.BeFalse();
 			test_subject.done();
-			test_subject.is_signaled()
-				.Should()
+			fired.Should()
 				.BeTrue();
+		}
+
+		[Test]
+		public void should_never_fire_twice()
+		{
+			var fired = false;
+			var test_subject = WaitableCounter.starting_at(1, () => fired = true);
+			test_subject.done();
+			fired = false;
+			test_subject.done();
+			fired.Should()
+				.BeFalse();
 		}
 	}
 }
