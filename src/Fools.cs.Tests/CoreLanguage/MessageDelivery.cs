@@ -84,15 +84,10 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = _create_mail_room();
 			test_subject.subscribe<SillyMessage>(
-				new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
-			test_subject.subscribe<SillyMessage>(
-				new RecursiveSubscriber(3, test_subject, _log).subscribe_recursively_until_counter_expires);
-			test_subject.announce_and_notify_when_done(new SillyMessage("hi"), _notified.notify);
-			_notified.wait_until_count_reaches(1, Consts.TINY_DELAY)
-				.Should()
-				.BeTrue();
+				new RecursiveSubscriber(2, test_subject, _log).subscribe_recursively_until_counter_expires);
+			test_subject.announce(new SillyMessage("hi"));
 			_log.Should()
-				.Equal(new object[] {"Counted 3: hi", "Counted 3: hi"});
+				.Equal(new object[] {"Counted 2: hi"});
 		}
 
 		[SetUp]
@@ -152,16 +147,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			{
 				_log.Add(string.Format("Counted {0}: {1}", _counter, message.value));
 				var next = _counter - 1;
-				if (next <= 0)
-				{
-					done();
-					return;
-				}
-				_recurse(next);
-				new Task(() => {
-					_recurse(next);
-					done();
-				}).Start();
+				if (next > 0) _recurse(next);
+				done();
 			}
 
 			private void _recurse(int next)

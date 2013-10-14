@@ -25,7 +25,8 @@ namespace core_compile.tests.InteractWithUser
 		}
 
 		[NotNull]
-		public MissionVerificationBuilder<TLab> when<TMessage>([NotNull] Action<TLab, TMessage> do_what) where TMessage : MailMessage
+		public MissionVerificationBuilder<TLab> when<TMessage>([NotNull] Action<TLab, TMessage> do_what)
+			where TMessage : MailMessage
 		{
 			_activities.Add(new MissionActivityTypeSpecific<TLab, TMessage>(do_what));
 			return this;
