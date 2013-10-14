@@ -71,20 +71,6 @@ namespace Fools.cs.Tests.CoreLanguage
 		}
 
 		[Test]
-		public void mail_sent_to_a_mail_room_should_also_be_announced_to_all_more_central_mail_rooms()
-		{
-			var home_office = new MailRoom();
-			var log = store_silly_values();
-			var mail_target = home_office.create_satellite_office();
-			home_office.inform_about_message<SillyMessage>();
-			mail_target.inform_about_message<SillyMessage>();
-			home_office.subscribe<SillyMessage>(log.accept);
-			mail_target.announce(new SillyMessage("hi"));
-			log.received.Should()
-				.Equal(new object[] {"hi"});
-		}
-
-		[Test]
 		public void subscribers_should_only_get_messages_they_asked_for()
 		{
 			var test_subject = new MailRoom();
@@ -113,18 +99,6 @@ namespace Fools.cs.Tests.CoreLanguage
 				.BeTrue();
 			_log.Should()
 				.Equal(new object[] {"Counted 3: hi", "Counted 3: hi"});
-		}
-
-		[Test]
-		public void universal_subscribers_should_receive_all_messages()
-		{
-			var test_subject = new MailRoom();
-			var log = store_all_values();
-			test_subject.subscribe_to_all(log.accept);
-			test_subject.announce(new SillyMessage("silly"));
-			test_subject.announce(new SeriousMessage("serious"));
-			log.received.Should()
-				.Equal(new object[] {"silly", "serious"});
 		}
 
 		[SetUp]
