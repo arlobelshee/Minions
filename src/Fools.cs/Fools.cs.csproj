@@ -114,9 +114,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ActiveCity.cs" />
+    <Compile Include="Api\City.cs" />
+    <Compile Include="Api\CityMap.cs" />
     <Compile Include="Api\CommandLineApp\AppAbort.cs" />
     <Compile Include="Api\AppErrorLevel.cs" />
     <Compile Include="Api\CommandLineApp\CommandLineProgram.cs" />
+    <Compile Include="Api\ConstructionSite.cs" />
     <Compile Include="Api\DeadDrop.cs" />
     <Compile Include="Api\DoMyBidding.cs" />
     <Compile Include="Api\AppQuit.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Api\NewMission.cs" />
     <Compile Include="Api\OverlordThrone.cs" />
     <Compile Include="Api\CommandLineApp\UniversalCommands.cs" />
+    <Compile Include="Api\PublicBuildings.cs" />
     <Compile Include="Utilities\NonBlockingTally.cs" />
     <Compile Include="Utilities\Mismatches.cs" />
     <Compile Include="Utilities\NonBlockingBarrier.cs" />

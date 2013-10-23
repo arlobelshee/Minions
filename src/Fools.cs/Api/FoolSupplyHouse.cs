@@ -4,6 +4,7 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Fools.cs.Utilities;
 
@@ -18,11 +19,12 @@ namespace Fools.cs.Api
 		public FoolSupplyHouse()
 		{
 			_overlord_throne = new OverlordThrone();
-			_main_drop = new MailRoom();
+			_main_drop = new MailRoom(Enumerable.Empty<Type>(), "Global room");
 			_active_city = new ActiveCity(_overlord_throne, _main_drop);
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_overlord_throne", Justification = "Instance is owned by a different object.")]
+		[SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_overlord_throne",
+			Justification = "Instance is owned by a different object.")]
 		public void Dispose()
 		{
 			_active_city.Dispose();

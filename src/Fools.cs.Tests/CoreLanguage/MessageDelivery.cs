@@ -79,6 +79,16 @@ namespace Fools.cs.Tests.CoreLanguage
 		}
 
 		[Test]
+		public void sending_an_invalid_message_should_throw()
+		{
+			var test_subject = new MailRoom(new[]{typeof(SillyMessage)}, "TestRoom");
+			Action announce_invalid_message = ()=>test_subject.announce(new SeriousMessage("hi"));
+			announce_invalid_message.ShouldThrow<InvalidOperationException>()
+				.WithMessage(
+					"Attempted to send a non-registered message. Make sure you register all intended messages with the ConstructionSite before creating the MailRoom. Attempted to send SeriousMessage to TestRoom.");
+		}
+
+		[Test]
 		public void
 			subscribing_for_a_message_while_processing_that_message_should_result_in_new_subscriber_not_receiving_message()
 		{
@@ -100,10 +110,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[NotNull]
 		private static MailRoom _create_mail_room()
 		{
-			var test_subject = new MailRoom();
-			test_subject.inform_about_message<SillyMessage>();
-			test_subject.inform_about_message<SeriousMessage>();
-			return test_subject;
+			return new MailRoom(new[]{typeof(SillyMessage), typeof(SeriousMessage)}, "TestRoom");
 		}
 
 		private void async_handler([NotNull] SillyMessage m, [NotNull] Action done)

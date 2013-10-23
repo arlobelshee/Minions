@@ -190,4 +190,13 @@
 	<member name="M:FluentAssertions.Collections.CollectionAssertions`2.ContainInOrder(System.Collections.IEnumerable,System.String,System.Object[])">
 		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
 	</member>
+	<member name="M:FluentAssertions.Primitives.ReferenceTypeAssertions`2.NotBeNull(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Primitives.StringAssertions.NotBeNullOrEmpty(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:FluentAssertions.Primitives.StringAssertions.BeNullOrEmpty(System.String,System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
 </assembly>
