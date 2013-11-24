@@ -111,7 +111,7 @@ namespace Fools.cs.Utilities
 			_impl.OnDeserialization(sender);
 		}
 
-		public bool TryGetValue([NotNull] TKey key, [NotNull] out TValue value)
+		public bool TryGetValue(TKey key, [NotNull] out TValue value)
 		{
 			// ReSharper disable CompareNonConstrainedGenericWithNull
 			Debug.Assert(key != null, "key != null");
