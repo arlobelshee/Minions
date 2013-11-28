@@ -26,6 +26,7 @@ namespace core_compile.tests.InteractWithUser
 					.spawn_per<AppRun<CompilerUserInteractionModel>>()
 					.when<AppRun<CompilerUserInteractionModel>>(CompileProjects.start_compiling_projects)
 					.when<FoolsProjectCompileFinished>(CompileProjects.finished_one_project)
+					.when<FSharpCompileFinished>(CompileProjects.report_fsharp_build_results)
 					.build());
 			control.Received()
 				.send_out_fools_to(mission<CompileOneProject>()

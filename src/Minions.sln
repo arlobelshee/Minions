@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fools.cs.Tests", "Fools.cs.Tests\Fools.cs.Tests.csproj", "{5D8ECBE5-0149-4FF2-98B2-9ACA18BFFD44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fools.cs", "Fools.cs\Fools.cs.csproj", "{917ECD06-9ABF-4DE2-AA39-D19981577246}"
