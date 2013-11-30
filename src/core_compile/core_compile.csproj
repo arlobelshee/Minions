@@ -48,10 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyReference.cs" />
     <Compile Include="For.cs" />
     <Compile Include="CompileOneProject.cs" />
     <Compile Include="CompileProjects.cs" />
     <Compile Include="CompilerUserInteractionModel.cs" />
+    <Compile Include="CompilationMode.cs" />
+    <Compile Include="FSharpCompilation.cs" />
+    <Compile Include="FSharpProject.cs" />
     <Compile Include="Messages\FoolsProjectFound.cs" />
     <Compile Include="Messages\FoolsProjectCompileFinished.cs" />
     <Compile Include="Program.cs" />

@@ -6,8 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
@@ -42,53 +40,9 @@ namespace core_compile
 			Console.WriteLine("I would be parsing the project file here.");
 			Console.WriteLine("Instead I'm going to compile some F#.");
 
-			// Note: fsc requires the directories to aleady exist. Make them before calling.
-
-			const string fsharp_assemblies =
-				@"C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0";
-			const string net_framework_assemblies =
-				@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5";
-			var debug_directory = "Debug";
-			var debug_debug_settings = @"-g --debug:full --optimize-";
-			var debug_defines = @"--define:DEBUG";
-			var files_to_compile = @"Methods.fs Program.fs";
-			var references = (@"-r:""" + fsharp_assemblies + @"\FSharp.Core.dll"" -r:""" + net_framework_assemblies
-									+ @"\mscorlib.dll"" -r:""" + net_framework_assemblies + @"\System.Core.dll"" -r:""" + net_framework_assemblies
-									+ @"\System.dll"" -r:""" + net_framework_assemblies + @"\System.Numerics.dll""");
-			var debug_fsc_command_line =
-				string.Format(
-					@"-o:obj\{0}\fsharp_console_app.exe {1} --noframework {2} --define:TRACE --doc:bin\{0}\fsharp_console_app.XML --platform:anycpu32bitpreferred {3} --target:exe --warn:3 --warnaserror:76 --fullpaths --flaterrors --subsystemversion:6.00 --highentropyva+ .AssemblyAttributes.fs {4}",
-					debug_directory,
-					debug_debug_settings,
-					debug_defines,
-					references,
-					files_to_compile);
-			var release_fsc_command_line =
-				@"-o:obj\Release\fsharp_console_app.exe --debug:pdbonly --noframework --define:TRACE --doc:bin\Release\fsharp_console_app.XML --optimize+ --platform:anycpu32bitpreferred -r:""C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\4.3.1.0\FSharp.Core.dll"" -r:""C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll"" -r:""C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Core.dll"" -r:""C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll"" -r:""C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Numerics.dll"" --target:exe --warn:3 --warnaserror:76 --fullpaths --flaterrors --subsystemversion:6.00 --highentropyva+ .AssemblyAttributes.fs Methods.fs Program.fs";
-
-			var fsharp_build_dir = new DirectoryInfo(Directory.GetCurrentDirectory()).GetDirectories("msbuild_helpers").First();
-			Debug.Assert(fsharp_build_dir != null, "fsharp_build_dir != null");
-			fsharp_build_dir.CreateSubdirectory("bin/" + debug_directory);
-			fsharp_build_dir.CreateSubdirectory("obj/" + debug_directory);
-			var compiler_command = new ProcessStartInfo(fsharp_build_dir.GetFiles("fsc.exe").First().FullName, debug_fsc_command_line) {
-				CreateNoWindow = true,
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				WorkingDirectory = fsharp_build_dir.FullName
-			};
-			var compile = new Process {EnableRaisingEvents = true, StartInfo = compiler_command};
-			compile.ErrorDataReceived += write_data_to(Console.Error);
-			compile.OutputDataReceived += write_data_to(Console.Out);
-			compile.Exited += (sender, args) => lab._mission_control.announce(new FSharpCompileFinished(compile));
-			compile.Start();
-			compile.BeginErrorReadLine();
-			compile.BeginOutputReadLine();
-		}
-
-		private static DataReceivedEventHandler write_data_to(TextWriter destination)
-		{
-			return (sender, args) => { if (destination != null && args != null) destination.WriteLineAsync(args.Data); };
+			CompilationMode.DEBUG.compile(FSharpProject.hello_world())
+				.prepare_mission(lab._mission_control)
+				.begin();
 		}
 
 		public static void report_fsharp_build_results([NotNull] CompileProjects lab, [NotNull] FSharpCompileFinished message)
