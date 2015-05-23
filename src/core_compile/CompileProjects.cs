@@ -42,7 +42,18 @@ namespace core_compile
 			Console.WriteLine("Instead I'm going to compile some F#.");
 
 			var file_system = FileSystem.Real();
-			CompilationMode.debug(file_system).compile(FSharpProject.hello_world(file_system).Result)
+			var hello_world = FSharpProject.hello_world(file_system).Result;
+			hello_world.add_file("Methods.fs");
+			const string transliteration_to_fsharp_results = @"module AllTheThings
+
+let say_hello argv =
+  printfn ""%A"" argv
+  printfn ""hello world""
+  0";
+			hello_world.source_root.File("Methods.fs")
+				.Overwrite(transliteration_to_fsharp_results);
+
+			CompilationMode.debug(file_system).compile(hello_world)
 				.prepare_mission(lab._mission_control)
 				.begin();
 		}

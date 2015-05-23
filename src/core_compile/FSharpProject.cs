@@ -16,6 +16,16 @@ namespace core_compile
 {
 	public class FSharpProject
 	{
+		private const string _program_file_contents = @"open AllTheThings
+
+[<EntryPoint>]
+let main argv =
+  say_hello argv
+";
+		private const string _fsharp_assembly_attributes_contents = @"namespace Microsoft.BuildSettings
+  [<System.Runtime.Versioning.TargetFrameworkAttribute("".NETFramework,Version=v4.5"", FrameworkDisplayName="".NET Framework 4.5"")>]
+  do ()
+";
 		[NotNull] private readonly FsDirectory _source_root;
 		[NotNull] private readonly List<string> _files_to_compile = new List<string>();
 		[NotNull] private readonly List<AssemblyReference> _assembly_references;
@@ -52,13 +62,13 @@ namespace core_compile
 		[NotNull]
 		public static async Task<FSharpProject> hello_world([NotNull] FileSystem file_system)
 		{
-			var my_docs = file_system.Directory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-			var source_root = my_docs.Dir("hello_world");
-			await source_root.EnsureExists();
+			var tmp = await file_system.TempDirectory;
+			var source_root = tmp.Dir("hello_world");
+			await source_root.File("Program.fs")
+				.Overwrite(_program_file_contents);
+			await source_root.File(".AssemblyAttributes.fs").Overwrite(_fsharp_assembly_attributes_contents);
 
-			var hello_world = new FSharpProject(source_root);
-			hello_world.add_file("Methods.fs");
-			return hello_world;
+			return new FSharpProject(source_root);
 		}
 	}
 }
