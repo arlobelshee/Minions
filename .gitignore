@@ -59,3 +59,5 @@ dist/
 
 # Generated code
 *.peg.cs
+*.ncrunchproject
+*.ncrunchsolution

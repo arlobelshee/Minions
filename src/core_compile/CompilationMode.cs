@@ -59,7 +59,7 @@ namespace core_compile
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
 					UseShellExecute = false,
-					WorkingDirectory = source.source_root.FullName
+					WorkingDirectory = source.source_root.Path.Absolute
 				};
 			return new FSharpCompilation(source.source_root, compiler_command, this);
 		}

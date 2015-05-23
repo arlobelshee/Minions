@@ -40,7 +40,7 @@ namespace core_compile
 			Console.WriteLine("I would be parsing the project file here.");
 			Console.WriteLine("Instead I'm going to compile some F#.");
 
-			CompilationMode.DEBUG.compile(FSharpProject.hello_world())
+			CompilationMode.DEBUG.compile(FSharpProject.hello_world().Result)
 				.prepare_mission(lab._mission_control)
 				.begin();
 		}
