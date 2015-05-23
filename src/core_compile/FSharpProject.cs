@@ -50,9 +50,8 @@ namespace core_compile
 		public IEnumerable<string> files_to_compile { get { return _files_to_compile.Concat(new[] {"Program.fs"}); } }
 
 		[NotNull]
-		public static async Task<FSharpProject> hello_world()
+		public static async Task<FSharpProject> hello_world([NotNull] FileSystem file_system)
 		{
-			var file_system = FileSystem.Real();
 			var my_docs = file_system.Directory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
 			var source_root = my_docs.Dir("hello_world");
 			await source_root.EnsureExists();

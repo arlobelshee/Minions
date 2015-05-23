@@ -6,10 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Fools.cs.Utilities;
+using Simulated;
+using Simulated._Fs;
 
 namespace core_compile
 {
@@ -18,33 +19,32 @@ namespace core_compile
 		[NotNull] public readonly string build_dir_name;
 		[NotNull] private readonly string _debug_settings;
 		[NotNull] private readonly string _defines;
-
-		[NotNull] public static readonly CompilationMode DEBUG = new CompilationMode("Debug",
-			"-g --debug:full --optimize-",
-			new[] {"DEBUG"});
-
-		[NotNull] public static readonly CompilationMode RELEASE = new CompilationMode("Release",
-			"--debug:pdbonly --optimize+",
-			new string[] {});
-
-		[NotNull] private static readonly DirectoryInfo _assembly_directory =
-			new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly()
-				.Location));
-
-		[NotNull] public static readonly DirectoryInfo FSHARP_COMPILER_DIR =
-			_assembly_directory.GetDirectories("msbuild_helpers")
-				.First();
-
-		[NotNull] private static readonly FileInfo _fsharp_compiler = FSHARP_COMPILER_DIR.GetFiles("fsc.exe")
-			.First();
+		[NotNull] private readonly FsFile _fsharp_compiler;
 
 		private CompilationMode([NotNull] string build_dir_name,
 			[NotNull] string debug_settings,
-			[NotNull] IEnumerable<string> defines)
+			[NotNull] IEnumerable<string> defines,
+			[NotNull] FileSystem file_system)
 		{
 			this.build_dir_name = build_dir_name;
 			_debug_settings = debug_settings;
 			_defines = string.Join(" ", defines.Select(d => string.Format("--define:{0}", d)));
+			_fsharp_compiler = file_system.File(Assembly.GetExecutingAssembly()
+				.Location)
+				.ContainingFolder.Dir("msbuild_helpers")
+				.File("fsc.exe");
+		}
+
+		[NotNull]
+		public static CompilationMode debug([NotNull] FileSystem file_system)
+		{
+			return new CompilationMode("Debug", "-g --debug:full --optimize-", new[] {"DEBUG"}, file_system);
+		}
+
+		[NotNull]
+		public static CompilationMode release([NotNull] FileSystem file_system)
+		{
+			return new CompilationMode("Release", "--debug:pdbonly --optimize+", new string[] {}, file_system);
 		}
 
 		private const string _args_template =
@@ -53,7 +53,7 @@ namespace core_compile
 		[NotNull]
 		public FSharpCompilation compile([NotNull] FSharpProject source)
 		{
-			var compiler_command = new ProcessStartInfo(_fsharp_compiler.FullName,
+			var compiler_command = new ProcessStartInfo(_fsharp_compiler.FullPath.Absolute,
 				_command_line(source.files_to_compile, source.references())) {
 					CreateNoWindow = true,
 					RedirectStandardOutput = true,

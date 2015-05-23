@@ -62,12 +62,11 @@ namespace core_compile
 
 		private void _create_build_dirs()
 		{
-			Task.WaitAll(_source_root.Dir("bin")
-				.Dir(_mode.build_dir_name)
-				.EnsureExists(),
-				_source_root.Dir("obj")
-					.Dir(_mode.build_dir_name)
-					.EnsureExists());
+			var bin = _source_root.Dir("bin")
+				.Dir(_mode.build_dir_name);
+			var obj = _source_root.Dir("obj")
+				.Dir(_mode.build_dir_name);
+			Task.WaitAll(bin.EnsureExists(), obj.EnsureExists());
 		}
 	}
 }

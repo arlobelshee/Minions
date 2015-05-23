@@ -19,7 +19,7 @@ namespace core_compile
 		}
 
 		private const string _fsharp_assemblies =
-			@"C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.6\4.3.1.0";
+			@"C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.5\4.3.1.0";
 
 		private const string _net_framework_assemblies =
 			@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6";

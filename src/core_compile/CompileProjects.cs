@@ -11,6 +11,7 @@ using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
 using Microsoft.Build.Execution;
+using Simulated;
 
 namespace core_compile
 {
@@ -40,7 +41,8 @@ namespace core_compile
 			Console.WriteLine("I would be parsing the project file here.");
 			Console.WriteLine("Instead I'm going to compile some F#.");
 
-			CompilationMode.DEBUG.compile(FSharpProject.hello_world().Result)
+			var file_system = FileSystem.Real();
+			CompilationMode.debug(file_system).compile(FSharpProject.hello_world(file_system).Result)
 				.prepare_mission(lab._mission_control)
 				.begin();
 		}
