@@ -18,9 +18,6 @@ namespace core_compile
 			_lib = dir.File(assembly_name);
 		}
 
-		private const string _fsharp_assemblies =
-			@"C:\Program Files (x86)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.5\4.3.1.0";
-
 		private const string _net_framework_assemblies =
 			@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6";
 
@@ -33,7 +30,7 @@ namespace core_compile
 		[NotNull]
 		public static AssemblyReference fsharp([NotNull] string assembly_name, [NotNull] FileSystem fs)
 		{
-			return new AssemblyReference(fs.Directory(_fsharp_assemblies), assembly_name);
+			return new AssemblyReference(FSharpCompilation.tools_and_libs(fs), assembly_name);
 		}
 
 		public override string ToString()

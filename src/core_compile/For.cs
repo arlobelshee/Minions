@@ -11,11 +11,11 @@ namespace core_compile
 {
 	public static class For
 	{
-		public static void my_amusement([NotNull] MissionLocation agent)
+		public static void my_amusement([NotNull] MissionLocation home_city)
 		{
-			CommandLineProgram<CompilerUserInteractionModel>.show_him_what_you_do(agent);
-			CompileProjects.show_him_what_you_do(agent);
-			CompileOneProject.show_him_what_you_do(agent);
+			CommandLineProgram<CompilerUserInteractionModel>.show_him_what_you_do(home_city);
+			CompileProjects.show_him_what_you_do(home_city);
+			CompileOneProject.show_him_what_you_do(home_city);
 		}
 	}
 }

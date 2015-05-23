@@ -29,9 +29,7 @@ namespace core_compile
 			this.build_dir_name = build_dir_name;
 			_debug_settings = debug_settings;
 			_defines = string.Join(" ", defines.Select(d => string.Format("--define:{0}", d)));
-			_fsharp_compiler = file_system.File(Assembly.GetExecutingAssembly()
-				.Location)
-				.ContainingFolder.Dir("msbuild_helpers")
+			_fsharp_compiler = FSharpCompilation.tools_and_libs(file_system)
 				.File("fsc.exe");
 		}
 

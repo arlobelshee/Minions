@@ -6,9 +6,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Fools.cs.Api;
 using Fools.cs.Utilities;
+using Simulated;
 using Simulated._Fs;
 
 namespace core_compile
@@ -67,6 +69,14 @@ namespace core_compile
 			var obj = _source_root.Dir("obj")
 				.Dir(_mode.build_dir_name);
 			Task.WaitAll(bin.EnsureExists(), obj.EnsureExists());
+		}
+
+		[NotNull]
+		public static FsDirectory tools_and_libs([NotNull] FileSystem file_system)
+		{
+			return file_system.File(Assembly.GetExecutingAssembly()
+				.Location)
+				.ContainingFolder.Dir("msbuild_helpers");
 		}
 	}
 }

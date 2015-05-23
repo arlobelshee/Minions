@@ -15,18 +15,6 @@ namespace Fools.cs.Tests.CoreLanguage
 	public class CreateTheCityMap
 	{
 		[Test]
-		public void city_should_expose_building_commission_and_mission_control()
-		{
-			using (var test_subject = new City())
-			{
-				test_subject.fools.Should()
-					.BeOfType<FoolFactory>();
-				test_subject.map.Should()
-					.BeOfType<CityMap>();
-			}
-		}
-
-		[Test]
 		public void each_anonymous_location_should_be_distinct()
 		{
 			var first = _map.secret_location(_arbitrary_purpose);
