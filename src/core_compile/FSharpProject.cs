@@ -3,7 +3,7 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
-using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,7 +27,7 @@ let main argv =
   do ()
 ";
 		[NotNull] private readonly FsDirectory _source_root;
-		[NotNull] private readonly List<string> _files_to_compile = new List<string>();
+		[NotNull] private readonly ConcurrentBag<string> _files_to_compile = new ConcurrentBag<string>();
 		[NotNull] private readonly List<AssemblyReference> _assembly_references;
 
 		public FSharpProject([NotNull] FsDirectory source_root)
@@ -66,7 +66,8 @@ let main argv =
 			var source_root = tmp.Dir("hello_world");
 			await source_root.File("Program.fs")
 				.Overwrite(_program_file_contents);
-			await source_root.File(".AssemblyAttributes.fs").Overwrite(_fsharp_assembly_attributes_contents);
+			await source_root.File(".AssemblyAttributes.fs")
+				.Overwrite(_fsharp_assembly_attributes_contents);
 
 			return new FSharpProject(source_root);
 		}

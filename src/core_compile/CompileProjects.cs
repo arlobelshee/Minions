@@ -4,13 +4,11 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
-using Microsoft.Build.Execution;
 using Simulated;
 
 namespace core_compile
@@ -35,14 +33,24 @@ namespace core_compile
 			mission_control.send_out_fools_to(watch_for_projects_to_compile);
 		}
 
-		public static void start_compiling_projects([NotNull] CompileProjects lab,
-			AppRun<CompilerUserInteractionModel> message)
+		public static async void start_compiling_projects([NotNull] CompileProjects lab,
+			[NotNull] AppRun<CompilerUserInteractionModel> message)
 		{
 			Console.WriteLine("I would be parsing the project file here.");
 			Console.WriteLine("Instead I'm going to compile some F#.");
 
 			var file_system = FileSystem.Real();
-			var hello_world = FSharpProject.hello_world(file_system).Result;
+			var hello_world = await FSharpProject.hello_world(file_system);
+			emit_hello_world(hello_world);
+
+			CompilationMode.debug(file_system)
+				.compile(hello_world)
+				.prepare_mission(lab._mission_control)
+				.begin();
+		}
+
+		private static void emit_hello_world([NotNull] FSharpProject hello_world)
+		{
 			hello_world.add_file("Methods.fs");
 			const string transliteration_to_fsharp_results = @"module AllTheThings
 
@@ -52,16 +60,12 @@ let say_hello argv =
   0";
 			hello_world.source_root.File("Methods.fs")
 				.Overwrite(transliteration_to_fsharp_results);
-
-			CompilationMode.debug(file_system).compile(hello_world)
-				.prepare_mission(lab._mission_control)
-				.begin();
 		}
 
 		public static void report_fsharp_build_results([NotNull] CompileProjects lab, [NotNull] FSharpCompileFinished message)
 		{
-			Console.WriteLine("Build completed.");
 			message.compile.Dispose();
+			Console.WriteLine("Underlying build completed. Press ENTER to quit.");
 			Console.ReadLine();
 			lab._mission_control.announce(new AppQuit(AppErrorLevel.Ok));
 		}
@@ -70,16 +74,6 @@ let say_hello argv =
 		{
 			throw new NotImplementedException();
 		}
-
-		private static BuildRequestData build_project_file([NotNull] string project_file_path)
-		{
-			var global_properties = new Dictionary<string, string>();
-			global_properties["Configuration"] = "Release";
-			global_properties["Platform"] = "AnyCpu";
-			var command_line_app = new ProjectInstance(project_file_path, global_properties, null);
-			var what_to_build = new BuildRequestData(command_line_app, new[] {"Build"});
-			return what_to_build;
-		}
 	}
 
 	public class FSharpCompileFinished : MailMessage
@@ -87,19 +81,7 @@ let say_hello argv =
 		[NotNull]
 		public Process compile { get; set; }
 
-		[NotNull]
-		public BuildSubmission submission { get; set; }
-
-		[NotNull]
-		public BuildManager build { get; set; }
-
-		public FSharpCompileFinished([NotNull] BuildSubmission submission, [NotNull] BuildManager build)
-		{
-			this.submission = submission;
-			this.build = build;
-		}
-
-		public FSharpCompileFinished(Process compile)
+		public FSharpCompileFinished([NotNull] Process compile)
 		{
 			this.compile = compile;
 		}
