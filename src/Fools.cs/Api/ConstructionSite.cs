@@ -23,14 +23,16 @@ namespace Fools.cs.Api
 		public string name { get; private set; }
 
 		[NotNull]
-		public abstract MailRoom create_dead_drop();
+		public abstract MailIndex create_dead_drop();
 
-		public void will_pass_message<TMessage>() where TMessage : MailMessage
+		[NotNull]
+		public ConstructionSite will_pass_message<TMessage>() where TMessage : MailMessage
 		{
-			will_pass_message(typeof (TMessage));
+			return will_pass_message(typeof (TMessage));
 		}
 
-		public void will_pass_message([NotNull] Type valid_message)
+		[NotNull]
+		public ConstructionSite will_pass_message([NotNull] Type valid_message)
 		{
 			if (_built)
 			{
@@ -40,19 +42,20 @@ namespace Fools.cs.Api
 						name));
 			}
 			_valid_messages.Add(valid_message);
+			return this;
 		}
 
 		[NotNull]
-		protected MailRoom build_new_room()
+		protected MailIndex build_new_room()
 		{
 			_built = true;
-			return new MailRoom(_valid_messages, name);
+			return new MailIndex(_valid_messages, name);
 		}
 	}
 
 	internal class PublicBuilding : ConstructionSite
 	{
-		[CanBeNull] private MailRoom _building;
+		[CanBeNull] private MailIndex _building;
 
 		private PublicBuilding([NotNull] string name) : base(name) {}
 
@@ -61,7 +64,7 @@ namespace Fools.cs.Api
 			return new PublicBuilding(name);
 		}
 
-		public override MailRoom create_dead_drop()
+		public override MailIndex create_dead_drop()
 		{
 			return _building ?? (_building = build_new_room());
 		}
@@ -77,7 +80,7 @@ namespace Fools.cs.Api
 			return new UndisclosedLocation(String.Format("an undisclosed location for {0}", purpose));
 		}
 
-		public override MailRoom create_dead_drop()
+		public override MailIndex create_dead_drop()
 		{
 			return build_new_room();
 		}

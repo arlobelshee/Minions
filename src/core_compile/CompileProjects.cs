@@ -36,45 +36,61 @@ namespace core_compile
 		public static async void start_compiling_projects([NotNull] CompileProjects lab,
 			[NotNull] AppRun<CompilerUserInteractionModel> message)
 		{
+			Console.WriteLine("I would be handling the command line arguments here to find all projects.");
+			Console.WriteLine("#HACK - Instead I'm going to pretend it had just one project.");
+
+			var compile_one_project = NewMission.in_lab(()=>new FoolsProjectToCompile());
+
+			lab._mission_control.announce(new FoolsProjectFound());
+	
 			Console.WriteLine("I would be parsing the project file here.");
-			Console.WriteLine("Instead I'm going to compile some F#.");
+			Console.WriteLine("#HACK - Instead I'm going to pretend it was Hello world.");
+
+			Console.WriteLine("Transliterating Fools to F#.");
+			Console.WriteLine("#HACK - Instead I'm going to ignore the Fools and just emit a Hello World program in F#.");
 
 			var file_system = FileSystem.Real();
-			var hello_world = await FSharpProject.hello_world(file_system);
-			emit_hello_world(hello_world);
+			var compilation = await FSharpProject.hello_world(file_system);
+			Debug.Assert(compilation != null, "compilation != null");
+			emit_hello_world(compilation);
+
+			Console.WriteLine("Beginning F# compile.");
 
 			CompilationMode.debug(file_system)
-				.compile(hello_world)
+				.compile(compilation)
 				.prepare_mission(lab._mission_control)
 				.begin();
 		}
 
-		private static void emit_hello_world([NotNull] FSharpProject hello_world)
+		private static void emit_hello_world([NotNull] FSharpProject compilation)
 		{
-			hello_world.add_file("Methods.fs");
+			compilation.add_file("Methods.fs");
 			const string transliteration_to_fsharp_results = @"module AllTheThings
 
 let say_hello argv =
   printfn ""%A"" argv
   printfn ""hello world""
   0";
-			hello_world.source_root.File("Methods.fs")
+			compilation.source_root.File("Methods.fs")
 				.Overwrite(transliteration_to_fsharp_results);
 		}
 
 		public static void report_fsharp_build_results([NotNull] CompileProjects lab, [NotNull] FSharpCompileFinished message)
 		{
 			message.compile.Dispose();
-			Console.WriteLine("Underlying build completed. Press ENTER to quit.");
+			Console.WriteLine("Underlying build completed.");
+			lab._mission_control.announce(new FoolsProjectCompileFinished());
+		}
+
+		public static void finished_one_project([NotNull] CompileProjects lab, [NotNull] FoolsProjectCompileFinished message)
+		{
+			Console.WriteLine("#HACK - I'm pretending that there's only one project, so done now. Press ENTER to quit.");
 			Console.ReadLine();
 			lab._mission_control.announce(new AppQuit(AppErrorLevel.Ok));
 		}
-
-		public static void finished_one_project(CompileProjects lab, FoolsProjectCompileFinished message)
-		{
-			throw new NotImplementedException();
-		}
 	}
+
+	public class FoolsProjectToCompile {}
 
 	public class FSharpCompileFinished : MailMessage
 	{

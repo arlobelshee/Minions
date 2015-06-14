@@ -14,12 +14,17 @@ namespace Fools.cs.Api
 	{
 		[NotNull] private readonly ActiveCity _active_city;
 		[NotNull] private readonly OverlordThrone _overlord_throne;
-		[NotNull] private readonly MailRoom _main_drop;
+		[NotNull] private readonly MailIndex _main_drop;
+		[NotNull] private readonly CityMap _city_map;
 
 		public FoolSupplyHouse()
 		{
 			_overlord_throne = new OverlordThrone();
-			_main_drop = new MailRoom(Enumerable.Empty<Type>(), "Global room");
+			_city_map = new CityMap();
+			_main_drop = _city_map.public_location("Global mailroom")
+				.will_pass_message<DoMyBidding>()
+				.will_pass_message<AppQuit>()
+				.create_dead_drop();
 			_active_city = new ActiveCity(_overlord_throne, _main_drop);
 		}
 
@@ -41,13 +46,13 @@ namespace Fools.cs.Api
 		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission) where TLab : class
 		{
 			_inform_main_drop_about_messages_used(mission);
-			_active_city._subscribe_fool_factory_to_respond_to_spawning_messages(mission);
+			_active_city.define_mission(mission);
 		}
 
 		[Obsolete("Use the active city to do all message announcing. But we've still got some code to move over.")]
 		public void announce(MailMessage what_happened)
 		{
-			_active_city.announce(what_happened);
+			_active_city.city_hall.announce(what_happened);
 		}
 
 		private void _inform_main_drop_about_messages_used<TLab>([NotNull] MissionDescription<TLab> mission)

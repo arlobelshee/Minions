@@ -81,7 +81,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void sending_an_invalid_message_should_throw()
 		{
-			var test_subject = new MailRoom(new[]{typeof(SillyMessage)}, "TestRoom");
+			var test_subject = new MailIndex(new[]{typeof(SillyMessage)}, "TestRoom");
 			Action announce_invalid_message = ()=>test_subject.announce(new SeriousMessage("hi"));
 			announce_invalid_message.ShouldThrow<InvalidOperationException>()
 				.WithMessage(
@@ -108,9 +108,9 @@ namespace Fools.cs.Tests.CoreLanguage
 		}
 
 		[NotNull]
-		private static MailRoom _create_mail_room()
+		private static MailIndex _create_mail_room()
 		{
-			return new MailRoom(new[]{typeof(SillyMessage), typeof(SeriousMessage)}, "TestRoom");
+			return new MailIndex(new[]{typeof(SillyMessage), typeof(SeriousMessage)}, "TestRoom");
 		}
 
 		private void async_handler([NotNull] SillyMessage m, [NotNull] Action done)
@@ -139,14 +139,14 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			private readonly int _counter;
 			[NotNull] private readonly List<string> _log;
-			[NotNull] private readonly MailRoom _mail_room_for_recursive_subscriptions;
+			[NotNull] private readonly MailIndex _mail_index_for_recursive_subscriptions;
 
 			public RecursiveSubscriber(int counter,
-				[NotNull] MailRoom mail_room_for_recursive_subscriptions,
+				[NotNull] MailIndex mail_index_for_recursive_subscriptions,
 				[NotNull] List<string> log)
 			{
 				_counter = counter;
-				_mail_room_for_recursive_subscriptions = mail_room_for_recursive_subscriptions;
+				_mail_index_for_recursive_subscriptions = mail_index_for_recursive_subscriptions;
 				_log = log;
 			}
 
@@ -160,8 +160,8 @@ namespace Fools.cs.Tests.CoreLanguage
 
 			private void _recurse(int next)
 			{
-				_mail_room_for_recursive_subscriptions.subscribe<SillyMessage>(
-					new RecursiveSubscriber(next, _mail_room_for_recursive_subscriptions, _log)
+				_mail_index_for_recursive_subscriptions.subscribe<SillyMessage>(
+					new RecursiveSubscriber(next, _mail_index_for_recursive_subscriptions, _log)
 						.subscribe_recursively_until_counter_expires);
 			}
 		}

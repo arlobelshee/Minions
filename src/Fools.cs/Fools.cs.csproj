@@ -128,6 +128,7 @@
     <Compile Include="Api\FoolFactory.cs" />
     <Compile Include="Api\FoolsCompiler.cs" />
     <Compile Include="Api\MailMessage.cs" />
+    <Compile Include="Api\MailIndex.cs" />
     <Compile Include="Api\MailRoom.cs" />
     <Compile Include="Api\MissionActivity.cs" />
     <Compile Include="Api\MissionActivityTypeSpecific.cs" />

@@ -23,8 +23,9 @@ namespace Fools.cs.Api.CommandLineApp
 		{
 			var interact_with_user = NewMission.in_lab(() => new CommandLineProgram<TViewModel>(app_execution));
 			interact_with_user.send_new_fool_when<DoMyBidding>()
-				.and_have_it(figure_out_what_the_user_wants);
-			interact_with_user.whenever<AppAbort>(print_usage);
+				.and_have_it(figure_out_what_the_user_wants)
+				.after_that()
+				.whenever<AppAbort>(print_usage);
 			app_execution.send_out_fools_to(interact_with_user);
 		}
 

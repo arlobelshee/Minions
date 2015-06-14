@@ -24,8 +24,8 @@ namespace Fools.cs.Tests.CoreLanguage
 			{
 				var done = NonBlockingTally.starting_at(0);
 				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);
-				test_subject.announce(new ElvesFound());
-				test_subject.announce_and_notify_when_done(new SayGo(), done.notify);
+				test_subject.city_hall.announce(new ElvesFound());
+				test_subject.city_hall.announce_and_notify_when_done(new SayGo(), done.notify);
 				done.wait_until_count_reaches(1, Consts.BRIEF_DELAY)
 					.Should()
 					.BeTrue();
@@ -42,8 +42,8 @@ namespace Fools.cs.Tests.CoreLanguage
 				var done = NonBlockingTally.starting_at(0);
 				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);
 				should_be_no_orcs();
-				test_subject.announce(new ElvesFound());
-				test_subject.announce_and_notify_when_done(new ElvesFound(), done.notify);
+				test_subject.city_hall.announce(new ElvesFound());
+				test_subject.city_hall.announce_and_notify_when_done(new ElvesFound(), done.notify);
 				done.wait_until_count_reaches(1, Consts.BRIEF_DELAY)
 					.Should()
 					.BeTrue();

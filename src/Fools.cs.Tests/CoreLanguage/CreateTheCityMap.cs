@@ -97,7 +97,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = _map.secret_location(_arbitrary_purpose);
 			test_subject.create_dead_drop();
-			Action late_message_add = test_subject.will_pass_message<SillyMessage>;
+			Action late_message_add = ()=> { test_subject.will_pass_message<SillyMessage>(); };
 			late_message_add.ShouldThrow<InvalidOperationException>()
 				.WithMessage(
 					string.Format(

@@ -1,50 +1,41 @@
-﻿// MailRoom.cs
+// MailRoom.cs
 // 
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public class MailRoom : DeadDrop
+	public class MailRoom
 	{
-		[NotNull]
-		public string name { get; private set; }
+		[NotNull] private readonly Fool<MailIndex> _postal_carrier;
+		[NotNull] private readonly MailIndex _main_drop;
 
-		public delegate void MessageHandler(MailMessage message, Action done);
-
-		[NotNull] private readonly NonNullDictionary<string, NonNullList<MessageHandler>> _listeners =
-			new NonNullDictionary<string, NonNullList<MessageHandler>>();
-
-		public MailRoom([NotNull] IEnumerable<Type> messages_supported, [NotNull] string name)
+		public MailRoom([NotNull] MailIndex main_drop, [NotNull] FoolFactory fool_factory)
 		{
-			this.name = name;
-			messages_supported.each(inform_about_message);
+			_main_drop = main_drop;
+			_postal_carrier = fool_factory.create_fool(_main_drop);
 		}
 
-		public ReadOnlyCollection<string> allowed_messages
+		public void announce([NotNull] MailMessage what_happened)
 		{
-			get
-			{
-				return _listeners.Keys.ToList()
-					.AsReadOnly();
-			}
+			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
+				mail_room
+					// ReSharper restore PossibleNullReferenceException
+					.announce(what_happened),
+				FoolFactory.noop);
 		}
 
-		public void inform_about_message([NotNull] Type message_type)
+		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, [NotNull] Action when_done)
 		{
-			var key = key_for(message_type);
-			if (!_listeners.ContainsKey(key)) _listeners[key] = new NonNullList<MessageHandler>();
-		}
-
-		public void inform_about_message<TMessage>() where TMessage : MailMessage
-		{
-			inform_about_message(typeof (TMessage));
+			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
+				mail_room
+					// ReSharper restore PossibleNullReferenceException
+					.announce_and_notify_when_done(what_happened, when_done),
+				FoolFactory.noop);
 		}
 
 		public void subscribe<TMessage>([NotNull] Action<TMessage, Action> listener) where TMessage : MailMessage
@@ -52,62 +43,56 @@ namespace Fools.cs.Api
 			subscribe(typeof (TMessage), (m, done) => listener((TMessage) m, done));
 		}
 
-		public void subscribe([NotNull] Type message_type, [NotNull] MessageHandler on_message)
+		public void subscribe([NotNull] Type message_type, [NotNull] MailIndex.MessageHandler listener)
 		{
-			_listeners[key_for(message_type)].Add(on_message);
+			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
+				mail_room
+					// ReSharper restore PossibleNullReferenceException
+				.subscribe(message_type, listener),
+				FoolFactory.noop);
 		}
 
-		public void announce(MailMessage what_happened)
+		public void define_mission<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission) where TLab : class
 		{
-			var when_done_notification = WaitableCounter.non_counting();
-			_announce_to_specific_listeners(what_happened, when_done_notification);
+			mission.spawning_messages.each(message_type => 
+				// ReSharper disable AssignNullToNotNullAttribute
+				subscribe(message_type, (message, done) => _spawn_fool(fool_factory, mission, done, message)));
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 
-		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, [NotNull] Action when_done)
+		private void _spawn_fool<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission,
+			[NotNull] Action done_creating_fool,
+			[NotNull] MailMessage constructor_message) where TLab : class
 		{
-			var when_done_notification = WaitableCounter.starting_at(0, when_done);
-			_announce_to_specific_listeners(what_happened, when_done_notification);
+			var fool = fool_factory.create_fool(mission.make_lab());
+			_subscribe_handlers_for_rest_of_mission(mission, fool);
+			_execute_fool_ctor(mission, done_creating_fool, constructor_message, fool);
 		}
 
-		private void _announce_to_specific_listeners([NotNull] MailMessage what_happened,
-			[NotNull] WaitableCounter when_done_notification)
+		private void _subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
+			[NotNull] Fool<TLab> fool) where TLab : class
 		{
-			var key = key_for(what_happened.GetType());
-			NonNullList<MessageHandler> recipients;
-			if (!_listeners.TryGetValue(key, out recipients))
-			{
-				throw new InvalidOperationException(
-					string.Format(
-						"Attempted to send a non-registered message. Make sure you register all intended messages with the ConstructionSite before creating the MailRoom. Attempted to send {0} to {1}.",
-						what_happened.GetType()
-							.Name,
-						name));
-			}
-			_send_to_all(recipients, what_happened, when_done_notification);
+			_postal_carrier.upon_completion_of_this_task(mail_room => mission.activities.each(activity => {
+				if (activity == null) return;
+				// ReSharper disable PossibleNullReferenceException
+				mail_room.subscribe(activity.message_type,
+					// ReSharper restore PossibleNullReferenceException
+					// ReSharper disable AssignNullToNotNullAttribute
+					(message, done_handling_message) => fool.do_work(lab => activity.execute(lab, message), done_handling_message));
+				// ReSharper restore AssignNullToNotNullAttribute
+			}));
 		}
 
-		private void _send_to_all([NotNull] NonNullList<MessageHandler> listeners,
-			[NotNull] MailMessage what_happened,
-			[NotNull] WaitableCounter when_done_notification)
+		private static void _execute_fool_ctor<TLab>([NotNull] MissionDescription<TLab> mission,
+			[NotNull] Action done_creating_fool,
+			[NotNull] MailMessage constructor_message,
+			[NotNull] Fool<TLab> fool) where TLab : class
 		{
-			listeners.ToArray()
-				.each(recipient => {
-					when_done_notification.begin();
-					// ReSharper disable PossibleNullReferenceException
-					recipient // ReSharper restore PossibleNullReferenceException
-						(what_happened, when_done_notification.done);
-				});
-		}
-
-		[NotNull]
-		private static string key_for([NotNull] Type message_type)
-		{
-			return message_type.Name;
-		}
-
-		public override string ToString()
-		{
-			return string.Format("Mail room that is {0}.", name);
+			var mission_activity = mission.activity_for(constructor_message);
+			if (mission_activity == null) done_creating_fool();
+			else // ReSharper disable AssignNullToNotNullAttribute
+				fool.do_work(lab => mission_activity.execute(lab, constructor_message), done_creating_fool);
+			// ReSharper restore AssignNullToNotNullAttribute
 		}
 	}
 }
