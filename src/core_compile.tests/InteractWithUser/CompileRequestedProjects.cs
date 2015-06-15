@@ -3,6 +3,7 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
+using System.Diagnostics;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
@@ -26,12 +27,12 @@ namespace core_compile.tests.InteractWithUser
 					.spawn_per<AppRun<CompilerUserInteractionModel>>()
 					.when<AppRun<CompilerUserInteractionModel>>(CompileProjects.start_compiling_projects)
 					.when<FoolsProjectCompileFinished>(CompileProjects.finished_one_project)
-					.when<FSharpCompileFinished>(CompileProjects.report_fsharp_build_results)
 					.build());
 			control.Received()
 				.send_out_fools_to(mission<CompileOneProject>()
 					.spawn_per<FoolsProjectFound>()
 					.when<FoolsProjectFound>(CompileOneProject.start_compiling)
+					.when<FSharpCompileFinished>(CompileOneProject.report_fsharp_build_results)
 					.build());
 		}
 

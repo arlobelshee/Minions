@@ -12,18 +12,16 @@ namespace Fools.cs.Api
 	public class MailRoom
 	{
 		[NotNull] private readonly Fool<MailIndex> _postal_carrier;
-		[NotNull] private readonly MailIndex _main_drop;
 
-		public MailRoom([NotNull] MailIndex main_drop, [NotNull] FoolFactory fool_factory)
+		public MailRoom([NotNull] MailIndex delivery_routes, [NotNull] FoolFactory fool_factory)
 		{
-			_main_drop = main_drop;
-			_postal_carrier = fool_factory.create_fool(_main_drop);
+			_postal_carrier = fool_factory.create_fool(delivery_routes);
 		}
 
 		public void announce([NotNull] MailMessage what_happened)
 		{
-			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
-				mail_room
+			_postal_carrier.do_work(delivery_routes => // ReSharper disable PossibleNullReferenceException
+				delivery_routes
 					// ReSharper restore PossibleNullReferenceException
 					.announce(what_happened),
 				FoolFactory.noop);
@@ -31,36 +29,28 @@ namespace Fools.cs.Api
 
 		public void announce_and_notify_when_done([NotNull] MailMessage what_happened, [NotNull] Action when_done)
 		{
-			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
-				mail_room
+			_postal_carrier.do_work(delivery_routes => // ReSharper disable PossibleNullReferenceException
+				delivery_routes
 					// ReSharper restore PossibleNullReferenceException
 					.announce_and_notify_when_done(what_happened, when_done),
 				FoolFactory.noop);
 		}
 
-		public void subscribe<TMessage>([NotNull] Action<TMessage, Action> listener) where TMessage : MailMessage
+		public void define_mission<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission)
+			where TLab : class
 		{
-			subscribe(typeof (TMessage), (m, done) => listener((TMessage) m, done));
-		}
-
-		public void subscribe([NotNull] Type message_type, [NotNull] MailIndex.MessageHandler listener)
-		{
-			_postal_carrier.do_work(mail_room => // ReSharper disable PossibleNullReferenceException
-				mail_room
+			_postal_carrier.do_work(delivery_routes => mission.spawning_messages.each(message_type =>
+				// ReSharper disable PossibleNullReferenceException
+				delivery_routes
 					// ReSharper restore PossibleNullReferenceException
-				.subscribe(message_type, listener),
+					// ReSharper disable AssignNullToNotNullAttribute
+					.subscribe(message_type, (message, done) => _spawn_fool(fool_factory, mission, done, message))),
+				// ReSharper restore AssignNullToNotNullAttribute
 				FoolFactory.noop);
 		}
 
-		public void define_mission<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission) where TLab : class
-		{
-			mission.spawning_messages.each(message_type => 
-				// ReSharper disable AssignNullToNotNullAttribute
-				subscribe(message_type, (message, done) => _spawn_fool(fool_factory, mission, done, message)));
-			// ReSharper restore AssignNullToNotNullAttribute
-		}
-
-		private void _spawn_fool<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission,
+		private void _spawn_fool<TLab>([NotNull] FoolFactory fool_factory,
+			[NotNull] MissionDescription<TLab> mission,
 			[NotNull] Action done_creating_fool,
 			[NotNull] MailMessage constructor_message) where TLab : class
 		{
@@ -72,10 +62,10 @@ namespace Fools.cs.Api
 		private void _subscribe_handlers_for_rest_of_mission<TLab>([NotNull] MissionDescription<TLab> mission,
 			[NotNull] Fool<TLab> fool) where TLab : class
 		{
-			_postal_carrier.upon_completion_of_this_task(mail_room => mission.activities.each(activity => {
+			_postal_carrier.upon_completion_of_this_task(delivery_routes => mission.activities.each(activity => {
 				if (activity == null) return;
 				// ReSharper disable PossibleNullReferenceException
-				mail_room.subscribe(activity.message_type,
+				delivery_routes.subscribe(activity.message_type,
 					// ReSharper restore PossibleNullReferenceException
 					// ReSharper disable AssignNullToNotNullAttribute
 					(message, done_handling_message) => fool.do_work(lab => activity.execute(lab, message), done_handling_message));

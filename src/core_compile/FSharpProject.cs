@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Fools.cs.Utilities;
-using Simulated;
 using Simulated._Fs;
 
 namespace core_compile
@@ -60,14 +59,12 @@ let main argv =
 		public IEnumerable<string> files_to_compile { get { return _files_to_compile.Concat(new[] {"Program.fs"}); } }
 
 		[NotNull]
-		public static async Task<FSharpProject> hello_world([NotNull] FileSystem file_system)
+		public static async Task<FSharpProject> command_line_program([NotNull] FsDirectory source_root)
 		{
-			var tmp = await file_system.TempDirectory;
-			var source_root = tmp.Dir("hello_world");
-			await source_root.File("Program.fs")
-				.Overwrite(_program_file_contents);
-			await source_root.File(".AssemblyAttributes.fs")
-				.Overwrite(_fsharp_assembly_attributes_contents);
+			await Task.WhenAll(source_root.File("Program.fs")
+				.Overwrite(_program_file_contents),
+				source_root.File(".AssemblyAttributes.fs")
+					.Overwrite(_fsharp_assembly_attributes_contents));
 
 			return new FSharpProject(source_root);
 		}

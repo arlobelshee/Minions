@@ -51,12 +51,6 @@ namespace Fools.cs.Tests.CoreLanguage
 			}
 		}
 
-		[Test, Ignore("Not implemented")]
-		public void two_diferent_missions_can_spawn_from_same_message()
-		{
-			throw new NotImplementedException();
-		}
-
 		[SetUp]
 		public void init()
 		{

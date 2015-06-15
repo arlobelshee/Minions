@@ -1,0 +1,67 @@
+Messages:
+* Messages will always be order independent.
+* Message delivery is asynchronous, order random, and arbitrarily delayed.
+* Therefore, all you need to verify to verify correct behavior of messages is the messages that are sent and where they re addressed, not order or  any other spect of how they are sent.
+
+Building concurrency:
+* Buildings have reader/writer lock semmantics.
+* When a Minion starts, it will have all permissions / locks for all buildings needed to process that message.
+* There is no possibility of deadlock, though single-threading is possible.
+* Starvation is possible depending on message delivery priority. For this reason, we must choose our message delivery algorithm well (so that we can make it starvation-proof).
+* A Minion cannot request building access during processing of a message. It can send itself a new message with a different span of building access.
+* No guarantee is made for objects across message pass boundaries. They may change state arbitrarily.
+* It is not possible for any Minion to have objects changed by another Minion while it is processing a message, only between messages.
+* Thefore race conditions are not possible.
+
+Object permanence:
+* Each object is in exactly one building at a time.
+* Stack variables are all building references.
+* Each Minion has its own hideout/lab. This building is guaranteed not visible to any other Minion, so objects stashed here will never change.
+* An object may reference other objects. These are also building references. There is no way to reference an object without specifying the building.
+* Destroying a building destroys all objects in that building.
+* Destroying a building destroys all buildings that contain objects that reference that building.
+* Destroying a building destroys all messages in the mail room of that building, without delivering them.
+* Destroying a building assassinates all Minions who are on missions that declare that building as a required location.
+* Minions may send mail to destroyed buildings. The message will simply be destroyed undelivered (just as if it were in the mail room at time of building destruction). This does not count as building access; the sending Minion is unharmed (again, just as if the message were in the mail room at time of building destruction).
+* Any Minion who attempts to access a destroyed building (even to read) is then assassinated. Attempting to access means taking on a mission step that requests any sort of access to a destroyed building. The message will not be executed; the Minion will simply be assassinated and the message will proceed to teh next handler (if any). Note: messages do not require buildings, mission steps do. So there may be Minions who will respond to the same message in a way that does not require the building, in which case they will execute safely.
+* Building destruction happens only between message executions. A Minion can set a bomb on  building. It will go off after the Minion leaves and before any other Minion enters.
+* A Minion may explicitly clone an object into another building. This has building-wide deep copy semantics (likely implemented via copy-on-write). All objects in the same building will be copied; references will be updated in the copy to refer to objects in its new building. All object references to another building will be shallow-copied (just copy the reference).
+* A Minion may also shallow-copy an object to another building. This clones just that one object and leaves all object references pointing to the original instances in whatever buildings they lie. This is commonly done to reference some object from a Minion's hideout.
+* A cloned object for which neither source nor original has been modified may be switched to "use original"
+* Any Minion with write access may destroy any object reference at any time. Objects will remain until their last reference is removed. 
+* A building may have "fields" which reference objects in that building. These are object references just like any others and serve to keep instances alive & provide access to instances by any who have access to the building.
+* Messages may contain objects, which may reside in any building. Any receiving Minions will be granted read access to the buildings containing the directly-referenced objects (no deep traversal for all buildings) when they process that one message; this is added to any other buildings they would normally access when processing messages of that type.
+* An attempt to reference an object without sufficient building access is an illegal action. The Minion will be dealt with accordingly.
+
+C'tors / d'tors:
+* Regular objets have neither.
+* At construction, will always initialize each field to valid objects (not nulls). Thus everything has a "default constructor" by recursion.
+* Request to create an object is just a function (use the type as a function). This takes optional variables for each field, allowing overrides as necessary.
+
+Resources:
+* Like objects, but represent some external component that is acquired and lost.
+* Can be held on the stack or in a building.
+* Do not have fields (cannot reference objects or primitives). Therefore cannot participate in cycles, though can be kept alive by a cycle and released only in garbage collection.
+* Can be referenced just like any other object.
+* Support RIAA. User code on acquire(), abort(), and release(). Automatic calling of these functions based on scope entry / exit. Scope exit means last reference released. So can be extended by storing a reference in a building, object, etc.
+* Resources can also have user code for commit(); that will never be automatically called, but can be explicitly called by code (useful for default-rollback transactional semmantics).
+* All resources have all 4 of these functions. Their default implementation is no-op. It is never an error to call any of these functions, as long as proper sequencing is maintained (one acquire first, one release last, arbitrary number of abort and commit between).
+* The first call to abort() or commit() will do its thing and subsequent calls will no-op. This is guaranteed by a wrapper resource around the user code.
+* Resources cannot be deep copied. Any copy is always a shallow/reference copy. References have unique identity semmantics.
+
+Minion lifetime:
+* Any Minion performing a Rebelious Action will have a contract taken out on it.
+* A Minion may also have a Summary Execution Contract taken out on it (a contract taken out not in response to a Rebellious Action).
+* Any Minion with a contract on its life will be assassinated as soon as possible, certainly before it can take another mission action, possibly while it is performing a current mission action.
+* The Overlord or any Secret Agent can declare any Minion Rebellious or take out a Summary Contract on one at any time.
+* Exceeding resource caps (default or specified) is a Rebellious Action.
+* Attempting to acccess any object in a destroyed building is a Rebellious Action.
+* Completing a mission successfully issues a summary execution contract.
+* If a Minion is assassinated while processing a message, any work alreay performed will be rolled back to its state before this message was received.
+* A Rebellious Action detected as part of taking a misssion step will pause that Minion until the assassination completes. In general, the system will make a best-efforts attempt to discover Rebellious Activities and roll back to pretend the action never happened. That is not guaranteed in general, but can be guaranteed for certain types of Rebellious Actions (such as accessing data in a destroyed building).
+* A Summary Execution Contract will be fulfilled after the Minion is done executing any current mission step (when it returns to its hideout).
+* Resources will be handled as per references (if an object containing a resource is rolled back such that the resource reference is released, that will make the resource go out of scope, etc). If a resource goes out of scope in this way, then the system will automatically call 'abort()' before calling 'release()'.
+* Minions only have 2 states: alive and dead. User code only executes on a fully alive Minion. There is no initialization phase where a Minion is being born. By the time it handles its first message (the one that resulted in it being spawned), it is a full, live Minion. Similarly, a Minion does not get any warning when it is about to die. It executes what turns out to be its last mission step and then is summarily killed, without any user code ever knowing.
+* A Minion can ask to get a message when Minions on another mission are assassinated (when it finishes), when they receive Summary Contracts, or when they perform Rebellious Actions. Notification is always delivered only after the Minion is no longer actively taking a mission step. The Minion may or may not have been assassinated, but all of its affects on the world have been completed (or rolled back); the world is in a consistent state. A Minion receiving these messages is still limited like normal (can't see other Minions or their effects, can't see into another Minion's hideout, etc). It receives the mission that was being executed by that Minion (including the originating message).
+
+

@@ -4,7 +4,6 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
-using System.Linq;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
@@ -22,6 +21,7 @@ namespace Fools.cs.Api
 			_city_hall = new MailRoom(main_drop, _fool_factory);
 		}
 
+		[NotNull]
 		public MailRoom city_hall { get { return _city_hall; } }
 
 		public void Dispose()
@@ -37,8 +37,7 @@ namespace Fools.cs.Api
 			return _overlord_throne;
 		}
 
-		public void define_mission<TLab>([NotNull] MissionDescription<TLab> mission)
-			where TLab : class
+		public void define_mission<TLab>([NotNull] MissionDescription<TLab> mission) where TLab : class
 		{
 			_city_hall.define_mission(_fool_factory, mission);
 		}
