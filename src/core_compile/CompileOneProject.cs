@@ -10,6 +10,7 @@ using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Utilities;
 using Simulated;
+using Simulated._Fs;
 
 namespace core_compile
 {
@@ -39,17 +40,17 @@ namespace core_compile
 			Console.WriteLine("#HACK - Instead I'm going to pretend it was Hello world.");
 
 			Console.WriteLine("Transliterating Fools to F#.");
+
+			var compilation = await FSharpProject.command_line_program(message.project_directory);
+			Debug.Assert(compilation != null, "compilation != null");
+
 			Console.WriteLine("#HACK - Instead I'm going to ignore the Fools and just emit a Hello World program in F#.");
 
-			var file_system = FileSystem.Real();
-			var tmp = await file_system.TempDirectory;
-			var compilation = await FSharpProject.command_line_program(tmp.Dir("hello_world"));
-			Debug.Assert(compilation != null, "compilation != null");
 			await emit_hello_world(compilation);
 
 			Console.WriteLine("Beginning F# compile.");
 
-			CompilationMode.debug(file_system)
+			CompilationMode.debug(FileSystem.Real())
 				.compile(compilation)
 				.prepare_mission(lab._mission_control)
 				.begin();
