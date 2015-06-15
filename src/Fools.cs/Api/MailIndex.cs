@@ -27,6 +27,7 @@ namespace Fools.cs.Api
 			messages_supported.each(inform_about_message);
 		}
 
+		[NotNull]
 		public ReadOnlyCollection<string> allowed_messages
 		{
 			get

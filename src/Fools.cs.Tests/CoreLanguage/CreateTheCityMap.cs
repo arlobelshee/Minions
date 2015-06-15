@@ -4,6 +4,7 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Fools.cs.Api;
 using Fools.cs.Utilities;
@@ -20,8 +21,7 @@ namespace Fools.cs.Tests.CoreLanguage
 			var first = _map.secret_location(_arbitrary_purpose);
 			var second = _map.secret_location(_arbitrary_purpose);
 			first.Should()
-				.BeOfType<UndisclosedLocation>()
-				.And.NotBeSameAs(second);
+				.NotBeSameAs(second);
 		}
 
 		[Test]
@@ -54,8 +54,8 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void well_known_sites_should_create_the_same_dead_drop_every_time_you_ask()
 		{
 			var test_subject = _map.public_location(PublicBuildings.APPLICATION);
-			var first = test_subject.create_dead_drop();
-			var second = test_subject.create_dead_drop();
+			var first = test_subject.create_dead_drop(_fool_factory);
+			var second = test_subject.create_dead_drop(_fool_factory);
 			first.Should()
 				.NotBeNull()
 				.And.BeSameAs(second);
@@ -65,8 +65,8 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void secret_locations_should_create_a_new_dead_drop_every_time_you_ask()
 		{
 			var test_subject = _map.secret_location(_arbitrary_purpose);
-			var first = test_subject.create_dead_drop();
-			var second = test_subject.create_dead_drop();
+			var first = test_subject.create_dead_drop(_fool_factory);
+			var second = test_subject.create_dead_drop(_fool_factory);
 			first.Should()
 				.NotBeNull()
 				.And.NotBeSameAs(second);
@@ -77,7 +77,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = _map.secret_location(_arbitrary_purpose);
 			test_subject.will_pass_message<SillyMessage>();
-			var drop = test_subject.create_dead_drop();
+			var drop = test_subject.create_dead_drop(_fool_factory);
 			drop.allowed_messages.Should()
 				.Equal(new object[] {"SillyMessage"});
 		}
@@ -87,7 +87,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		{
 			var test_subject = _map.public_location(PublicBuildings.APPLICATION);
 			test_subject.will_pass_message<SillyMessage>();
-			var drop = test_subject.create_dead_drop();
+			var drop = test_subject.create_dead_drop(_fool_factory);
 			drop.allowed_messages.Should()
 				.Equal(new object[] {"SillyMessage"});
 		}
@@ -96,8 +96,8 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void attempting_to_add_new_message_after_building_room_should_fail()
 		{
 			var test_subject = _map.secret_location(_arbitrary_purpose);
-			test_subject.create_dead_drop();
-			Action late_message_add = ()=> { test_subject.will_pass_message<SillyMessage>(); };
+			test_subject.create_dead_drop(_fool_factory);
+			Action late_message_add = () => { test_subject.will_pass_message<SillyMessage>(); };
 			late_message_add.ShouldThrow<InvalidOperationException>()
 				.WithMessage(
 					string.Format(
@@ -109,10 +109,12 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void set_up()
 		{
 			_map = new CityMap();
+			_fool_factory = FoolFactory.using_background_threads();
 		}
 
 		private const string _arbitrary_purpose = "watching the game";
 
-		[NotNull] private CityMap _map;
+		[NotNull, SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]  private CityMap _map;
+		[NotNull, SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]  private FoolFactory _fool_factory;
 	}
 }

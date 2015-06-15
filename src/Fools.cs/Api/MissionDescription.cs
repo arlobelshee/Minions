@@ -11,6 +11,9 @@ namespace Fools.cs.Api
 {
 	/// <summary>
 	///    Describes one mission that we can send fools on.
+	///    MissionDescription is a class definition; Missions are instances. A single Mission
+	///    instance represents one Fool attempting the Mission. Each Mission has several attributes;
+	///    they come from the following places.
 	///    Missions tell fools how to respond to messages. Each mission can have 0:many
 	///    fools on it at a time. All of them will respond to a received message. Send different
 	///    fools to different mission locations if you wish to talk to them individually.

@@ -14,11 +14,11 @@ namespace Fools.cs.Api
 		[NotNull] private readonly FoolFactory _fool_factory;
 		[NotNull] private readonly MailRoom _city_hall;
 
-		public ActiveCity([NotNull] OverlordThrone overlord_throne, [NotNull] MailIndex main_drop)
+		public ActiveCity([NotNull] OverlordThrone overlord_throne, [NotNull] ConstructionSite city_hall)
 		{
 			_overlord_throne = overlord_throne;
 			_fool_factory = FoolFactory.using_background_threads();
-			_city_hall = new MailRoom(main_drop, _fool_factory);
+			_city_hall = city_hall.create_dead_drop(_fool_factory);
 		}
 
 		[NotNull]

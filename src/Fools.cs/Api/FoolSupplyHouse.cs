@@ -5,7 +5,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
@@ -14,18 +13,15 @@ namespace Fools.cs.Api
 	{
 		[NotNull] private readonly ActiveCity _active_city;
 		[NotNull] private readonly OverlordThrone _overlord_throne;
-		[NotNull] private readonly MailIndex _main_drop;
-		[NotNull] private readonly CityMap _city_map;
 
 		public FoolSupplyHouse()
 		{
 			_overlord_throne = new OverlordThrone();
-			_city_map = new CityMap();
-			_main_drop = _city_map.public_location("Global mailroom")
+			var city_map = new CityMap();
+			var city_hall = city_map.public_location(PublicBuildings.APPLICATION)
 				.will_pass_message<DoMyBidding>()
-				.will_pass_message<AppQuit>()
-				.create_dead_drop();
-			_active_city = new ActiveCity(_overlord_throne, _main_drop);
+				.will_pass_message<AppQuit>();
+			_active_city = new ActiveCity(_overlord_throne, city_hall);
 		}
 
 		[SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_overlord_throne",
@@ -45,7 +41,6 @@ namespace Fools.cs.Api
 
 		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission) where TLab : class
 		{
-			_inform_main_drop_about_messages_used(mission);
 			_active_city.define_mission(mission);
 		}
 
@@ -53,15 +48,6 @@ namespace Fools.cs.Api
 		public void announce(MailMessage what_happened)
 		{
 			_active_city.city_hall.announce(what_happened);
-		}
-
-		private void _inform_main_drop_about_messages_used<TLab>([NotNull] MissionDescription<TLab> mission)
-			where TLab : class
-		{
-			mission.spawning_messages.each(_main_drop.inform_about_message);
-			// ReSharper disable PossibleNullReferenceException
-			mission.activities.each(activity => _main_drop.inform_about_message(activity.message_type));
-			// ReSharper restore PossibleNullReferenceException
 		}
 	}
 }

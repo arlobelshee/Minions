@@ -3,13 +3,12 @@
 // Copyright 2012 The Minions Project (http:/github.com/Minions).
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
-using System.Diagnostics;
+using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
 using NSubstitute;
 using NUnit.Framework;
-using core_compile.Messages;
 
 namespace core_compile.tests.InteractWithUser
 {

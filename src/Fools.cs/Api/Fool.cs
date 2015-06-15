@@ -13,16 +13,17 @@ namespace Fools.cs.Api
 	public class Fool<TLab> where TLab : class
 	{
 		[NotNull] private Task _previous_operation;
-
-		[NotNull] private readonly TLab _lab;
 		[NotNull] private readonly object _task_lock = new object();
 		[NotNull] private readonly List<Action<TLab>> _upon_completion = new List<Action<TLab>>();
 
 		public Fool([NotNull] Task root_task, [NotNull] TLab lab)
 		{
 			_previous_operation = root_task;
-			_lab = lab;
+			this.lab = lab;
 		}
+
+		[NotNull]
+		public TLab lab { get; private set; }
 
 		public void do_work([NotNull] Action<TLab> work, [NotNull] Action done)
 		{
@@ -41,13 +42,12 @@ namespace Fools.cs.Api
 
 		private void _do_work([NotNull] Action<TLab> work, [NotNull] Action done)
 		{
-			Action<Task> next_operation = ignored_result_of_previous_task =>
-			{
+			Action<Task> next_operation = ignored_result_of_previous_task => {
 				try
 				{
-					work(_lab);
+					work(lab);
 					_upon_completion.ForEach(w => // ReSharper disable PossibleNullReferenceException
-						w(_lab));
+						w(lab));
 					// ReSharper restore PossibleNullReferenceException
 				}
 				catch (Exception ex)

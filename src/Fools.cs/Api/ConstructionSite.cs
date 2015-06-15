@@ -9,21 +9,22 @@ using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public abstract class ConstructionSite
+	public class ConstructionSite
 	{
 		[NotNull] private readonly HashSet<Type> _valid_messages = new HashSet<Type>();
 		private bool _built;
 
-		protected ConstructionSite([NotNull] string name)
+		protected ConstructionSite([NotNull] string name, [NotNull] CityMap city_map)
 		{
 			this.name = name;
+			this.city_map = city_map;
 		}
 
 		[NotNull]
 		public string name { get; private set; }
 
 		[NotNull]
-		public abstract MailIndex create_dead_drop();
+		public CityMap city_map { get; private set; }
 
 		[NotNull]
 		public ConstructionSite will_pass_message<TMessage>() where TMessage : MailMessage
@@ -37,7 +38,7 @@ namespace Fools.cs.Api
 			if (_built)
 			{
 				throw new InvalidOperationException(
-					string.Format("Illegal attempt to add new message type after creating mail room. Attempted to add {0} to {1}.",
+					String.Format("Illegal attempt to add new message type after creating mail room. Attempted to add {0} to {1}.",
 						valid_message.Name,
 						name));
 			}
@@ -46,43 +47,37 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		protected MailIndex build_new_room()
+		public static ConstructionSite undisclosed_location([NotNull] string purpose, [NotNull] CityMap city_map)
+		{
+			return new ConstructionSite(String.Format("an undisclosed location for {0}", purpose), city_map);
+		}
+
+		public static ConstructionSite public_building([NotNull] string name, [NotNull] CityMap city_map)
+		{
+			return new PublicBuilding(name, city_map);
+		}
+
+		public virtual MailRoom create_dead_drop([NotNull] FoolFactory fool_factory)
 		{
 			_built = true;
-			return new MailIndex(_valid_messages, name);
+			return new MailRoom(new MailIndex(_valid_messages, name), fool_factory, city_map);
 		}
 	}
 
 	internal class PublicBuilding : ConstructionSite
 	{
-		[CanBeNull] private MailIndex _building;
+		[CanBeNull] private MailRoom _building;
 
-		private PublicBuilding([NotNull] string name) : base(name) {}
+		public PublicBuilding([NotNull] string name, [NotNull] CityMap city_map) : base(name, city_map) {}
 
-		public static ConstructionSite named([NotNull] string name)
+		public override MailRoom create_dead_drop(FoolFactory fool_factory)
 		{
-			return new PublicBuilding(name);
-		}
-
-		public override MailIndex create_dead_drop()
-		{
-			return _building ?? (_building = build_new_room());
+			return _building ?? (_building = base.create_dead_drop(fool_factory));
 		}
 	}
 
 	internal class UndisclosedLocation : ConstructionSite
 	{
-		private UndisclosedLocation([NotNull] string name) : base(name) {}
-
-		[NotNull]
-		public static ConstructionSite to_do([NotNull] string purpose)
-		{
-			return new UndisclosedLocation(String.Format("an undisclosed location for {0}", purpose));
-		}
-
-		public override MailIndex create_dead_drop()
-		{
-			return build_new_room();
-		}
+		public UndisclosedLocation([NotNull] string name, [NotNull] CityMap city_map) : base(name, city_map) {}
 	}
 }

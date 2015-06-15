@@ -4,6 +4,7 @@
 // All rights reserved. Usage as permitted by the LICENSE.txt file for this project.
 
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Fools.cs.Utilities;
 
@@ -11,10 +12,14 @@ namespace Fools.cs.Api
 {
 	public class MailRoom
 	{
+		[NotNull]
+		public CityMap city_map { get; private set; }
+
 		[NotNull] private readonly Fool<MailIndex> _postal_carrier;
 
-		public MailRoom([NotNull] MailIndex delivery_routes, [NotNull] FoolFactory fool_factory)
+		public MailRoom([NotNull] MailIndex delivery_routes, [NotNull] FoolFactory fool_factory, [NotNull] CityMap city_map)
 		{
+			this.city_map = city_map;
 			_postal_carrier = fool_factory.create_fool(delivery_routes);
 		}
 
@@ -39,15 +44,28 @@ namespace Fools.cs.Api
 		public void define_mission<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission)
 			where TLab : class
 		{
-			_postal_carrier.do_work(delivery_routes => mission.spawning_messages.each(message_type =>
+			_postal_carrier.do_work(delivery_routes => {
 				// ReSharper disable PossibleNullReferenceException
-				delivery_routes
-					// ReSharper restore PossibleNullReferenceException
+				mission.activities.each(activity => delivery_routes.inform_about_message(activity.message_type));
+				// ReSharper restore PossibleNullReferenceException
+				mission.spawning_messages.each(message_type =>
+					// ReSharper disable PossibleNullReferenceException
 					// ReSharper disable AssignNullToNotNullAttribute
-					.subscribe(message_type, (message, done) => _spawn_fool(fool_factory, mission, done, message))),
+				{
+					delivery_routes.inform_about_message(message_type);
+					delivery_routes.subscribe(message_type, (message, done) => _spawn_fool(fool_factory, mission, done, message));
+				});
+			},
 				// ReSharper restore AssignNullToNotNullAttribute
+				// ReSharper restore PossibleNullReferenceException
 				FoolFactory.noop);
 		}
+
+		[NotNull]
+		public ReadOnlyCollection<string> allowed_messages { get { return _postal_carrier.lab.allowed_messages; } }
+
+		[NotNull]
+		public string name { get { return _postal_carrier.lab.name; } }
 
 		private void _spawn_fool<TLab>([NotNull] FoolFactory fool_factory,
 			[NotNull] MissionDescription<TLab> mission,
