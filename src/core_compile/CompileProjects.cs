@@ -9,7 +9,6 @@ using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Api.CommandLineApp;
 using Fools.cs.Utilities;
-using Simulated;
 
 namespace core_compile
 {
@@ -38,8 +37,6 @@ namespace core_compile
 			Console.WriteLine("I would be handling the command line arguments here to find all projects.");
 			Console.WriteLine("#HACK - Instead I'm going to pretend it had just one project.");
 
-			var find_all_projects = NewMission.in_lab(()=>new FoolsProjectToCompile());
-
 			lab._mission_control.announce(new FoolsProjectFound());
 		}
 
@@ -50,8 +47,6 @@ namespace core_compile
 			lab._mission_control.announce(new AppQuit(AppErrorLevel.Ok));
 		}
 	}
-
-	public class FoolsProjectToCompile {}
 
 	public class FSharpCompileFinished : MailMessage
 	{

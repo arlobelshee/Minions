@@ -10,7 +10,6 @@ using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Utilities;
 using Simulated;
-using Simulated._Fs;
 
 namespace core_compile
 {
@@ -34,8 +33,7 @@ namespace core_compile
 			mission_control.send_out_fools_to(compile_a_project_when_found);
 		}
 
-		public static async void start_compiling([NotNull] CompileOneProject lab,
-			[NotNull] FoolsProjectFound message)
+		public static async void start_compiling([NotNull] CompileOneProject lab, [NotNull] FoolsProjectFound message)
 		{
 			Console.WriteLine("I would be parsing the project file here.");
 			Console.WriteLine("#HACK - Instead I'm going to pretend it was Hello world.");
