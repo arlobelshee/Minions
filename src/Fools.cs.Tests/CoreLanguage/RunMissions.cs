@@ -19,7 +19,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void mission_control_should_execute_mission_parts_when_messages_arrive()
 		{
-			using (var fools = new FoolSupplyHouse())
+			using (var fools = new FoolSupplyHouse(FoolFactory.using_background_threads()))
 			{
 				var done = NonBlockingTally.starting_at(0);
 				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);
@@ -36,7 +36,7 @@ namespace Fools.cs.Tests.CoreLanguage
 		[Test]
 		public void mission_control_should_spawn_missions_parts_when_spawn_messages_arrive()
 		{
-			using (var fools = new FoolSupplyHouse())
+			using (var fools = new FoolSupplyHouse(FoolFactory.using_background_threads()))
 			{
 				var done = NonBlockingTally.starting_at(0);
 				var test_subject = fools.build_me_a_city(_offer_to_raid_the_elves);

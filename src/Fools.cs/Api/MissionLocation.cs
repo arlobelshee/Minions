@@ -10,6 +10,11 @@ namespace Fools.cs.Api
 	[UsedForMocking]
 	public interface MissionLocation : DeadDrop
 	{
-		void send_out_fools_to<TLab>([NotNull] MissionDescription<TLab> mission) where TLab : class;
+		[NotNull]
+		CityMap surrounding_city { get; }
+		void send_out_fools_to<TLab>([NotNull] MissionDescription<TLab> mission)
+			where TLab : class;
+		void send_out_main_thread_fools_to<TLab>([NotNull] MissionDescription<TLab> mission)
+			where TLab : class;
 	}
 }

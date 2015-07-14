@@ -52,11 +52,13 @@ namespace Fools.cs.Api
 			return new ConstructionSite(String.Format("an undisclosed location for {0}", purpose), city_map);
 		}
 
+		[NotNull]
 		public static ConstructionSite public_building([NotNull] string name, [NotNull] CityMap city_map)
 		{
 			return new PublicBuilding(name, city_map);
 		}
 
+		[NotNull]
 		public virtual MailRoom create_dead_drop([NotNull] FoolFactory fool_factory)
 		{
 			_built = true;

@@ -10,7 +10,6 @@ using core_compile.Messages;
 using Fools.cs.Api;
 using Fools.cs.Utilities;
 using Simulated;
-using Simulated._Fs;
 
 namespace core_compile
 {

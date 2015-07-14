@@ -108,8 +108,8 @@ namespace Fools.cs.Tests.CoreLanguage
 		[SetUp]
 		public void set_up()
 		{
-			_map = new CityMap();
 			_fool_factory = FoolFactory.using_background_threads();
+			_map = new CityMap(_fool_factory);
 		}
 
 		private const string _arbitrary_purpose = "watching the game";

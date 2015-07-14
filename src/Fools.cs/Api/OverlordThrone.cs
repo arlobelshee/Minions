@@ -21,12 +21,13 @@ namespace Fools.cs.Api
 			return _result;
 		}
 
-		public void show_him_what_you_do([NotNull] FoolSupplyHouse mission_control)
+		public void show_him_what_you_do([NotNull] MailRoom city_hall)
 		{
-			var tell_overlord_when_all_work_is_done = NewMission.in_lab(() => this);
-			tell_overlord_when_all_work_is_done.send_new_fool_when<DoMyBidding>();
-			tell_overlord_when_all_work_is_done.whenever<AppQuit>(stop_program);
-			mission_control.send_out_fools_to(tell_overlord_when_all_work_is_done);
+			var tell_overlord_when_all_work_is_done = NewMission.in_lab(() => this)
+				.send_new_fool_when<DoMyBidding>()
+				.after_that()
+				.whenever<AppQuit>(stop_program);
+			city_hall.send_out_fools_to(tell_overlord_when_all_work_is_done);
 		}
 
 		private static void stop_program([NotNull] OverlordThrone lab, [NotNull] AppQuit message)

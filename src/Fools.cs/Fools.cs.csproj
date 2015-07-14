@@ -114,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ActiveCity.cs" />
-    <Compile Include="Api\City.cs" />
     <Compile Include="Api\CityMap.cs" />
     <Compile Include="Api\CommandLineApp\AppAbort.cs" />
     <Compile Include="Api\AppErrorLevel.cs" />

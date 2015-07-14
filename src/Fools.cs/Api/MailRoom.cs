@@ -10,20 +10,19 @@ using Fools.cs.Utilities;
 
 namespace Fools.cs.Api
 {
-	public class MailRoom
+	public class MailRoom : MissionLocation
 	{
-		[NotNull]
-		public CityMap city_map { get; private set; }
+		public CityMap surrounding_city { get; private set; }
 
 		[NotNull] private readonly Fool<MailIndex> _postal_carrier;
 
-		public MailRoom([NotNull] MailIndex delivery_routes, [NotNull] FoolFactory fool_factory, [NotNull] CityMap city_map)
+		public MailRoom([NotNull] MailIndex delivery_routes, [NotNull] FoolFactory fool_factory, [NotNull] CityMap surrounding_city)
 		{
-			this.city_map = city_map;
+			this.surrounding_city = surrounding_city;
 			_postal_carrier = fool_factory.create_fool(delivery_routes);
 		}
 
-		public void announce([NotNull] MailMessage what_happened)
+		public void announce(MailMessage what_happened)
 		{
 			_postal_carrier.do_work(delivery_routes => // ReSharper disable PossibleNullReferenceException
 				delivery_routes
@@ -41,8 +40,19 @@ namespace Fools.cs.Api
 				FoolFactory.noop);
 		}
 
-		public void define_mission<TLab>([NotNull] FoolFactory fool_factory, [NotNull] MissionDescription<TLab> mission)
+		public void send_out_fools_to<TLab>(MissionDescription<TLab> mission)
 			where TLab : class
+		{
+			_send_the_fools(surrounding_city.regular_fools, mission);
+		}
+
+		public void send_out_main_thread_fools_to<TLab>(MissionDescription<TLab> mission)
+			where TLab : class
+		{
+			_send_the_fools(surrounding_city.gui_fools, mission);
+		}
+
+		private void _send_the_fools<TLab>(FoolFactory fool_factory, MissionDescription<TLab> mission) where TLab : class
 		{
 			_postal_carrier.do_work(delivery_routes => {
 				// ReSharper disable PossibleNullReferenceException
