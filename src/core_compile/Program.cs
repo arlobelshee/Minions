@@ -14,7 +14,7 @@ namespace core_compile
 		// ReSharper disable InconsistentNaming
 		private static int Main([NotNull] string[] args) // ReSharper restore InconsistentNaming
 		{
-			using (var fools = new FoolSupplyHouse(FoolFactory.on_this_thread()))
+			using (var fools = new FoolSupplyHouse(FoolFactory.using_background_threads()))
 			{
 				return (int) fools.build_me_a_city(For.my_amusement)
 					.make_the_fools_dance(args)

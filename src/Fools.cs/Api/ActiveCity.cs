@@ -21,7 +21,7 @@ namespace Fools.cs.Api
 			var city_hall_location = _map.public_location(PublicBuildings.APPLICATION)
 				.will_pass_message<DoMyBidding>()
 				.will_pass_message<AppQuit>();
-			_city_hall = city_hall_location.create_dead_drop(_map.regular_fools);
+			_city_hall = city_hall_location.create_dead_drop(_map.gui_fools);
 		}
 
 		[NotNull]

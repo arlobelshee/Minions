@@ -26,7 +26,7 @@ namespace Fools.cs.Api.CommandLineApp
 				.and_have_it(figure_out_what_the_user_wants)
 				.after_that()
 				.whenever<AppAbort>(print_usage);
-			app_execution.send_out_fools_to(interact_with_user);
+			app_execution.send_out_main_thread_fools_to(interact_with_user);
 		}
 
 		private static void figure_out_what_the_user_wants([NotNull] CommandLineProgram<TViewModel> lab,
