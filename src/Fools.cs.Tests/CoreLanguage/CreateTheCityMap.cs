@@ -28,8 +28,16 @@ namespace Fools.cs.Tests.CoreLanguage
 		public void anonyous_locations_should_know_their_purpose()
 		{
 			var test_subject = _map.secret_location("watching the game");
-			test_subject.name.Should()
+			test_subject.create_dead_drop(_fool_factory).name.Should()
 				.Be("an undisclosed location for watching the game");
+		}
+
+		[Test]
+		public void anonyous_location_purpose_should_allow_per_instance_data()
+		{
+			var test_subject = _map.secret_location("{1} the {0}");
+			test_subject.create_dead_drop(_fool_factory, "outcome", "betting on").name.Should()
+				.Be("an undisclosed location for betting on the outcome");
 		}
 
 		[Test]

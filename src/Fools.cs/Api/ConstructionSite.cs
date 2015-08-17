@@ -59,10 +59,10 @@ namespace Fools.cs.Api
 		}
 
 		[NotNull]
-		public virtual MailRoom create_dead_drop([NotNull] FoolFactory fool_factory)
+		public virtual MailRoom create_dead_drop([NotNull] FoolFactory fool_factory, [NotNull] params object[] name_args)
 		{
 			_built = true;
-			return new MailRoom(new MailIndex(_valid_messages, name), fool_factory, city_map);
+			return new MailRoom(new MailIndex(_valid_messages, String.Format(name, name_args)), fool_factory, city_map);
 		}
 	}
 
@@ -72,14 +72,9 @@ namespace Fools.cs.Api
 
 		public PublicBuilding([NotNull] string name, [NotNull] CityMap city_map) : base(name, city_map) {}
 
-		public override MailRoom create_dead_drop(FoolFactory fool_factory)
+		public override MailRoom create_dead_drop(FoolFactory fool_factory, params object[] name_args)
 		{
-			return _building ?? (_building = base.create_dead_drop(fool_factory));
+			return _building ?? (_building = base.create_dead_drop(fool_factory, name_args));
 		}
-	}
-
-	internal class UndisclosedLocation : ConstructionSite
-	{
-		public UndisclosedLocation([NotNull] string name, [NotNull] CityMap city_map) : base(name, city_map) {}
 	}
 }
