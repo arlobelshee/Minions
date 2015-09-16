@@ -13,7 +13,7 @@ Here are some of the terms of art:
 * **Fool**: A being that could potentially do useful work. Each city has an infinite supply of Fools.
 * **Minion**: A Fool that has been given a Mission Briefing. It now does useful work on behalf of its Overlord (performs a Mission). Minions will always be killed when their Mission is done (whether they succeed or not). Minions are unable to see any other Minions. They communicate only via Secret Messages. Minions are lazy: they don't do anything until a Secret Message triggers some phase of their Mission. Then they do whatever instructions were included in their Mission Briefing for that phase.
 * **Device**: A tool for Minions to use. It does nothing on its own. But it can be easily deployed to any City as part of a Master Plan. Devices may require one or multiple Minions to be useful.
-* * **Mission**: One part of a Master Plan. Carried out by a single Minion. A Mission is a set of phases. Each phase is triggered by receipt of a specific Secret Message and contains a set of instructions for the Minion to carry out. Many Missions involve acquiring or manipulating Loot.
+* **Mission**: One part of a Master Plan. Carried out by a single Minion. A Mission is a set of phases. Each phase is triggered by receipt of a specific Secret Message and contains a set of instructions for the Minion to carry out. Many Missions involve acquiring or manipulating Loot.
 * **Mission Briefing**: A description of a Mission. Can be given to any number of Fools at any time to turn them into Minions on that Mission. Describes the phases, Buildings, Devices, and Secret Messages involved in this Mission.
 * **Master Plan**: Several Mission Briefings, Devices, and smaller Master Plans that can be used together to attain some purpose. A Master Plan may be deployed to a City to make that City Productive.
 * **Building**: A place to hold stuff, get mail (Secret Messages), and perform Missions.
@@ -39,3 +39,7 @@ Minions core contains the following:
  * Share effective Devices.
  * Share effective Master Plans.
  * Share productive Cities.
+
+## License
+
+Minions and all the core tools are Copyright &copy; The Minions Project, 2015. They are licensed under the 3-clause BSD license.
